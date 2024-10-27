@@ -1,0 +1,116 @@
+/* Outer container for centering the login box on the screen */
+.loginContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5dc; /* Light beige background */
+  }
+  
+  /* Styling for the main login box */
+  .loginBox {
+    width: 320px;
+    padding: 20px;
+    padding-top: 50px; /* Space above logo */
+    border-radius: 15px;
+    background-color: #fff7e6; /* Soft cream color */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    text-align: center;
+    position: relative;
+  }
+  
+  /* Container for the logo with a circular background */
+  .logoContainer {
+    width: 80px;
+    height: 80px;
+    background-color: #ffffff;
+    border-radius: 50%; /* Creates circular shape */
+    margin: 0 auto -40px; /* Pulls logo into the top part of the login box */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Shadow for logo circle */
+  }
+  
+  /* Main title for the login page */
+  .loginTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4b2e19; /* Brown color for text */
+    margin-top: 30px; /* Space below logo */
+  }
+  
+  /* Subtitle for the login prompt */
+  .subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  /* Container for each input field with icon */
+  .inputGroup {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+  }
+  
+  /* Basic styling for input fields */
+  .input {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding-left: 5px;
+    font-size: 14px;
+  }
+  
+  /* Icon styling inside input fields */
+  .icon {
+    margin-right: 5px;
+    font-size: 16px;
+    color: #666;
+  }
+  
+  /* Styling for the main login button */
+  .loginButton {
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #a77e3e; /* Goldish button color, feel free to change - G */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  /* Styling for the "Forgot Password" section */
+  .forgotPassword {
+    font-size: 12px;
+    color: #666;
+    margin-top: 10px;
+  }
+  
+  .forgotPassword a {
+    color: #a77e3e; /* Link color matching button */
+    text-decoration: none;
+  }
+  
+  /* Styling for the "Register new account" button */
+  .registerButton {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    background-color: #fff;
+    color: #a77e3e;
+    border: 1px solid #a77e3e;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
