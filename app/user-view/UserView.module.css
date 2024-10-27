@@ -1,0 +1,121 @@
+/* Container for the entire User View page */
+.userViewContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+  }
+  
+  /* Header section styling */
+  .header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd; /* Light border line under header */
+  }
+  
+  /* Styling for the user's name displayed in the header */
+  .userName {
+    font-weight: bold;
+    color: #a77e3e; /* Brown color matching the Figma design */
+    margin-right: auto; /* Aligns the username to the left */
+  }
+  
+  /* Navigation links container */
+  .navLinks {
+    display: flex;
+    gap: 15px; /* Spacing between each link */
+    margin-left: auto; /* Aligns the navigation links to the right */
+  }
+  
+  /* Styling for each navigation link in the header */
+  .navLinks a {
+    color: #a77e3e;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  /* Container for the account and cart dropdown sections */
+  .accountContainer,
+  .cartContainer {
+    position: relative; /* Allows dropdown to position itself absolutely */
+    margin-left: 15px; /* Spacing between buttons */
+  }
+  
+  /* Styling for the account and cart buttons */
+  .accountContainer button,
+  .cartContainer button {
+    background: none; /* Removes default button styling */
+    border: none;
+    color: #a77e3e;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  /* Dropdown menu styling */
+  .dropdown {
+    position: absolute;
+    top: 100%; /* Positions dropdown below the button */
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    width: 200px; /* Fixed width for dropdown */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+  
+  /* Each item within the dropdown */
+  .dropdown p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555; /* Dark gray for text */
+  }
+  
+  /* Main content section below the header */
+  .mainContent {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  
+  /* Styling for the welcome title text */
+  .welcomeTitle {
+    font-size: 32px;
+    font-weight: bold;
+    color: #a77e3e; /* Brown color matching the Figma design */
+    margin-bottom: 10px;
+  }
+  
+  /* Styling for the tagline under the welcome title */
+  .tagline {
+    font-size: 16px;
+    color: #666; /* Lighter gray color for tagline */
+    margin-bottom: 30px;
+  }
+  
+  /* Styling for the "Continue" button */
+  .continueButton {
+    display: inline-flex;
+    align-items: center; /* Centers icon and text vertically */
+    padding: 10px 20px;
+    background-color: #fff;
+    color: #a77e3e; /* Matches brown color from Figma */
+    border: 1px solid #a77e3e;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  /* Spacing for the icon inside the "Continue" button */
+  .continueButton span {
+    margin-right: 5px;
+  }
+  
+  /* Container for the wardrobe image */
+  .imageContainer {
+    margin-top: 20px; /* Space above the image */
+  }
+  

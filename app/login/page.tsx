@@ -12,7 +12,7 @@ export default function LoginPage() {
   // Function to handle login logic (placeholder)
   const handleLogin = () => {
     console.log('Logging in...');
-    // Login logic goes here, im not sure what it should be so heres a place holder! -Grace
+    // Login logic goes here, idk what itll be rn, so heres a placeholder! -Grace
   };
 
   return (
@@ -61,7 +61,12 @@ export default function LoginPage() {
         </p>
 
         {/* Register new account button */}
-        <button className={styles.registerButton}>Register new account</button>
+        <button
+          className={styles.registerButton}
+          onClick={() => window.location.href = '/register'} // Redirect to Register page
+        >
+          Register new account
+        </button>
       </div>
     </div>
   );
