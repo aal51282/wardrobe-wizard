@@ -1,0 +1,90 @@
+/* Main container for the Team page */
+.teamContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  /* Title styling for "Our Team" */
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #a77e3e;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  
+  /* Container for the illustration at the top */
+  .illustrationContainer {
+    margin-bottom: 20px;
+  }
+  
+  /* Default description text about the project */
+  .description {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    max-width: 600px;
+    margin-bottom: 30px;
+  }
+  
+  /* Grid layout for team members */
+  .teamGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns to fit 4 members */
+    gap: 20px;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  /* Styling for each team member card */
+  .teamMember {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  /* Profile image styling */
+  .profileImage {
+    border-radius: 50%; /* Circular image */
+    width: 100px;
+    height: 100px;
+    background-color: #f2f2f2; /* Placeholder background color */
+  }
+  
+  /* Name styling under each profile */
+  .memberName {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 10px;
+  }
+  
+  /* Role styling under the name */
+  .memberRole {
+    font-size: 12px;
+    color: #a77e3e;
+  }
+  
+  /* Back button styling to match the "Continue" button from User View */
+  .backButton {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    color: #a77e3e;
+    border: 1px solid #a77e3e;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 30px;
+  }
+  
+  /* Icon styling within the back button */
+  .backButton span {
+    margin-right: 5px;
+  }
+  
