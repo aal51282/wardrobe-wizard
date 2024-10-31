@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './ResetPassword.module.css';
 
 export default function ResetPasswordPage() {
+  const router = useRouter();
+
   // State for tracking user input and page flow
   const [loginName, setLoginName] = useState('');
   const [isUserValid, setIsUserValid] = useState(false);
@@ -10,7 +13,8 @@ export default function ResetPasswordPage() {
   // Function to handle login name submission
   const handleLoginNameSubmit = () => {
     // Placeholder: Check if loginName exists in the database
-    if (loginName === "existingUser") { // once again, placeholder
+    // Example: replace with actual database call
+    if (loginName === "existingUser") { // Mock validation
       setIsUserValid(true); // User is valid
     } else {
       alert("User does not exist.");
@@ -22,10 +26,12 @@ export default function ResetPasswordPage() {
     // Placeholder: Update the user's password in the database
     console.log(`Password for ${loginName} updated to: ${newPassword}`);
     alert("Password has been reset successfully!");
+
+    // Redirect to the login page after successful password reset
+    router.push('/login');
   };
-  // There is absolutely no Verification in this reset page, like zip, nada
-  // So this is something to look into later down the line when we have the rest of the project up
-  // -G
+  // I know theres low security here, I just wanted to get this down pact and worry about safety later
+  // Maybe we can look into email sending / hiding the password when its typed out -G
   return (
     <div className={styles.resetPasswordContainer}>
       <h1>Reset Password</h1>
