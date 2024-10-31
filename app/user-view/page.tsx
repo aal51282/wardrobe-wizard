@@ -1,24 +1,26 @@
 // Import necessary libraries and hooks
 import Image from 'next/image';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './UserView.module.css';
 
 export default function UserViewPage() {
+  const router = useRouter();
+
   // Placeholder state for user data and cart items
   const [userData, setUserData] = useState({
     username: "User's Name", // This will be dynamically set once database is integrated
-    password: "User's Password", // Also a Placeholder!
+    password: "User's Password", // Placeholder
   });
-  const [cartItems, setCartItems] = useState([]); // Placeholder for user's cart items, this is a lot of Placeholders
+  const [cartItems, setCartItems] = useState([]); // Placeholder for user's cart items
 
-  // State to control dropdown visibility
-  // I thought for account and cart, a drop down menu would look the cleanest
+  // State to control dropdown visibility for Account and Cart
   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
   const [showCartDropdown, setShowCartDropdown] = useState(false);
 
   // Function to handle Continue button click (redirect to Product page)
   const handleContinue = () => {
-    window.location.href = '/product';
+    router.push('/product');
   };
 
   return (
@@ -27,14 +29,10 @@ export default function UserViewPage() {
       <header className={styles.header}>
         <div className={styles.userName}>{userData.username}</div>
         
-        {/* Navigation Links */}
+        {/* Updated Navigation Links: Upload Clothing and Meet the Team */}
         <nav className={styles.navLinks}>
-          <a href="#">Watches</a>
-          <a href="#">Eyewear</a>
-          <a href="#">Jewelry</a>
-          <a href="#">Essentials</a>
-          <a href="#">Gifting</a>
-          <a href="#">Brand</a>
+          <a href="/upload">Upload Clothing</a>
+          <span className={styles.verticalLine}></span> {/* Vertical line separator */}
           <a href="/project-team">Meet the Team</a>
         </nav>
 
@@ -60,7 +58,7 @@ export default function UserViewPage() {
             <div className={styles.dropdown}>
               {cartItems.length > 0 ? (
                 cartItems.map((item, index) => (
-                  <p key={index}>{item.name}</p> // Replace with actual item names from database I guess this will be from the User's database? -G
+                  <p key={index}>{item.name}</p> // Replace with actual item names from database
                 ))
               ) : (
                 <p>Your cart is empty.</p>
@@ -88,3 +86,4 @@ export default function UserViewPage() {
     </div>
   );
 }
+
