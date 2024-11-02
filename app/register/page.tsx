@@ -6,49 +6,53 @@ export default function RegisterPage() {
   const router = useRouter();
 
   // State for form inputs
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
   // Function to handle form submission
   const handleRegister = () => {
-    if (!username || !password || !email) {
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
       setError("All fields are required.");
       return;
     }
 
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     // Placeholder: Code to add user to the database will go here
-    console.log(`Creating user: ${username}, Email: ${email}`);
+    console.log(`Creating user: ${firstName} ${lastName}, Email: ${email}`);
 
     // Redirect to the login page after successful registration
     router.push('/login');
   };
 
-  // Just like the Reset Password: VERY low security in this code
-  // Mess around with sending an email to verify, hiding the password when typed
-  // All that good stuff, another time. -G
   return (
     <div className={styles.registerContainer}>
       <h1>Register</h1>
       <div className={styles.inputSection}>
-        <label htmlFor="username">Login Username</label>
+        <label htmlFor="firstName">First Name</label>
         <input
           type="text"
-          id="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
+          id="firstName"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          placeholder="First Name"
           className={styles.input}
         />
 
-        <label htmlFor="password">Password</label>
+        <label htmlFor="lastName">Last Name</label>
         <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          type="text"
+          id="lastName"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          placeholder="Last Name"
           className={styles.input}
         />
 
@@ -62,7 +66,27 @@ export default function RegisterPage() {
           className={styles.input}
         />
 
-        {/* Error message if required fields are missing */}
+        <label htmlFor="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          className={styles.input}
+        />
+
+        <label htmlFor="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="Confirm Password"
+          className={styles.input}
+        />
+
+        {/* Error message if required fields are missing or passwords don't match */}
         {error && <p className={styles.error}>{error}</p>}
 
         <button onClick={handleRegister} className={styles.submitButton}>
@@ -72,3 +96,4 @@ export default function RegisterPage() {
     </div>
   );
 }
+
