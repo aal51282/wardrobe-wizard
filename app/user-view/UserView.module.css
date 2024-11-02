@@ -23,7 +23,7 @@
   margin-right: auto; /* Aligns the username to the left */
 }
 
-/* Navigation links container for Upload Clothing and Meet the Team */
+/* Navigation links container for Upload Clothing, Outfits, and Meet the Team */
 .navLinks {
   display: flex;
   align-items: center;
@@ -44,41 +44,14 @@
   height: 20px;
 }
 
-/* Container for the account and cart dropdown sections */
-.accountContainer,
-.cartContainer {
-  position: relative; /* Allows dropdown to position itself absolutely */
-  margin-left: 15px; /* Spacing between buttons */
-}
-
-/* Styling for the account and cart buttons */
-.accountContainer button,
-.cartContainer button {
-  background: none; /* Removes default button styling */
+/* Styling for the account button */
+.accountButton {
+  background: none;
   border: none;
-  color: #a77e3e;
+  color: #a77e3e; /* Matches brown color for consistency */
   font-size: 14px;
   cursor: pointer;
-}
-
-/* Dropdown menu styling */
-.dropdown {
-  position: absolute;
-  top: 100%; /* Positions dropdown below the button */
-  right: 0;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-  width: 200px; /* Fixed width for dropdown */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-}
-
-/* Each item within the dropdown */
-.dropdown p {
-  margin: 5px 0;
-  font-size: 14px;
-  color: #555; /* Dark gray for text */
+  margin-left: 15px; /* Spacing to the right of the navigation links */
 }
 
 /* Main content section below the header */

@@ -7,16 +7,11 @@ import styles from './UserView.module.css';
 export default function UserViewPage() {
   const router = useRouter();
 
-  // Placeholder state for user data and cart items
+  // Placeholder state for user data
   const [userData, setUserData] = useState({
     username: "User's Name", // This will be dynamically set once database is integrated
     password: "User's Password", // Placeholder
   });
-  const [cartItems, setCartItems] = useState([]); // Placeholder for user's cart items
-
-  // State to control dropdown visibility for Account and Cart
-  const [showAccountDropdown, setShowAccountDropdown] = useState(false);
-  const [showCartDropdown, setShowCartDropdown] = useState(false);
 
   // Function to handle Continue button click (redirect to Product page)
   const handleContinue = () => {
@@ -29,43 +24,19 @@ export default function UserViewPage() {
       <header className={styles.header}>
         <div className={styles.userName}>{userData.username}</div>
         
-        {/* Updated Navigation Links: Upload Clothing and Meet the Team */}
+        {/* Navigation Links: Upload Clothing, Outfits, and Meet the Team */}
         <nav className={styles.navLinks}>
           <a href="/upload">Upload Clothing</a>
+          <span className={styles.verticalLine}></span> {/* Vertical line separator */}
+          <a href="/saved-outfits">Outfits</a>
           <span className={styles.verticalLine}></span> {/* Vertical line separator */}
           <a href="/project-team">Meet the Team</a>
         </nav>
 
-        {/* Account Dropdown */}
-        <div className={styles.accountContainer}>
-          <button onClick={() => setShowAccountDropdown(!showAccountDropdown)}>
-            Account <span>👤</span>
-          </button>
-          {showAccountDropdown && (
-            <div className={styles.dropdown}>
-              <p>Username: {userData.username}</p>
-              <p>Password: {userData.password}</p>
-            </div>
-          )}
-        </div>
-
-        {/* Cart Dropdown */}
-        <div className={styles.cartContainer}>
-          <button onClick={() => setShowCartDropdown(!showCartDropdown)}>
-            Cart <span>🛒</span>
-          </button>
-          {showCartDropdown && (
-            <div className={styles.dropdown}>
-              {cartItems.length > 0 ? (
-                cartItems.map((item, index) => (
-                  <p key={index}>{item.name}</p> // Replace with actual item names from database
-                ))
-              ) : (
-                <p>Your cart is empty.</p>
-              )}
-            </div>
-          )}
-        </div>
+        {/* Account Button - redirects to Account page */}
+        <button className={styles.accountButton} onClick={() => router.push('/account')}>
+          Account <span>👤</span>
+        </button>
       </header>
 
       {/* Main Content */}
@@ -86,4 +57,3 @@ export default function UserViewPage() {
     </div>
   );
 }
-
