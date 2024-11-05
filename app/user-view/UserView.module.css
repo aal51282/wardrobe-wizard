@@ -54,6 +54,16 @@
   margin-left: 15px; /* Spacing to the right of the navigation links */
 }
 
+/* Styling for the logout button */
+.logoutButton {
+  background: none;
+  border: none;
+  color: #a77e3e; /* Matches the project's color scheme */
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: 15px; /* Spacing to the right of the account button */
+}
+
 /* Main content section below the header */
 .mainContent {
   text-align: center;

@@ -13,9 +13,18 @@ export default function UserViewPage() {
     password: "User's Password", // Placeholder
   });
 
+  // Temporary isLoggedIn state to simulate user authentication
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // Assume user is logged in initially
+
   // Function to handle Continue button click (redirect to Product page)
   const handleContinue = () => {
     router.push('/product');
+  };
+
+  // Function to handle Logout
+  const handleLogout = () => {
+    setIsLoggedIn(false); // Reset isLoggedIn to false
+    router.push('/'); // Redirect to the root page
   };
 
   return (
@@ -36,6 +45,11 @@ export default function UserViewPage() {
         {/* Account Button - redirects to Account page */}
         <button className={styles.accountButton} onClick={() => router.push('/account')}>
           Account <span>👤</span>
+        </button>
+
+        {/* Logout Button */}
+        <button className={styles.logoutButton} onClick={handleLogout}>
+          Logout
         </button>
       </header>
 
