@@ -1,0 +1,64 @@
+.uploadClothingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #a77e3e;
+    margin-bottom: 20px;
+  }
+  
+  /* Form styling */
+  .uploadForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 300px;
+    width: 100%;
+  }
+  
+  /* Styling for input fields and dropdowns */
+  .input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  /* Styling for the submit button */
+  .submitButton {
+    padding: 10px 20px;
+    background-color: #a77e3e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  /* Navigation buttons container */
+  .navigationButtons {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  /* Styling for back and continue buttons */
+  .backButton,
+  .continueButton {
+    padding: 10px 20px;
+    background-color: #a77e3e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
