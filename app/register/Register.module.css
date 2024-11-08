@@ -6,13 +6,19 @@
   justify-content: center;
   height: 100vh;
   text-align: center;
+  background-color: #f7f3eb; /* Soft, warm background color */
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
 .registerTitle {
-  font-size: 24px;
+  font-size: 32px; /* Larger, more prominent title */
   font-weight: bold;
   color: #a77e3e; /* Brown color for title */
   margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px; /* Adds space between letters */
 }
 
 /* Input section styling */
@@ -21,41 +27,70 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 300px;
+  max-width: 350px;
+  background-color: #ffffff; /* White background for input section */
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); /* Light shadow for input section */
 }
 
 .inputLabel {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 5px;
+  font-size: 16px; /* Slightly larger labels */
+  color: #5a5a5a;
+  margin-bottom: 8px;
   align-self: flex-start;
+  font-weight: bold;
 }
 
 /* Styling for text inputs */
 .input {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
+  padding: 12px;
+  margin-bottom: 20px;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 10px;
+  background-color: #f9f9f9; /* Light background for inputs */
+  transition: all 0.3s ease;
+}
+
+.input:focus {
+  border-color: #a77e3e;
+  outline: none;
+  box-shadow: 0px 0px 5px rgba(167, 126, 62, 0.3); /* Glow effect on focus */
 }
 
 /* Error message styling */
 .errorMessage {
   color: red;
-  font-size: 12px;
+  font-size: 14px;
   margin-top: -10px;
   margin-bottom: 15px;
+  font-weight: bold;
 }
 
 /* Styling for submit button */
 .submitButton {
-  padding: 10px 20px;
+  padding: 12px 25px;
   background-color: #a77e3e;
   color: #fff;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  border-radius: 12px;
+  font-size: 18px; /* Larger font for button */
   font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: #8d6830; /* Darker shade on hover */
+}
+
+/* Add subtle animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.registerContainer, .inputSection {
+  animation: fadeIn 1s ease-in;
 }

@@ -1,3 +1,4 @@
+// Import necessary components and hooks
 "use client";
 
 import { useState } from 'react';
@@ -77,6 +78,13 @@ export default function LoginPage() {
         >
           Register new account
         </button>
+      </div>
+
+      {/* Large logo and text on the right side */}
+      <div className={styles.largeLogoContainer}>
+        <img src="/large-logo.png" alt="Wardrobe Wizard Large Logo" className={styles.largeLogo} />
+        <p className={styles.largeLogoText}>Wardrobe Wizard</p>
+        <p className={styles.largeLogoSubText}>Don’t get mad, get Wardrobe Wizard</p>
       </div>
     </div>
   );
