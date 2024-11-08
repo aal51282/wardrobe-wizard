@@ -1,64 +1,64 @@
-.uploadClothingContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  h1 {
-    font-size: 24px;
-    font-weight: bold;
-    color: #a77e3e;
-    margin-bottom: 20px;
-  }
-  
-  /* Form styling */
-  .uploadForm {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    max-width: 300px;
-    width: 100%;
-  }
-  
-  /* Styling for input fields and dropdowns */
-  .input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
-  
-  /* Styling for the submit button */
-  .submitButton {
-    padding: 10px 20px;
-    background-color: #a77e3e;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  /* Navigation buttons container */
-  .navigationButtons {
-    display: flex;
-    gap: 20px;
-    margin-top: 20px;
-  }
-  
-  /* Styling for back and continue buttons */
-  .backButton,
-  .continueButton {
-    padding: 10px 20px;
-    background-color: #a77e3e;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
+/* Container for the upload clothing page */
+.uploadContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f9f9f9; /* Matches the project theme */
+}
+
+.pageTitle {
+  font-size: 28px;
+  font-weight: bold;
+  color: #a77e3e; /* Matches project color scheme */
+  margin-bottom: 20px;
+}
+
+.inputLabel {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+  align-self: flex-start;
+}
+
+.inputField {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.dropdown {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.submitButton {
+  padding: 10px 20px;
+  background-color: #a77e3e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.backButton {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #e6e6e6; /* Light gray for the back button */
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}

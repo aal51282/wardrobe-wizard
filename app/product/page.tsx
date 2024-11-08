@@ -1,8 +1,10 @@
+"use client";
+
 // Import necessary libraries and hooks
 import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import styles from './ProductPage.module.css';
+import styles from './Product.module.css';
 
 export default function ProductPage() {
   const router = useRouter();

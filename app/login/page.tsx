@@ -1,18 +1,28 @@
-// Import necessary components and hooks
-import Image from 'next/image';
+"use client";
+
 import { useState } from 'react';
-// Import CSS module for styling this page
+import { useRouter } from 'next/navigation';
 import styles from './Login.module.css';
 
 export default function LoginPage() {
+  const router = useRouter();
+
   // State hooks for managing input values
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  // Function to handle login logic (placeholder)
+  // Function to handle login logic
   const handleLogin = () => {
-    console.log('Logging in...');
-    // Login logic goes here, placeholder for now
+    if (username && password) {
+      console.log('Logging in...');
+      console.log(`Username: ${username}`);
+      console.log(`Password: ${password}`);
+
+      // Simulate successful login and navigate to user page
+      router.push('/user-view');
+    } else {
+      alert('Please enter both username and password.');
+    }
   };
 
   return (
@@ -21,13 +31,13 @@ export default function LoginPage() {
       <div className={styles.loginBox}>
         {/* Logo section */}
         <div className={styles.logoContainer}>
-          <Image src="/logo.png" alt="Wardrobe Wizard Logo" width={80} height={80} />
+          <img src="/logo.png" alt="Wardrobe Wizard Logo" width={80} height={80} />
         </div>
-        
+
         {/* Login title and subtitle */}
         <h1 className={styles.loginTitle}>Login</h1>
         <p className={styles.subtitle}>Sign in to your account</p>
-        
+
         {/* Username input with icon */}
         <div className={styles.inputGroup}>
           <span className={styles.icon}>👤</span>
@@ -61,9 +71,12 @@ export default function LoginPage() {
         </p>
 
         {/* Register new account button */}
-        <a href="/register" className={styles.registerButton}>
+        <button
+          className={styles.registerButton}
+          onClick={() => router.push('/register')} // Redirect to Register page
+        >
           Register new account
-        </a>
+        </button>
       </div>
     </div>
   );

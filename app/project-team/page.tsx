@@ -1,3 +1,4 @@
+"use client";
 // Import necessary components and hooks
 import Image from 'next/image';
 import { useRouter } from 'next/navigation'; // Next.js router for navigation

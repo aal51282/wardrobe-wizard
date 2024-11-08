@@ -8,7 +8,7 @@
   text-align: center;
 }
 
-h1 {
+.registerTitle {
   font-size: 24px;
   font-weight: bold;
   color: #a77e3e; /* Brown color for title */
@@ -24,7 +24,7 @@ h1 {
   max-width: 300px;
 }
 
-label {
+.inputLabel {
   font-size: 14px;
   color: #666;
   margin-bottom: 5px;
@@ -41,12 +41,11 @@ label {
 }
 
 /* Error message styling */
-.error {
+.errorMessage {
   color: red;
   font-size: 12px;
   margin-top: -10px;
   margin-bottom: 15px;
-  text-align: center;
 }
 
 /* Styling for submit button */
@@ -59,9 +58,4 @@ label {
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-}
-
-/* Additional margin for the bottom of the last input */
-.inputSection input:last-of-type {
-  margin-bottom: 20px;
 }

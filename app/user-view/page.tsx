@@ -1,3 +1,5 @@
+"use client";
+
 // Import necessary libraries and hooks
 import Image from 'next/image';
 import { useState } from 'react';
