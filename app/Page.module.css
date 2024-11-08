@@ -1,0 +1,56 @@
+/* Styling for the Home Page container */
+.homePageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+    padding: 20px;
+  }
+  
+  /* Header styling */
+  .header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .title {
+    font-size: 28px;
+    color: #a77e3e;
+    font-weight: bold;
+  }
+  
+  .navLinks a {
+    margin-left: 15px;
+    color: #a77e3e;
+    text-decoration: none;
+    font-size: 16px;
+  }
+  
+  .navLinks a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Main content styling */
+  .mainContent {
+    text-align: center;
+    margin-top: 40px;
+  }
+  
+  .welcomeText {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  .instructionText {
+    font-size: 16px;
+    color: #666;
+  }
+  

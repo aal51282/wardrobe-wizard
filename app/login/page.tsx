@@ -12,7 +12,7 @@ export default function LoginPage() {
   // Function to handle login logic (placeholder)
   const handleLogin = () => {
     console.log('Logging in...');
-    // Login logic goes here, im not sure what it should be so heres a place holder! -Grace
+    // Login logic goes here, placeholder for now
   };
 
   return (
@@ -57,11 +57,13 @@ export default function LoginPage() {
 
         {/* Forgot password link */}
         <p className={styles.forgotPassword}>
-          I forgot my password. <a href="#">Click here to reset</a>
+          I forgot my password. <a href="/reset-password">Click here to reset</a>
         </p>
 
         {/* Register new account button */}
-        <button className={styles.registerButton}>Register new account</button>
+        <a href="/register" className={styles.registerButton}>
+          Register new account
+        </a>
       </div>
     </div>
   );
