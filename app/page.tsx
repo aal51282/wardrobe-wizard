@@ -1,6 +1,6 @@
 // Import necessary components and hooks
 import Link from 'next/link';
-import styles from './HomePage.module.css';
+import styles from './Page.module.css';
 
 export default function HomePage() {
   return (
