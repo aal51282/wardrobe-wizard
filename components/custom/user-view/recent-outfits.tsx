@@ -24,8 +24,11 @@ export function RecentOutfits() {
                     hover:shadow-2xl transition-shadow duration-300
                     animate-fade-in">
       <CardHeader className="space-y-2">
-        <CardTitle className="text-[#D4AF37] text-3xl font-bold">
+        <CardTitle className="text-[#D4AF37] text-3xl font-bold flex items-center gap-2">
           Recent Outfits
+          <span className="text-sm font-normal bg-[#D4AF37]/10 px-3 py-1 rounded-full">
+            {recentOutfits.length} outfits
+          </span>
         </CardTitle>
         <p className="text-[#D4AF37]/70 text-sm">
           Swipe to explore your latest creations
