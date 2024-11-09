@@ -1,5 +1,5 @@
 import { FeatureCard } from './FeatureCard';
-import styles from '../../app/Page.module.css';
+import styles from '../../../app/Page.module.css';
 
 const features = [
   {

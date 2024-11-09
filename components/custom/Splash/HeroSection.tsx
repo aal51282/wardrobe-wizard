@@ -1,4 +1,4 @@
-import styles from '../../app/Page.module.css';
+import styles from '../../../app/Page.module.css';
 
 export function HeroSection() {
   return (

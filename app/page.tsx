@@ -1,7 +1,7 @@
-import { Header } from '@/components/custom/Header';
-import { HeroSection } from '@/components/custom/HeroSection';
-import { FeatureGrid } from '@/components/custom/FeatureGrid';
-import { CTASection } from '@/components/custom/CTASection';
+import { Header } from '@/components/shared/Header';
+import { HeroSection } from '@/components/custom/Splash/HeroSection';
+import { FeatureGrid } from '@/components/custom/Splash/FeatureGrid';
+import { CTASection } from '@/components/custom/Splash/CTASection';
 import styles from './Page.module.css';
 
 export default function HomePage() {
