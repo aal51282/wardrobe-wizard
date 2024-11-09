@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Wardrobe Wizard 🧙‍♂️👔
 
-## Getting Started
+Wardrobe Wizard is a modern web application designed to help users organize and explore their wardrobe with ease. Built with Next.js 14 and TypeScript, it provides a seamless and intuitive interface for managing your clothing collection.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- User authentication (login/register)
+- Wardrobe organization system
+- Modern, responsive design
+- Intuitive user interface
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework:** Next.js 14 (App Router)
+- **Language:** TypeScript
+- **Styling:**
+  - Tailwind CSS
+  - Shadcn UI
+  - Radix UI
+- **Authentication:** [To be implemented]
+- **Database:** [To be implemented]
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🏗️ Project Structure
 
-## Learn More
+## 🚦 Getting Started
 
-To learn more about Next.js, take a look at the following resources:
+1. **Clone the repository**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   git clone https://github.com/aal51282/wardrobe-wizard
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Install dependencies**
 
-## Deploy on Vercel
+   ```bash
+   cd wardrobe-wizard
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Run the development server**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```bash
+   npm run dev
+   ```
+
+4. **Open your browser**
+   Navigate to `http://localhost:3000`
+
+## 💻 Development Guidelines
+
+- Follow TypeScript best practices
+- Use functional components and hooks
+- Implement responsive design with a mobile-first approach
+- Optimize for performance using React Server Components
+- Follow the project's code style and structure conventions
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📝 License
+
+[LICENSE.md](LICENSE.md)
+
+## 👥 Authors
+
+Angel Loaiza, Grace Walbrecher, Lily Valdes, Brenda Thornton
