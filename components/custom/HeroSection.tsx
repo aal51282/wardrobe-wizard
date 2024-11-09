@@ -1,5 +1,3 @@
-import Link from 'next/link';
-import { Button } from "@/components/ui/button";
 import styles from '../../app/Page.module.css';
 
 export function HeroSection() {

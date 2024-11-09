@@ -8,7 +8,6 @@ export function CTASection() {
       <Button size="lg" className={styles.ctaButton} asChild>
         <Link href="/register">Get Started Free</Link>
       </Button>
-      <p className={styles.ctaSubtext}>No credit card required</p>
     </div>
   );
 }
