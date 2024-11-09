@@ -20,11 +20,18 @@ const recentOutfits = [
 
 export function RecentOutfits() {
   return (
-    <Card className="border-[#D4AF37] bg-white shadow-[#D4AF37]/10">
-      <CardHeader>
-        <CardTitle className="text-[#D4AF37] text-2xl">Recent Outfits</CardTitle>
+    <Card className="border-[#D4AF37] bg-white/80 backdrop-blur-sm shadow-xl
+                    hover:shadow-2xl transition-shadow duration-300
+                    animate-fade-in">
+      <CardHeader className="space-y-2">
+        <CardTitle className="text-[#D4AF37] text-3xl font-bold">
+          Recent Outfits
+        </CardTitle>
+        <p className="text-[#D4AF37]/70 text-sm">
+          Swipe to explore your latest creations
+        </p>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-6">
         <Carousel
           opts={{
             align: "start",
@@ -36,18 +43,21 @@ export function RecentOutfits() {
             {recentOutfits.map(({ id, name, image }) => (
               <CarouselItem key={id} className="pl-2 md:pl-4 basis-1/4">
                 <div
-                  className="group relative aspect-square rounded-md overflow-hidden cursor-pointer
-                           border border-[#D4AF37] hover:border-[#B4941F] transition-colors"
+                  className="group relative aspect-square rounded-lg overflow-hidden cursor-pointer
+                           border border-[#D4AF37] hover:border-[#B4941F] transition-all duration-300
+                           shadow-md hover:shadow-lg hover:scale-[1.02]"
                 >
                   <Image
                     src={image}
                     alt={name}
                     fill
-                    className="object-cover transition-transform group-hover:scale-105"
+                    className="object-cover transition-transform duration-300 group-hover:scale-110"
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    priority={id <= 4} // Prioritize loading first 4 images
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#D4AF37]/60 to-transparent 
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#D4AF37]/80 to-transparent 
                               opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <p className="absolute bottom-2 left-2 text-white font-medium">
+                    <p className="absolute bottom-3 left-3 text-white font-medium tracking-wide">
                       {name}
                     </p>
                   </div>
@@ -55,8 +65,10 @@ export function RecentOutfits() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="text-[#D4AF37] hover:bg-[#F9F6E8] border-[#D4AF37]" />
-          <CarouselNext className="text-[#D4AF37] hover:bg-[#F9F6E8] border-[#D4AF37]" />
+          <CarouselPrevious className="text-[#D4AF37] hover:bg-[#F9F6E8] border-[#D4AF37]
+                                     -left-4 hover:scale-110 transition-transform" />
+          <CarouselNext className="text-[#D4AF37] hover:bg-[#F9F6E8] border-[#D4AF37]
+                                 -right-4 hover:scale-110 transition-transform" />
         </Carousel>
       </CardContent>
     </Card>
