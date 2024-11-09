@@ -10,6 +10,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
+import { LogoutButton } from "@/components/custom/auth/logout-button";
+import { User } from "lucide-react";
 
 const navigationLinks = [
   { href: "/upload", label: "Upload Clothing" },
@@ -74,17 +76,13 @@ export function Header() {
               className="bg-white border-[#D4AF37]"
             >
               <DropdownMenuItem 
-                className="text-[#D4AF37] hover:bg-[#F9F6E8] cursor-pointer text-lg"
                 onClick={() => router.push('/account')}
+                className="text-[#D4AF37] hover:bg-[#F9F6E8] cursor-pointer"
               >
+                <User className="mr-2 h-4 w-4" />
                 Account Settings
               </DropdownMenuItem>
-              <DropdownMenuItem 
-                className="text-[#D4AF37] hover:bg-[#F9F6E8] cursor-pointer text-lg"
-                onClick={() => router.push('/')}
-              >
-                Logout
-              </DropdownMenuItem>
+              <LogoutButton />
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
