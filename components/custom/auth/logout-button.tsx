@@ -10,13 +10,12 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
 export function LogoutButton() {
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const router = useRouter();
 
   const handleLogoutClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -24,19 +23,9 @@ export function LogoutButton() {
     setShowConfirmation(true);
   };
 
-  const handleLogout = async () => {
-    try {
-      // Add your logout logic here
-      setShowConfirmation(false);
-      router.push("/");
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
-
   return (
     <>
-      <DropdownMenuItem 
+      <DropdownMenuItem
         onClick={handleLogoutClick}
         className="text-[#D4AF37] hover:bg-[#F9F6E8] cursor-pointer"
       >
@@ -45,12 +34,14 @@ export function LogoutButton() {
       </DropdownMenuItem>
 
       <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
-        <DialogContent 
+        <DialogContent
           className="sm:max-w-md border-[#D4AF37]"
           onClick={(e) => e.stopPropagation()}
         >
           <DialogHeader>
-            <DialogTitle className="text-[#D4AF37] text-xl">Confirm Logout</DialogTitle>
+            <DialogTitle className="text-[#D4AF37] text-xl">
+              Confirm Logout
+            </DialogTitle>
             <DialogDescription className="text-[#D4AF37]/70">
               Are you sure you want to logout from Wardrobe Wizard?
             </DialogDescription>
@@ -63,12 +54,11 @@ export function LogoutButton() {
             >
               Cancel
             </Button>
-            <Button
-              onClick={handleLogout}
-              className="flex-1 bg-[#D4AF37] text-white hover:bg-[#B4941F]"
-            >
-              Confirm Logout
-            </Button>
+            <Link href="/" className="flex-1">
+              <Button className="w-full bg-[#D4AF37] text-white hover:bg-[#B4941F]">
+                Confirm Logout
+              </Button>
+            </Link>
           </DialogFooter>
         </DialogContent>
       </Dialog>

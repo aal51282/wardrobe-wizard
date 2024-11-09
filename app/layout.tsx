@@ -23,11 +23,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // You can add authentication check here if needed
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" href="/logo.png" />
-      </head>
       <body className={inter.className}>{children}</body>
     </html>
   );
