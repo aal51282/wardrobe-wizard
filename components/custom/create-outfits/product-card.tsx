@@ -39,7 +39,11 @@ interface ProductCardProps {
   deleteItem: (id: string) => void;
 }
 
-export function ProductCard({ item, toggleSelection, deleteItem }: ProductCardProps) {
+export function ProductCard({
+  item,
+  toggleSelection,
+  deleteItem,
+}: ProductCardProps) {
   return (
     <Card className="group hover:shadow-md transition-shadow duration-200">
       <CardHeader className="relative p-0">
@@ -68,14 +72,11 @@ export function ProductCard({ item, toggleSelection, deleteItem }: ProductCardPr
           <Badge variant="secondary" className="bg-gray-100 text-gray-600">
             {item.category}
           </Badge>
-          <Badge 
-            variant="secondary" 
-            className="bg-gray-100 text-gray-600"
-          >
+          <Badge variant="secondary" className="bg-gray-100 text-gray-600">
             {item.size}
           </Badge>
-          <Badge 
-            variant="secondary" 
+          <Badge
+            variant="secondary"
             className="bg-gray-100 text-gray-600 capitalize"
           >
             {item.color}
@@ -87,8 +88,8 @@ export function ProductCard({ item, toggleSelection, deleteItem }: ProductCardPr
           onClick={() => toggleSelection(item.id)}
           variant={item.selected ? "default" : "outline"}
           className={`flex-1 ${
-            item.selected 
-              ? "bg-[#D4AF37] hover:bg-[#B4941F]" 
+            item.selected
+              ? "bg-[#D4AF37] hover:bg-[#B4941F]"
               : "hover:bg-gray-100"
           }`}
         >
@@ -104,7 +105,7 @@ export function ProductCard({ item, toggleSelection, deleteItem }: ProductCardPr
             </>
           )}
         </Button>
-        
+
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button
@@ -118,7 +119,8 @@ export function ProductCard({ item, toggleSelection, deleteItem }: ProductCardPr
             <AlertDialogHeader>
               <AlertDialogTitle>Delete Item</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to delete "{item.name}"? This action cannot be undone.
+                Are you sure you want to delete &quot;{item.name}?&quot; This
+                action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -135,4 +137,4 @@ export function ProductCard({ item, toggleSelection, deleteItem }: ProductCardPr
       </CardFooter>
     </Card>
   );
-} 
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -43,30 +43,14 @@ const CATEGORIES = [
 
 const SIZES = ["XS", "S", "M", "L", "XL"] as const;
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-];
-
 const uploadSchema = z.object({
   category: z.string().min(1, "Please select a category"),
   color: z.string().min(1, "Color is required"),
   size: z.string().min(1, "Please select a size"),
   brand: z.string().min(1, "Brand is required"),
-  images: z.array(
-    z
-      .custom<File>()
-      .refine((file) => file !== null, "Image is required")
-      .refine((file) => file?.size <= MAX_FILE_SIZE, "Max file size is 5MB")
-      .refine(
-        (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-        "Only .jpg, .jpeg, .png and .webp formats are supported"
-      ),
-    "At least one image is required"
-  ),
+  images: z
+    .array(z.instanceof(File))
+    .min(1, { message: "At least one image is required" }),
 });
 
 export function UploadClothingForm() {
@@ -139,6 +123,13 @@ export function UploadClothingForm() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    
+    setFormState((prev) => ({ ...prev, images: Array.from(files) }));
   };
 
   return (
@@ -274,12 +265,7 @@ export function UploadClothingForm() {
                   <input
                     type="file"
                     className="hidden"
-                    onChange={(e) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        images: Array.from(e.target.files),
-                      }))
-                    }
+                    onChange={handleFileChange}
                     accept="image/png,image/jpeg,image/webp"
                   />
                 </label>

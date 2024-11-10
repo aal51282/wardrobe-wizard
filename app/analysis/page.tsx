@@ -11,7 +11,6 @@ import { SustainabilityTab } from "@/components/custom/analysis/sustainability-t
 
 // Move the mock data to a separate file later
 import { outfitAnalysis, recommendations } from "@/lib/mock-data";
-import type { OutfitAnalysis, Recommendation } from "@/lib/types";
 
 export default function AnalysisPage() {
   const router = useRouter();

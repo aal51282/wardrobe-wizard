@@ -95,7 +95,7 @@ export function PasswordUpdate({
       setConfirmPassword("");
       setHasAttemptedSubmit(false);
       onToggleFields();
-    } catch (err) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to update password",

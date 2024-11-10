@@ -22,22 +22,32 @@ interface Item {
   selected: boolean;
 }
 
+interface FilterState {
+  categories: string[];
+  colors: string[];
+  sizes: string[];
+  brands: string[];
+}
+
 function getSelectedItemsByCategory(items: Item[]) {
-  return items.reduce((acc, item) => {
-    if (item.selected) {
-      acc[item.category] = (acc[item.category] || 0) + 1;
-    }
-    return acc;
-  }, {} as Record<string, number>);
+  return items.reduce(
+    (acc, item) => {
+      if (item.selected) {
+        acc[item.category] = (acc[item.category] || 0) + 1;
+      }
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 }
 
 export default function CreateOutfitPage() {
   const router = useRouter();
   const [items, setItems] = useState<Item[]>([]);
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedFilters, setSelectedFilters] = useState({
+  const [selectedFilters, setSelectedFilters] = useState<FilterState>({
     categories: [],
     colors: [],
     sizes: [],
@@ -168,11 +178,11 @@ export default function CreateOutfitPage() {
       );
     }
 
-    // Apply filters with case-insensitive comparison
+    // Type-safe filter application
     if (selectedFilters.categories.length > 0) {
       updatedItems = updatedItems.filter((item) =>
         selectedFilters.categories.some(
-          category => category.toLowerCase() === item.category.toLowerCase()
+          (category) => category.toLowerCase() === item.category.toLowerCase()
         )
       );
     }
@@ -180,7 +190,7 @@ export default function CreateOutfitPage() {
     if (selectedFilters.colors.length > 0) {
       updatedItems = updatedItems.filter((item) =>
         selectedFilters.colors.some(
-          color => color.toLowerCase() === item.color.toLowerCase()
+          (color) => color.toLowerCase() === item.color.toLowerCase()
         )
       );
     }
@@ -188,7 +198,7 @@ export default function CreateOutfitPage() {
     if (selectedFilters.sizes.length > 0) {
       updatedItems = updatedItems.filter((item) =>
         selectedFilters.sizes.some(
-          size => size.toLowerCase() === item.size.toLowerCase()
+          (size) => size.toLowerCase() === item.size.toLowerCase()
         )
       );
     }
@@ -196,7 +206,7 @@ export default function CreateOutfitPage() {
     if (selectedFilters.brands.length > 0) {
       updatedItems = updatedItems.filter((item) =>
         selectedFilters.brands.some(
-          brand => brand.toLowerCase() === item.brand.toLowerCase()
+          (brand) => brand.toLowerCase() === item.brand.toLowerCase()
         )
       );
     }
@@ -206,19 +216,19 @@ export default function CreateOutfitPage() {
 
   // Toggle item selection
   const toggleSelection = (id: string) => {
-    const itemToToggle = items.find(item => item.id === id);
+    const itemToToggle = items.find((item) => item.id === id);
     if (!itemToToggle) return;
 
-    setItems(currentItems => {
+    setItems((currentItems) => {
       // If the item is being deselected, just handle that
       if (itemToToggle.selected) {
-        return currentItems.map(item =>
+        return currentItems.map((item) =>
           item.id === id ? { ...item, selected: false } : item
         );
       }
 
       // If selecting a new item, deselect any other item in the same category
-      return currentItems.map(item => {
+      return currentItems.map((item) => {
         if (item.id === id) {
           return { ...item, selected: true };
         }
@@ -230,14 +240,14 @@ export default function CreateOutfitPage() {
     });
 
     // Update filtered items as well to maintain consistency
-    setFilteredItems(currentFiltered => {
+    setFilteredItems((currentFiltered) => {
       if (itemToToggle.selected) {
-        return currentFiltered.map(item =>
+        return currentFiltered.map((item) =>
           item.id === id ? { ...item, selected: false } : item
         );
       }
 
-      return currentFiltered.map(item => {
+      return currentFiltered.map((item) => {
         if (item.id === id) {
           return { ...item, selected: true };
         }
@@ -265,7 +275,7 @@ export default function CreateOutfitPage() {
   const handleSaveOutfit = () => {
     const selectedItems = items.filter((item) => item.selected);
     const selectedByCategory = getSelectedItemsByCategory(items);
-    
+
     if (selectedItems.length === 0) {
       toast.error("Please select items to save an outfit", {
         description: "Select one item from each category you want to include.",
@@ -281,8 +291,7 @@ export default function CreateOutfitPage() {
 
   const handleCompleteOutfit = () => {
     const selectedItems = items.filter((item) => item.selected);
-    const selectedByCategory = getSelectedItemsByCategory(items);
-    
+
     if (selectedItems.length === 0) {
       toast.error("Please select items to create an outfit", {
         description: "Select one item from each category you want to include.",
@@ -290,7 +299,7 @@ export default function CreateOutfitPage() {
       return;
     }
 
-    router.push('/analysis');
+    router.push("/analysis");
   };
 
   return (
@@ -308,14 +317,15 @@ export default function CreateOutfitPage() {
               Back to Dashboard
             </Button>
           </div>
-          
+
           <div className="text-center">
             <h1 className="text-4xl font-bold text-[#D4AF37] mb-4">
               Your Wardrobe
             </h1>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Manage your clothing collection and create stunning outfits. Select
-              items to mix and match, or use filters to find specific pieces.
+              Manage your clothing collection and create stunning outfits.
+              Select items to mix and match, or use filters to find specific
+              pieces.
             </p>
           </div>
         </div>
@@ -351,7 +361,7 @@ export default function CreateOutfitPage() {
             <Suspense fallback={<LoadingSpinner />}>
               <FilterBar
                 selectedFilters={selectedFilters}
-                setSelectedFilters={setSelectedFilters}
+                setSelectedFilters={(filters) => setSelectedFilters(filters)}
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
               />
@@ -418,7 +428,7 @@ export default function CreateOutfitPage() {
                   selectedItems={items.filter((item) => item.selected)}
                 />
               </div>
-              
+
               {/* Mobile view buttons */}
               <div className="mt-6 space-y-3 lg:hidden">
                 <Button

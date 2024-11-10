@@ -2,7 +2,6 @@
 
 import { Search, X, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Popover,
@@ -11,7 +10,7 @@ import {
 } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
 import { filterData, FilterOption } from "@/util/example-data";
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 interface FilterBarProps {
   selectedFilters: {

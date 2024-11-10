@@ -21,13 +21,13 @@ export function RequestResetForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       emailSchema.parse({ email });
       setIsSubmitting(true);
 
       // Here you would make an API call to send the reset email
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulated API call
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulated API call
 
       setIsEmailSent(true);
       toast({
@@ -93,7 +93,7 @@ export function RequestResetForm() {
                 Please check your email for the password reset link.
               </p>
               <p className="text-sm text-green-600 mt-2">
-                If you don't see it, please check your spam folder.
+                If you don&apos;t see it, please check your spam folder.
               </p>
             </div>
             <Button
@@ -108,4 +108,4 @@ export function RequestResetForm() {
       </CardContent>
     </Card>
   );
-} 
+}
