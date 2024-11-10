@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
-import { TeamHeader } from "@/components/custom/team/team-header";
-import { TeamGrid } from "@/components/custom/team/team-grid";
+import { TeamHeader } from "@/components/custom/project-team/team-header";
+import { TeamGrid } from "@/components/custom/project-team/team-grid";
 import { teamMembers } from "@/lib/data/team-members";
 
 export default function ProjectTeamPage() {
