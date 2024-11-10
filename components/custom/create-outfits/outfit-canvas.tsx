@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Mannequin } from './mannequin';
+import { Mannequin } from '../product/mannequin';
 
 interface Item {
   id: string;

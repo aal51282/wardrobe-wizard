@@ -22,6 +22,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 
+interface Item {
+  id: string;
+  name: string;
+  image: string;
+  category: string;
+  color: string;
+  size: string;
+  brand: string;
+  selected: boolean;
+}
+
 interface ProductCardProps {
   item: Item;
   toggleSelection: (id: string) => void;
@@ -45,12 +56,31 @@ export function ProductCard({ item, toggleSelection, deleteItem }: ProductCardPr
         </div>
       </CardHeader>
       <CardContent className="p-4">
-        <h3 className="font-semibold text-gray-800 mb-1 line-clamp-1">
-          {item.name}
-        </h3>
-        <Badge variant="secondary" className="bg-gray-100 text-gray-600">
-          {item.category}
-        </Badge>
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="font-semibold text-gray-800 line-clamp-1">
+            {item.name}
+          </h3>
+          <Badge variant="outline" className="text-[#D4AF37] border-[#D4AF37]">
+            {item.brand}
+          </Badge>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="secondary" className="bg-gray-100 text-gray-600">
+            {item.category}
+          </Badge>
+          <Badge 
+            variant="secondary" 
+            className="bg-gray-100 text-gray-600"
+          >
+            {item.size}
+          </Badge>
+          <Badge 
+            variant="secondary" 
+            className="bg-gray-100 text-gray-600 capitalize"
+          >
+            {item.color}
+          </Badge>
+        </div>
       </CardContent>
       <CardFooter className="p-4 pt-0 flex justify-between gap-2">
         <Button

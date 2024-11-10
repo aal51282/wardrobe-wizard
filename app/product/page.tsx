@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { ProductCard } from "@/components/custom/product/product-card";
 import { FilterBar } from "@/components/custom/product/filter-bar";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { Button } from "@/components/ui/button";
 import { Shirt } from "lucide-react";
 import { OutfitCanvas } from "@/components/custom/create-outfits/outfit-canvas";
 
@@ -14,6 +13,9 @@ interface Item {
   name: string;
   image: string;
   category: string;
+  color: string;
+  size: string;
+  brand: string;
   selected: boolean;
 }
 
@@ -23,6 +25,12 @@ export default function ProductPage() {
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedFilters, setSelectedFilters] = useState({
+    categories: [],
+    colors: [],
+    sizes: [],
+    brands: [],
+  });
 
   // Fetch items from API or context
   useEffect(() => {
@@ -34,21 +42,30 @@ export default function ProductPage() {
           id: "1",
           name: "Skinny Mid-Rise Trousers",
           image: "/images/trousers.jpg",
-          category: "Men",
+          category: "Pants",
+          color: "black",
+          size: "M",
+          brand: "Zara",
           selected: false,
         },
         {
           id: "2",
-          name: "Striped Shirt",
+          name: "Classic Cotton Shirt",
           image: "/images/shirt.jpg",
-          category: "Women",
+          category: "T-Shirts",
+          color: "white",
+          size: "L",
+          brand: "Uniqlo",
           selected: false,
         },
         {
           id: "3",
-          name: "Sunglasses",
+          name: "Designer Sunglasses",
           image: "/images/sunglasses.jpg",
           category: "Accessories",
+          color: "black",
+          size: "One Size",
+          brand: "Nike",
           selected: false,
         },
       ];
@@ -63,12 +80,16 @@ export default function ProductPage() {
   useEffect(() => {
     let updatedItems = [...items];
 
-    if (selectedCategories.length > 0) {
-      updatedItems = updatedItems.filter((item) =>
-        selectedCategories.includes(item.category)
-      );
-    }
+    // Apply each filter type
+    Object.entries(selectedFilters).forEach(([filterType, selectedValues]) => {
+      if (selectedValues.length > 0) {
+        updatedItems = updatedItems.filter((item) =>
+          selectedValues.includes(item[filterType as keyof Item])
+        );
+      }
+    });
 
+    // Apply search query
     if (searchQuery.trim() !== "") {
       updatedItems = updatedItems.filter((item) =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -76,7 +97,7 @@ export default function ProductPage() {
     }
 
     setFilteredItems(updatedItems);
-  }, [selectedCategories, searchQuery, items]);
+  }, [selectedFilters, searchQuery, items]);
 
   // Toggle item selection
   const toggleSelection = (id: string) => {
@@ -151,8 +172,8 @@ export default function ProductPage() {
           <div className="bg-white rounded-lg shadow-sm p-6 mb-8 w-full">
             <Suspense fallback={<LoadingSpinner />}>
               <FilterBar
-                selectedCategories={selectedCategories}
-                setSelectedCategories={setSelectedCategories}
+                selectedFilters={selectedFilters}
+                setSelectedFilters={setSelectedFilters}
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
               />
@@ -196,7 +217,9 @@ export default function ProductPage() {
                 Preview Outfit
               </h2>
               <div className="min-h-[600px]">
-                <OutfitCanvas selectedItems={items.filter(item => item.selected)} />
+                <OutfitCanvas
+                  selectedItems={items.filter((item) => item.selected)}
+                />
               </div>
             </div>
           </div>
