@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -268,7 +267,7 @@ export function UploadClothingForm() {
             </div>
           </div>
 
-          <div className="space-y-4 pt-4">
+          <div className="pt-4">
             <Button
               type="submit"
               disabled={isSubmitting}
@@ -277,17 +276,6 @@ export function UploadClothingForm() {
             >
               {isSubmitting ? "Uploading..." : "Upload Item"}
             </Button>
-
-            <Link href="/user-view" className="block">
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full border-[#D4AF37] text-[#D4AF37] 
-                         hover:bg-[#D4AF37]/10 transition-colors duration-300"
-              >
-                Back to Dashboard
-              </Button>
-            </Link>
           </div>
         </form>
       </CardContent>
