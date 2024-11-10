@@ -42,8 +42,8 @@ export default function CreateOutfitPage() {
           id: "1",
           name: "Skinny Mid-Rise Trousers",
           image: "/images/trousers.jpg",
-          category: "Pants",
-          color: "black",
+          category: "T-Shirts",
+          color: "Black",
           size: "M",
           brand: "Zara",
           selected: false,
@@ -52,8 +52,8 @@ export default function CreateOutfitPage() {
           id: "2",
           name: "Classic Cotton Shirt",
           image: "/images/shirt.jpg",
-          category: "T-Shirts",
-          color: "white",
+          category: "Jeans",
+          color: "White",
           size: "L",
           brand: "Uniqlo",
           selected: false,
@@ -62,9 +62,9 @@ export default function CreateOutfitPage() {
           id: "3",
           name: "Designer Sunglasses",
           image: "/images/sunglasses.jpg",
-          category: "Accessories",
-          color: "black",
-          size: "One Size",
+          category: "Dresses",
+          color: "Navy",
+          size: "XS",
           brand: "Nike",
           selected: false,
         },
@@ -80,19 +80,42 @@ export default function CreateOutfitPage() {
   useEffect(() => {
     let updatedItems = [...items];
 
-    // Apply each filter type
-    Object.entries(selectedFilters).forEach(([filterType, selectedValues]) => {
-      if (selectedValues.length > 0) {
-        updatedItems = updatedItems.filter((item) =>
-          selectedValues.includes(item[filterType as keyof Item])
-        );
-      }
-    });
-
-    // Apply search query
-    if (searchQuery.trim() !== "") {
+    if (searchQuery.trim()) {
       updatedItems = updatedItems.filter((item) =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Apply filters with case-insensitive comparison
+    if (selectedFilters.categories.length > 0) {
+      updatedItems = updatedItems.filter((item) =>
+        selectedFilters.categories.some(
+          category => category.toLowerCase() === item.category.toLowerCase()
+        )
+      );
+    }
+
+    if (selectedFilters.colors.length > 0) {
+      updatedItems = updatedItems.filter((item) =>
+        selectedFilters.colors.some(
+          color => color.toLowerCase() === item.color.toLowerCase()
+        )
+      );
+    }
+
+    if (selectedFilters.sizes.length > 0) {
+      updatedItems = updatedItems.filter((item) =>
+        selectedFilters.sizes.some(
+          size => size.toLowerCase() === item.size.toLowerCase()
+        )
+      );
+    }
+
+    if (selectedFilters.brands.length > 0) {
+      updatedItems = updatedItems.filter((item) =>
+        selectedFilters.brands.some(
+          brand => brand.toLowerCase() === item.brand.toLowerCase()
+        )
       );
     }
 
