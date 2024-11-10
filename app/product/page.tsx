@@ -6,27 +6,35 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styles from "./Product.module.css";
 
+interface Item {
+  id: string;
+  name: string;
+  selected: boolean;
+  image?: string;
+  category?: string;
+}
+
 export default function ProductPage() {
   const router = useRouter();
 
   // Placeholder state for clothing items
-  const [items, setItems] = useState([
+  const [items, setItems] = useState<Item[]>([
     {
-      id: 1,
+      id: "1",
       name: "Skinny Mid-Rise Trousers",
       image: "/images/trousers.jpg",
       category: "Men",
       selected: false,
     },
     {
-      id: 2,
+      id: "2",
       name: "Striped Shirt",
       image: "/images/shirt.jpg",
       category: "Women",
       selected: false,
     },
     {
-      id: 3,
+      id: "3",
       name: "Sunglasses",
       image: "/images/sunglasses.jpg",
       category: "Accessories",
@@ -36,19 +44,17 @@ export default function ProductPage() {
 
   // State to show the saved outfits dropdown
   const [showSavedOutfits, setShowSavedOutfits] = useState(false);
-  // Reserved for future outfit selection functionality
-  const [selectedOutfit, setSelectedOutfit] = useState<string | null>(null);
 
   // State for search query
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Filter items based on search query
+  // Filter items based on search query with null checking
   const filteredItems = items.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false
   );
 
-  // Toggle item selection
-  const toggleSelection = (id) => {
+  // Toggle item selection with proper typing
+  const toggleSelection = (id: string) => {
     setItems((prevItems) =>
       prevItems.map((item) =>
         item.id === id ? { ...item, selected: !item.selected } : item

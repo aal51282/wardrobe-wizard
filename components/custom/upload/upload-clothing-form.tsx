@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -22,7 +21,7 @@ interface UploadFormState {
   color: string;
   size: string;
   brand: string;
-  image: File | null;
+  images: File[];
 }
 
 interface FormErrors {
@@ -30,7 +29,7 @@ interface FormErrors {
   color?: string;
   size?: string;
   brand?: string;
-  image?: string;
+  images?: string;
 }
 
 const CATEGORIES = [
@@ -53,24 +52,23 @@ const uploadSchema = z.object({
   color: z.string().min(1, "Color is required"),
   size: z.string().min(1, "Please select a size"),
   brand: z.string().min(1, "Brand is required"),
-  image: z.custom<File>()
+  images: z.array(z.custom<File>()
     .refine((file) => file !== null, "Image is required")
     .refine((file) => file?.size <= MAX_FILE_SIZE, "Max file size is 5MB")
     .refine(
       (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
       "Only .jpg, .jpeg, .png and .webp formats are supported"
-    ),
+    ), "At least one image is required"),
 });
 
 export function UploadClothingForm() {
-  const router = useRouter();
   const { toast } = useToast();
   const [formState, setFormState] = useState<UploadFormState>({
     category: "",
     color: "",
     size: "",
     brand: "",
-    image: null,
+    images: [],
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -122,9 +120,9 @@ export function UploadClothingForm() {
         color: "",
         size: "",
         brand: "",
-        image: null,
+        images: [],
       });
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to upload item. Please try again.",
@@ -228,7 +226,7 @@ export function UploadClothingForm() {
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[#D4AF37]">Image</Label>
+            <Label className="text-[#D4AF37]">Images</Label>
             <div className="mt-2">
               <div className="flex items-center justify-center w-full">
                 <label className="flex flex-col items-center justify-center w-full h-32 
@@ -252,20 +250,20 @@ export function UploadClothingForm() {
                     onChange={(e) =>
                       setFormState((prev) => ({
                         ...prev,
-                        image: e.target.files?.[0] || null,
+                        images: Array.from(e.target.files),
                       }))
                     }
                     accept="image/png,image/jpeg,image/webp"
                   />
                 </label>
               </div>
-              {formState.image && (
+              {formState.images.length > 0 && (
                 <p className="mt-2 text-sm text-[#D4AF37]">
-                  Selected: {formState.image.name}
+                  Selected: {formState.images.map(image => image.name).join(', ')}
                 </p>
               )}
-              {errors.image && (
-                <p className="text-red-500 text-sm">{errors.image}</p>
+              {errors.images && (
+                <p className="text-red-500 text-sm">{errors.images}</p>
               )}
             </div>
           </div>

@@ -9,21 +9,19 @@ export default function AccountPage() {
   const router = useRouter();
 
   // State for user data and photo upload
-  const [profilePhoto, setProfilePhoto] = useState(
-    "/images/default-profile.png"
-  ); // Default profile photo
+  const [profilePhoto, setProfilePhoto] = useState<string>("/default-avatar.png");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPasswordFields, setShowPasswordFields] = useState(false);
 
-  // Function to handle profile photo change
-  const handlePhotoUpload = (event) => {
-    const file = event.target.files[0];
+  // Function to handle profile photo change with proper TypeScript typing
+  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (file) {
       // Placeholder: Upload photo to the database and update profilePhoto URL
-      const photoURL = URL.createObjectURL(file);
-      setProfilePhoto(photoURL);
-      console.log("Photo uploaded:", file.name);
+      // For now, just create a local URL
+      const imageUrl = URL.createObjectURL(file);
+      setProfilePhoto(imageUrl);
     }
   };
 
