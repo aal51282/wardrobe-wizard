@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { ChevronLeft } from "lucide-react";
 import { ProfilePhoto } from "@/components/account/profile-photo";
 import { PasswordUpdate } from "@/components/account/password-update";
 import { DeleteAccountDialog } from "@/components/account/delete-account-dialog";
 import { UserInfo } from "@/components/account/user-info";
-import { useToast } from "@/hooks/use-toast";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -74,6 +76,15 @@ export default function AccountPage() {
               userEmail={userEmail}
               onDelete={handleDeleteAccount}
             />
+            <Button
+              onClick={() => router.push("/user-view")}
+              variant="outline"
+              className="w-full mt-4 border-[#D4AF37] text-[#D4AF37] 
+                       hover:bg-[#D4AF37]/10 transition-colors"
+            >
+              <ChevronLeft className="mr-2 h-4 w-4" />
+              Back to Dashboard
+            </Button>
           </CardContent>
         </Card>
       </div>
