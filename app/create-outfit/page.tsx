@@ -8,7 +8,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Shirt } from "lucide-react";
 import { OutfitCanvas } from "@/components/custom/create-outfits/outfit-canvas";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Save } from "lucide-react";
 import { toast } from "sonner";
 
 interface Item {
@@ -43,32 +43,102 @@ export default function CreateOutfitPage() {
       const fetchedItems: Item[] = [
         {
           id: "1",
-          name: "Skinny Mid-Rise Trousers",
-          image: "/images/trousers.jpg",
+          name: "Classic White Oxford Shirt",
+          image: "/images/shirt.jpg",
           category: "T-Shirts",
+          color: "White",
+          size: "M",
+          brand: "Uniqlo",
+          selected: false,
+        },
+        {
+          id: "2",
+          name: "Slim Fit Dark Jeans",
+          image: "/images/jeans.jpg",
+          category: "Jeans",
+          color: "Navy",
+          size: "L",
+          brand: "Zara",
+          selected: false,
+        },
+        {
+          id: "3",
+          name: "Wool Blend Sweater",
+          image: "/images/sweater.jpg",
+          category: "Sweaters",
+          color: "Gray",
+          size: "M",
+          brand: "H&M",
+          selected: false,
+        },
+        {
+          id: "4",
+          name: "Leather Bomber Jacket",
+          image: "/images/jacket.jpg",
+          category: "Jackets",
           color: "Black",
+          size: "L",
+          brand: "Nike",
+          selected: false,
+        },
+        {
+          id: "5",
+          name: "Cotton Chino Pants",
+          image: "/images/pants.jpg",
+          category: "Pants",
+          color: "Khaki",
+          size: "M",
+          brand: "Uniqlo",
+          selected: false,
+        },
+        {
+          id: "6",
+          name: "Graphic Print T-Shirt",
+          image: "/images/tshirt.jpg",
+          category: "T-Shirts",
+          color: "Red",
+          size: "S",
+          brand: "Adidas",
+          selected: false,
+        },
+        {
+          id: "7",
+          name: "Hooded Sweatshirt",
+          image: "/images/hoodie.jpg",
+          category: "Sweaters",
+          color: "Green",
+          size: "XL",
+          brand: "Nike",
+          selected: false,
+        },
+        {
+          id: "8",
+          name: "Denim Jacket",
+          image: "/images/denim-jacket.jpg",
+          category: "Jackets",
+          color: "Blue",
           size: "M",
           brand: "Zara",
           selected: false,
         },
         {
-          id: "2",
-          name: "Classic Cotton Shirt",
-          image: "/images/shirt.jpg",
-          category: "Jeans",
-          color: "White",
+          id: "9",
+          name: "Formal Dress Shirt",
+          image: "/images/dress-shirt.jpg",
+          category: "T-Shirts",
+          color: "Light Blue",
           size: "L",
-          brand: "Uniqlo",
+          brand: "H&M",
           selected: false,
         },
         {
-          id: "3",
-          name: "Designer Sunglasses",
-          image: "/images/sunglasses.jpg",
-          category: "Dresses",
-          color: "Navy",
-          size: "XS",
-          brand: "Nike",
+          id: "10",
+          name: "Athletic Performance Shorts",
+          image: "/images/shorts.jpg",
+          category: "Pants",
+          color: "Black",
+          size: "M",
+          brand: "Adidas",
           selected: false,
         },
       ];
@@ -138,6 +208,22 @@ export default function CreateOutfitPage() {
   const deleteItem = (id: string) => {
     // Implement deletion logic (API call)
     setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  };
+
+  const handleSaveOutfit = () => {
+    const selectedItems = items.filter((item) => item.selected);
+    
+    if (selectedItems.length === 0) {
+      toast.error("Please select at least one item to save an outfit", {
+        description: "Select items by clicking the 'Select' button on any clothing piece.",
+      });
+      return;
+    }
+
+    // Add your save logic here
+    toast.success("Outfit saved successfully!", {
+      description: `Saved ${selectedItems.length} items to your outfits.`,
+    });
   };
 
   const handleCompleteOutfit = () => {
@@ -242,13 +328,23 @@ export default function CreateOutfitPage() {
                 <h2 className="text-2xl font-semibold text-[#D4AF37]">
                   Preview Outfit
                 </h2>
-                <Button
-                  onClick={handleCompleteOutfit}
-                  className="bg-[#D4AF37] hover:bg-[#B4941F] text-white"
-                >
-                  <span>Complete Outfit</span>
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={handleSaveOutfit}
+                    variant="outline"
+                    className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-white"
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    <span>Save Outfit</span>
+                  </Button>
+                  <Button
+                    onClick={handleCompleteOutfit}
+                    className="bg-[#D4AF37] hover:bg-[#B4941F] text-white"
+                  >
+                    <span>Complete Outfit</span>
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
               </div>
               <div className="min-h-[600px]">
                 <OutfitCanvas
@@ -256,8 +352,16 @@ export default function CreateOutfitPage() {
                 />
               </div>
               
-              {/* Mobile view button */}
-              <div className="mt-6 lg:hidden">
+              {/* Mobile view buttons */}
+              <div className="mt-6 space-y-3 lg:hidden">
+                <Button
+                  onClick={handleSaveOutfit}
+                  variant="outline"
+                  className="w-full border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-white"
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  <span>Save Outfit</span>
+                </Button>
                 <Button
                   onClick={handleCompleteOutfit}
                   className="w-full bg-[#D4AF37] hover:bg-[#B4941F] text-white"
