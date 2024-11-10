@@ -7,6 +7,9 @@ import { FilterBar } from "@/components/custom/create-outfits/filter-bar";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Shirt } from "lucide-react";
 import { OutfitCanvas } from "@/components/custom/create-outfits/outfit-canvas";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import { toast } from "sonner";
 
 interface Item {
   id: string;
@@ -137,18 +140,17 @@ export default function CreateOutfitPage() {
     setItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
-  // Handle continue to create outfits
-  const handleContinue = () => {
+  const handleCompleteOutfit = () => {
     const selectedItems = items.filter((item) => item.selected);
+    
     if (selectedItems.length === 0) {
-      alert("Please select at least one item to create an outfit.");
+      toast.error("Please select at least one item to create an outfit", {
+        description: "Select items by clicking the 'Select' button on any clothing piece.",
+      });
       return;
     }
-    // Pass selected items via query params or state management
-    router.push({
-      pathname: "/create-outfit",
-      query: { selected: JSON.stringify(selectedItems) },
-    });
+
+    router.push('/analysis');
   };
 
   return (
@@ -236,13 +238,33 @@ export default function CreateOutfitPage() {
           {/* Right Side - Preview Outfit */}
           <div className="lg:w-1/2">
             <div className="bg-white rounded-lg shadow-sm p-8">
-              <h2 className="text-2xl font-semibold text-[#D4AF37] mb-6">
-                Preview Outfit
-              </h2>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-semibold text-[#D4AF37]">
+                  Preview Outfit
+                </h2>
+                <Button
+                  onClick={handleCompleteOutfit}
+                  className="bg-[#D4AF37] hover:bg-[#B4941F] text-white"
+                >
+                  <span>Complete Outfit</span>
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
               <div className="min-h-[600px]">
                 <OutfitCanvas
                   selectedItems={items.filter((item) => item.selected)}
                 />
+              </div>
+              
+              {/* Mobile view button */}
+              <div className="mt-6 lg:hidden">
+                <Button
+                  onClick={handleCompleteOutfit}
+                  className="w-full bg-[#D4AF37] hover:bg-[#B4941F] text-white"
+                >
+                  <span>Complete Outfit</span>
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
               </div>
             </div>
           </div>
