@@ -22,6 +22,15 @@ interface Item {
   selected: boolean;
 }
 
+function getSelectedItemsByCategory(items: Item[]) {
+  return items.reduce((acc, item) => {
+    if (item.selected) {
+      acc[item.category] = (acc[item.category] || 0) + 1;
+    }
+    return acc;
+  }, {} as Record<string, number>);
+}
+
 export default function CreateOutfitPage() {
   const router = useRouter();
   const [items, setItems] = useState<Item[]>([]);
@@ -197,11 +206,54 @@ export default function CreateOutfitPage() {
 
   // Toggle item selection
   const toggleSelection = (id: string) => {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, selected: !item.selected } : item
-      )
-    );
+    const itemToToggle = items.find(item => item.id === id);
+    if (!itemToToggle) return;
+
+    setItems(currentItems => {
+      // If the item is being deselected, just handle that
+      if (itemToToggle.selected) {
+        return currentItems.map(item =>
+          item.id === id ? { ...item, selected: false } : item
+        );
+      }
+
+      // If selecting a new item, deselect any other item in the same category
+      return currentItems.map(item => {
+        if (item.id === id) {
+          return { ...item, selected: true };
+        }
+        if (item.category === itemToToggle.category) {
+          return { ...item, selected: false };
+        }
+        return item;
+      });
+    });
+
+    // Update filtered items as well to maintain consistency
+    setFilteredItems(currentFiltered => {
+      if (itemToToggle.selected) {
+        return currentFiltered.map(item =>
+          item.id === id ? { ...item, selected: false } : item
+        );
+      }
+
+      return currentFiltered.map(item => {
+        if (item.id === id) {
+          return { ...item, selected: true };
+        }
+        if (item.category === itemToToggle.category) {
+          return { ...item, selected: false };
+        }
+        return item;
+      });
+    });
+
+    // Optional: Show feedback to user
+    if (!itemToToggle.selected) {
+      toast.info(`Selected ${itemToToggle.name} for ${itemToToggle.category}`, {
+        description: `Previous ${itemToToggle.category} selection has been removed.`,
+      });
+    }
   };
 
   // Handle item deletion
@@ -212,26 +264,28 @@ export default function CreateOutfitPage() {
 
   const handleSaveOutfit = () => {
     const selectedItems = items.filter((item) => item.selected);
+    const selectedByCategory = getSelectedItemsByCategory(items);
     
     if (selectedItems.length === 0) {
-      toast.error("Please select at least one item to save an outfit", {
-        description: "Select items by clicking the 'Select' button on any clothing piece.",
+      toast.error("Please select items to save an outfit", {
+        description: "Select one item from each category you want to include.",
       });
       return;
     }
 
     // Add your save logic here
     toast.success("Outfit saved successfully!", {
-      description: `Saved ${selectedItems.length} items to your outfits.`,
+      description: `Saved ${Object.keys(selectedByCategory).length} items to your outfits.`,
     });
   };
 
   const handleCompleteOutfit = () => {
     const selectedItems = items.filter((item) => item.selected);
+    const selectedByCategory = getSelectedItemsByCategory(items);
     
     if (selectedItems.length === 0) {
-      toast.error("Please select at least one item to create an outfit", {
-        description: "Select items by clicking the 'Select' button on any clothing piece.",
+      toast.error("Please select items to create an outfit", {
+        description: "Select one item from each category you want to include.",
       });
       return;
     }
