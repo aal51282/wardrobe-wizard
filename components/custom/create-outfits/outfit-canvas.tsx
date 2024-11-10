@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Mannequin } from './mannequin';
 
 interface Item {
   id: string;
@@ -14,26 +15,20 @@ interface OutfitCanvasProps {
 
 export function OutfitCanvas({ selectedItems }: OutfitCanvasProps) {
   return (
-    <div className="border rounded-lg shadow-md p-4 bg-white relative h-96 flex justify-center items-center">
-      <div className="relative w-48 h-96">
-        <Image
-          src="/images/mannequin.png" // Placeholder mannequin image
-          alt="Style Mannequin"
-          layout="fill"
-          objectFit="contain"
-        />
-        {/* Overlay selected clothing items */}
-        {selectedItems.map((item) => (
+    <div className="border rounded-lg shadow-md p-4 bg-white relative h-[800px] flex justify-center items-center">
+      <Mannequin />
+      {/* Overlay selected clothing items */}
+      {selectedItems.map((item) => (
+        <div key={item.id} className="absolute inset-0 flex items-center justify-center">
           <Image
-            key={item.id}
             src={item.image}
             alt={item.name}
             layout="fill"
             objectFit="contain"
             className="absolute"
           />
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 } 

@@ -147,21 +147,24 @@ export default function ProductPage() {
 
         {/* Main Content Area */}
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left Side - Filters and Products */}
-          <div className="lg:w-2/3">
-            {/* Filter Bar */}
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-              <Suspense fallback={<LoadingSpinner />}>
-                <FilterBar
-                  selectedCategories={selectedCategories}
-                  setSelectedCategories={setSelectedCategories}
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
-                />
-              </Suspense>
-            </div>
+          {/* Filter Bar - Now full width */}
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-8 w-full">
+            <Suspense fallback={<LoadingSpinner />}>
+              <FilterBar
+                selectedCategories={selectedCategories}
+                setSelectedCategories={setSelectedCategories}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+              />
+            </Suspense>
+          </div>
+        </div>
 
-            {/* Items Grid - Updated to 2 columns */}
+        {/* Content Grid and Preview */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Left Side - Products */}
+          <div className="lg:w-1/2">
+            {/* Items Grid */}
             <Suspense fallback={<LoadingSpinner />}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
                 {filteredItems.length > 0 ? (
@@ -186,13 +189,15 @@ export default function ProductPage() {
             </Suspense>
           </div>
 
-          {/* Right Side - Mannequin */}
-          <div className="lg:w-1/3 sticky top-8">
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <h2 className="text-xl font-semibold text-[#D4AF37] mb-4">
+          {/* Right Side - Preview Outfit */}
+          <div className="lg:w-1/2">
+            <div className="bg-white rounded-lg shadow-sm p-8">
+              <h2 className="text-2xl font-semibold text-[#D4AF37] mb-6">
                 Preview Outfit
               </h2>
-              <OutfitCanvas selectedItems={items.filter(item => item.selected)} />
+              <div className="min-h-[600px]">
+                <OutfitCanvas selectedItems={items.filter(item => item.selected)} />
+              </div>
             </div>
           </div>
         </div>

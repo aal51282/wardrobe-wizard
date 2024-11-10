@@ -37,14 +37,14 @@ export function FilterBar({
 
   return (
     <div className="space-y-4">
-      {/* Search Bar */}
-      <div className="relative">
+      {/* Search Bar - Extended to full width */}
+      <div className="relative w-full">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
         <Input
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search your wardrobe..."
-          className="pl-10 border-gray-200"
+          className="pl-10 border-gray-200 w-full"
         />
       </div>
 
