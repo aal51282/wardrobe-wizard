@@ -9,14 +9,10 @@ export default function ProjectTeamPage() {
 
   // Team member data
   const teamMembers = [
-    {
-      name: "Grace Walbrecher",
-      role: "Co-Founder",
-      image: "/images/kenzo.png",
-    },
-    { name: "Kenzo Suzuki", role: "Co-Founder", image: "/images/kenzo.png" },
-    { name: "Kenzo Suzuki", role: "Co-Founder", image: "/images/kenzo.png" },
-    { name: "Kenzo Suzuki", role: "Co-Founder", image: "/images/kenzo.png" },
+    { name: "Grace Walbrecher", role: "Frontend Developer", image: "/grace.png" },
+    { name: "Angel Loaiza", role: "Frontend Developer", image: "/angel.png" },
+    { name: "Brenda Thornton", role: "Backend Developer", image: "/brenda.png" },
+    { name: "Lily Valdes", role: "Database Manager", image: "/lily.png" },
   ];
 
   return (
@@ -25,7 +21,7 @@ export default function ProjectTeamPage() {
       <h2 className={styles.title}>Our Team</h2>
       <div className={styles.illustrationContainer}>
         <Image
-          src="/images/team-illustration.png"
+          src="/wardrobe.png"
           alt="Team Illustration"
           width={400}
           height={200}
