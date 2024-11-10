@@ -14,6 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
 
 interface UploadFormState {
   category: string;
@@ -21,6 +23,14 @@ interface UploadFormState {
   size: string;
   brand: string;
   image: File | null;
+}
+
+interface FormErrors {
+  category?: string;
+  color?: string;
+  size?: string;
+  brand?: string;
+  image?: string;
 }
 
 const CATEGORIES = [
@@ -35,8 +45,26 @@ const CATEGORIES = [
 
 const SIZES = ["XS", "S", "M", "L", "XL"] as const;
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
+const uploadSchema = z.object({
+  category: z.string().min(1, "Please select a category"),
+  color: z.string().min(1, "Color is required"),
+  size: z.string().min(1, "Please select a size"),
+  brand: z.string().min(1, "Brand is required"),
+  image: z.custom<File>()
+    .refine((file) => file !== null, "Image is required")
+    .refine((file) => file?.size <= MAX_FILE_SIZE, "Max file size is 5MB")
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+      "Only .jpg, .jpeg, .png and .webp formats are supported"
+    ),
+});
+
 export function UploadClothingForm() {
   const router = useRouter();
+  const { toast } = useToast();
   const [formState, setFormState] = useState<UploadFormState>({
     category: "",
     color: "",
@@ -44,19 +72,67 @@ export function UploadClothingForm() {
     brand: "",
     image: null,
   });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = (): boolean => {
+    try {
+      uploadSchema.parse(formState);
+      setErrors({});
+      return true;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const newErrors: FormErrors = {};
+        error.errors.forEach((err) => {
+          const path = err.path[0] as keyof FormErrors;
+          newErrors[path] = err.message;
+        });
+        setErrors(newErrors);
+      }
+      return false;
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formState);
+    
+    if (!validateForm()) {
+      toast({
+        title: "Validation Error",
+        description: "Please check the form for errors",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    // Clear form
-    setFormState({
-      category: "",
-      color: "",
-      size: "",
-      brand: "",
-      image: null,
-    });
+    setIsSubmitting(true);
+
+    try {
+      // Simulated API call
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      
+      toast({
+        title: "Success!",
+        description: "Item uploaded successfully",
+      });
+
+      // Clear form
+      setFormState({
+        category: "",
+        color: "",
+        size: "",
+        brand: "",
+        image: null,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to upload item. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -79,7 +155,8 @@ export function UploadClothingForm() {
                 setFormState((prev) => ({ ...prev, category: value }))
               }
             >
-              <SelectTrigger className="border-[#D4AF37] bg-white/50">
+              <SelectTrigger className={`border-[#D4AF37] bg-white/50 
+                ${errors.category ? 'border-red-500' : ''}`}>
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
@@ -90,6 +167,9 @@ export function UploadClothingForm() {
                 ))}
               </SelectContent>
             </Select>
+            {errors.category && (
+              <p className="text-red-500 text-sm">{errors.category}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -102,8 +182,12 @@ export function UploadClothingForm() {
               onChange={(e) =>
                 setFormState((prev) => ({ ...prev, color: e.target.value }))
               }
-              className="border-[#D4AF37] bg-white/50"
+              className={`border-[#D4AF37] bg-white/50 
+                ${errors.color ? 'border-red-500' : ''}`}
             />
+            {errors.color && (
+              <p className="text-red-500 text-sm">{errors.color}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -144,20 +228,46 @@ export function UploadClothingForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="image" className="text-[#D4AF37]">
-              Image
-            </Label>
-            <Input
-              id="image"
-              type="file"
-              onChange={(e) =>
-                setFormState((prev) => ({
-                  ...prev,
-                  image: e.target.files?.[0] || null,
-                }))
-              }
-              className="border-[#D4AF37] bg-white/50"
-            />
+            <Label className="text-[#D4AF37]">Image</Label>
+            <div className="mt-2">
+              <div className="flex items-center justify-center w-full">
+                <label className="flex flex-col items-center justify-center w-full h-32 
+                                border-2 border-[#D4AF37] border-dashed rounded-lg 
+                                cursor-pointer bg-white/50 hover:bg-[#D4AF37]/5 
+                                transition-colors duration-300">
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <svg className="w-8 h-8 mb-4 text-[#D4AF37]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                    </svg>
+                    <p className="mb-2 text-sm text-[#D4AF37]">
+                      <span className="font-semibold">Click to upload</span> or drag and drop
+                    </p>
+                    <p className="text-xs text-[#D4AF37]/70">
+                      PNG, JPG or WebP (MAX. 5MB)
+                    </p>
+                  </div>
+                  <input 
+                    type="file"
+                    className="hidden"
+                    onChange={(e) =>
+                      setFormState((prev) => ({
+                        ...prev,
+                        image: e.target.files?.[0] || null,
+                      }))
+                    }
+                    accept="image/png,image/jpeg,image/webp"
+                  />
+                </label>
+              </div>
+              {formState.image && (
+                <p className="mt-2 text-sm text-[#D4AF37]">
+                  Selected: {formState.image.name}
+                </p>
+              )}
+              {errors.image && (
+                <p className="text-red-500 text-sm">{errors.image}</p>
+              )}
+            </div>
           </div>
 
           <div className="space-y-4 pt-4">
