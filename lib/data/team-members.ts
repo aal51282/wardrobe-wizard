@@ -22,7 +22,7 @@ export const teamMembers: TeamMember[] = [
   {
     name: "Lily Valdes",
     role: "Database Manager",
-    image: "/lily.png",
+    image: "/MyPhotos.jpg",
     description: "MongoDB and data structure specialist",
   },
 ]; 

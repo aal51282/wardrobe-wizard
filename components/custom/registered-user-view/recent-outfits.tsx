@@ -9,13 +9,13 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 
 const recentOutfits = [
-  { id: 1, name: "Casual Friday", image: "/placeholder-outfit-1.jpg" },
-  { id: 2, name: "Weekend Brunch", image: "/placeholder-outfit-2.jpg" },
-  { id: 3, name: "Business Meeting", image: "/placeholder-outfit-3.jpg" },
-  { id: 4, name: "Evening Out", image: "/placeholder-outfit-4.jpg" },
-  { id: 5, name: "Summer Day", image: "/placeholder-outfit-5.jpg" },
-  { id: 6, name: "Workout Ready", image: "/placeholder-outfit-6.jpg" },
-  { id: 7, name: "Date Night", image: "/placeholder-outfit-7.jpg" },
+  { id: 1, name: "Casual Friday", image: "/images/casual-outfit.jpg" },
+  { id: 2, name: "Weekend Brunch", image: "/images/brunch.jpg" },
+  { id: 3, name: "Business Meeting", image: "/images/busniess-outfit.jpg" },
+  { id: 4, name: "Evening Out", image: "/images/evening.jpg" },
+  { id: 5, name: "Summer Day", image: "/images/summer.jpg" },
+  { id: 6, name: "Workout Ready", image: "/images/gym-outfit.jpg" },
+  { id: 7, name: "Date Night", image: "/images/date-night.jpg" },
 ];
 
 export function RecentOutfits() {
