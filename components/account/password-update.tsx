@@ -52,6 +52,12 @@ export function PasswordUpdate({
     const newPass = e.target.value;
     setNewPassword(newPass);
     validatePassword(newPass);
+    setHasAttemptedSubmit(false);
+  };
+
+  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(e.target.value);
+    setHasAttemptedSubmit(false);
   };
 
   const isPasswordValid = () => {
@@ -116,6 +122,8 @@ export function PasswordUpdate({
       <Button
         onClick={() => {
           setHasAttemptedSubmit(false);
+          setNewPassword("");
+          setConfirmPassword("");
           onToggleFields();
         }}
         variant="outline"
@@ -166,7 +174,7 @@ export function PasswordUpdate({
             <Input
               type="password"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={handleConfirmPasswordChange}
               className={`border-2 ${
                 hasAttemptedSubmit && confirmPassword !== newPassword ? 'border-red-300' : ''
               }`}
