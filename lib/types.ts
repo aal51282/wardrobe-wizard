@@ -18,4 +18,11 @@ export interface Recommendation {
   type: string;
   suggestion: string;
   reason: string;
+}
+
+export interface TeamMember {
+  name: string;
+  role: string;
+  image: string;
+  description?: string;
 } 
