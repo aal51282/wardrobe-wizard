@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { CheckIcon } from "lucide-react";
+import { Search, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 interface FilterBarProps {
   selectedCategories: string[];
@@ -10,7 +12,7 @@ interface FilterBarProps {
   setSearchQuery: (query: string) => void;
 }
 
-const categories = ["Men", "Women", "Accessories"];
+const categories = ["Men", "Women", "Accessories", "Shoes", "Outerwear"];
 
 export function FilterBar({
   selectedCategories,
@@ -20,40 +22,67 @@ export function FilterBar({
 }: FilterBarProps) {
   const toggleCategory = (category: string) => {
     if (selectedCategories.includes(category)) {
-      setSelectedCategories(selectedCategories.filter((cat) => cat !== category));
+      setSelectedCategories(
+        selectedCategories.filter((cat) => cat !== category)
+      );
     } else {
       setSelectedCategories([...selectedCategories, category]);
     }
   };
 
+  const clearFilters = () => {
+    setSelectedCategories([]);
+    setSearchQuery("");
+  };
+
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between mb-4">
-      {/* Category Filters */}
-      <div className="flex space-x-2 mb-2 sm:mb-0">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => toggleCategory(category)}
-            className={`px-4 py-2 rounded-md border ${
-              selectedCategories.includes(category)
-                ? "bg-[#D4AF37] text-white border-[#D4AF37]"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-            } flex items-center space-x-1`}
-          >
-            {selectedCategories.includes(category) && <CheckIcon className="h-4 w-4" />}
-            <span>{category}</span>
-          </button>
-        ))}
+    <div className="space-y-4">
+      {/* Search Bar */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
+        <Input
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search your wardrobe..."
+          className="pl-10 border-gray-200"
+        />
       </div>
 
-      {/* Search Bar */}
-      <input
-        type="text"
-        placeholder="Search your wardrobe..."
-        className="w-full sm:w-1/2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
+      {/* Categories */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-medium text-gray-700">Categories</h3>
+          {(selectedCategories.length > 0 || searchQuery) && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearFilters}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              Clear all filters
+              <X className="ml-2 h-4 w-4" />
+            </Button>
+          )}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {categories.map((category) => (
+            <Badge
+              key={category}
+              variant={
+                selectedCategories.includes(category) ? "default" : "outline"
+              }
+              className={`cursor-pointer ${
+                selectedCategories.includes(category)
+                  ? "bg-[#D4AF37] hover:bg-[#B4941F]"
+                  : "hover:bg-gray-100"
+              }`}
+              onClick={() => toggleCategory(category)}
+            >
+              {category}
+            </Badge>
+          ))}
+        </div>
+      </div>
     </div>
   );
-} 
+}
