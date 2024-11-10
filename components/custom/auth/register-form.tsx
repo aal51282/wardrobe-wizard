@@ -118,6 +118,7 @@ export function RegisterForm() {
       type: "text",
       icon: <User className="h-4 w-4" />,
       placeholder: "Enter your first name",
+      required: true,
     },
     {
       id: "lastName",
@@ -125,6 +126,7 @@ export function RegisterForm() {
       type: "text",
       icon: <User className="h-4 w-4" />,
       placeholder: "Enter your last name",
+      required: true,
     },
     {
       id: "email",
@@ -132,6 +134,7 @@ export function RegisterForm() {
       type: "email",
       icon: <Mail className="h-4 w-4" />,
       placeholder: "Enter your email",
+      required: true,
     },
     {
       id: "password",
@@ -139,6 +142,7 @@ export function RegisterForm() {
       type: "password",
       icon: <Lock className="h-4 w-4" />,
       placeholder: "Create a password",
+      required: true,
     },
   ];
 
@@ -152,9 +156,14 @@ export function RegisterForm() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {inputFields.map(({ id, label, type, icon, placeholder }) => (
+            {inputFields.map(({ id, label, type, icon, placeholder, required }) => (
               <div key={id} className="space-y-2">
-                <Label htmlFor={id}>{label}</Label>
+                <Label htmlFor={id} className="flex items-center">
+                  {label}
+                  {required && (
+                    <span className="text-red-500 ml-1" aria-label="required">*</span>
+                  )}
+                </Label>
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
                     {icon}
@@ -167,6 +176,8 @@ export function RegisterForm() {
                     className={`pl-10 ${errors[id] ? 'border-red-500' : ''}`}
                     placeholder={placeholder}
                     disabled={isSubmitting}
+                    required={required}
+                    aria-required={required}
                   />
                 </div>
                 {errors[id] && (
