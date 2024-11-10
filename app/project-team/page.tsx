@@ -17,7 +17,7 @@ const teamMembers: TeamMember[] = [
   {
     name: "Grace Walbrecher",
     role: "Frontend Developer",
-    image: "/grace.png",
+    image: "/grace.jpg",
     description: "Specializing in React and UI/UX design",
   },
   {
@@ -29,7 +29,7 @@ const teamMembers: TeamMember[] = [
   {
     name: "Brenda Thornton",
     role: "Backend Developer",
-    image: "/brenda.png",
+    image: "/brenda.jpg",
     description: "Focused on API development and server architecture",
   },
   {
