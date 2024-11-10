@@ -17,21 +17,17 @@ import {
   AlertDialogTitle,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { User, Mail, Lock, UserCheck } from "lucide-react";
+import { User, Mail, Lock } from "lucide-react";
 
 const registerSchema = z.object({
-  firstName: z.string().min(2, "First name must be at least 2 characters"),
-  lastName: z.string().min(2, "Last name must be at least 2 characters"),
-  username: z
-    .string()
-    .min(3, "Username must be at least 3 characters")
-    .regex(
-      /^[a-zA-Z0-9_]+$/,
-      "Username can only contain letters, numbers, and underscores"
-    ),
+  firstName: z.string()
+    .min(2, "First name must be at least 2 characters")
+    .regex(/^[a-zA-Z\s]+$/, "First name can only contain letters and spaces"),
+  lastName: z.string()
+    .min(2, "Last name must be at least 2 characters")
+    .regex(/^[a-zA-Z\s]+$/, "Last name can only contain letters and spaces"),
   email: z.string().email("Please enter a valid email address"),
-  password: z
-    .string()
+  password: z.string()
     .min(8, "Password must be at least 8 characters")
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
     .regex(/[a-z]/, "Password must contain at least one lowercase letter")
@@ -41,7 +37,6 @@ const registerSchema = z.object({
 interface FormState {
   firstName: string;
   lastName: string;
-  username: string;
   email: string;
   password: string;
 }
@@ -56,7 +51,6 @@ export function RegisterForm() {
   const [formState, setFormState] = useState<FormState>({
     firstName: "",
     lastName: "",
-    username: "",
     email: "",
     password: "",
   });
@@ -64,13 +58,14 @@ export function RegisterForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const handleInputChange =
-    (field: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      setFormState((prev) => ({ ...prev, [field]: e.target.value }));
-      if (errors[field]) {
-        setErrors((prev) => ({ ...prev, [field]: "" }));
-      }
-    };
+  const handleInputChange = (field: keyof FormState) => (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setFormState(prev => ({ ...prev, [field]: e.target.value }));
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: "" }));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,13 +76,13 @@ export function RegisterForm() {
       setIsSubmitting(true);
 
       // Here you would make an API call to register the user
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulated API call
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulated API call
 
       setShowSuccess(true);
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: FormErrors = {};
-        error.errors.forEach((err) => {
+        error.errors.forEach(err => {
           const path = err.path[0] as string;
           newErrors[path] = err.message;
         });
@@ -123,13 +118,6 @@ export function RegisterForm() {
       type: "text",
       icon: <User className="h-4 w-4" />,
       placeholder: "Enter your last name",
-    },
-    {
-      id: "username",
-      label: "Username",
-      type: "text",
-      icon: <UserCheck className="h-4 w-4" />,
-      placeholder: "Choose a username",
     },
     {
       id: "email",
@@ -169,7 +157,7 @@ export function RegisterForm() {
                     type={type}
                     value={formState[id as keyof FormState]}
                     onChange={handleInputChange(id as keyof FormState)}
-                    className={`pl-10 ${errors[id] ? "border-red-500" : ""}`}
+                    className={`pl-10 ${errors[id] ? 'border-red-500' : ''}`}
                     placeholder={placeholder}
                     disabled={isSubmitting}
                   />
@@ -207,8 +195,7 @@ export function RegisterForm() {
           <AlertDialogHeader>
             <AlertDialogTitle>Account Created Successfully!</AlertDialogTitle>
             <AlertDialogDescription>
-              Your account has been created. You can now sign in with your
-              credentials.
+              Your account has been created. You can now sign in with your email and password.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
