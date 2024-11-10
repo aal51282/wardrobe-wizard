@@ -10,6 +10,7 @@ import { OutfitCanvas } from "@/components/custom/create-outfits/outfit-canvas";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Save, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
+import Image from "next/image"
 
 interface Item {
   id: string;
@@ -59,7 +60,7 @@ export default function CreateOutfitPage() {
     // Replace with actual data fetching logic
     const fetchItems = async () => {
       // Example placeholder data
-      const fetchedItems: Item[] = [
+      const fetchedItems = [
         {
           id: "1",
           name: "Classic White Oxford Shirt",
@@ -85,7 +86,7 @@ export default function CreateOutfitPage() {
           name: "Wool Blend Sweater",
           image: "/images/sweater.jpg",
           category: "Sweaters",
-          color: "Gray",
+          color: "White",
           size: "M",
           brand: "H&M",
           selected: false,
@@ -93,7 +94,7 @@ export default function CreateOutfitPage() {
         {
           id: "4",
           name: "Leather Bomber Jacket",
-          image: "/images/jacket.jpg",
+          image: "/images/leather_jacket.jpg",
           category: "Jackets",
           color: "Black",
           size: "L",
@@ -113,9 +114,9 @@ export default function CreateOutfitPage() {
         {
           id: "6",
           name: "Graphic Print T-Shirt",
-          image: "/images/tshirt.jpg",
+          image: "/images/graphic_T.jpg",
           category: "T-Shirts",
-          color: "Red",
+          color: "Navy",
           size: "S",
           brand: "Adidas",
           selected: false,
@@ -123,7 +124,7 @@ export default function CreateOutfitPage() {
         {
           id: "7",
           name: "Hooded Sweatshirt",
-          image: "/images/hoodie.jpg",
+          image: "/images/sweatshirt.jpg",
           category: "Sweaters",
           color: "Green",
           size: "XL",
@@ -145,7 +146,7 @@ export default function CreateOutfitPage() {
           name: "Formal Dress Shirt",
           image: "/images/dress-shirt.jpg",
           category: "T-Shirts",
-          color: "Light Blue",
+          color: "White",
           size: "L",
           brand: "H&M",
           selected: false,
@@ -155,16 +156,15 @@ export default function CreateOutfitPage() {
           name: "Athletic Performance Shorts",
           image: "/images/shorts.jpg",
           category: "Pants",
-          color: "Black",
+          color: "Light Grey",
           size: "M",
           brand: "Adidas",
           selected: false,
-        },
+        }
       ];
       setItems(fetchedItems);
       setFilteredItems(fetchedItems);
     };
-
     fetchItems();
   }, []);
 
