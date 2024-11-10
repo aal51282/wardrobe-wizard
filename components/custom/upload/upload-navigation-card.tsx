@@ -22,7 +22,7 @@ export function UploadNavigationCard() {
         </Button>
 
         <Button
-          onClick={() => router.push("/product")}
+          onClick={() => router.push("/create-outfit")}
           className="flex-1 bg-[#D4AF37] hover:bg-[#B4941F] text-white 
                    transition-colors"
         >

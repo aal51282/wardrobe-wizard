@@ -16,7 +16,7 @@ export function WelcomeSection({ firstName = "User" }: WelcomeSectionProps) {
           Welcome, {firstName}!
         </h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Ready to organize your wardrobe? Start by uploading your clothes or 
+          Ready to organize your wardrobe? Start by uploading your clothes or
           creating your first outfit.
         </p>
       </div>
@@ -26,7 +26,7 @@ export function WelcomeSection({ firstName = "User" }: WelcomeSectionProps) {
         className="bg-[#D4AF37] hover:bg-[#B4941F] text-white px-10 py-8 text-xl
                    w-fit transform transition-all duration-200 hover:scale-105
                    shadow-lg hover:shadow-[#D4AF37]/20"
-        onClick={() => (window.location.href = "/product")}
+        onClick={() => (window.location.href = "/create-outfit")}
       >
         Get Started
         <ArrowRight className="ml-2 h-7 w-7 animate-bounce-x" />
