@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { ResetPasswordForm } from "@/components/custom/auth/reset-password-form";
+import { RequestResetForm } from "@/components/custom/auth/request-reset-form";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 export default function ResetPasswordPage() {
@@ -9,7 +9,7 @@ export default function ResetPasswordPage() {
                     flex items-center justify-center px-4 py-12"
     >
       <Suspense fallback={<LoadingSpinner />}>
-        <ResetPasswordForm />
+        <RequestResetForm />
       </Suspense>
     </div>
   );
