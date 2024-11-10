@@ -8,7 +8,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Shirt } from "lucide-react";
 import { OutfitCanvas } from "@/components/custom/create-outfits/outfit-canvas";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Save } from "lucide-react";
+import { ArrowRight, Save, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
 interface Item {
@@ -296,15 +296,28 @@ export default function CreateOutfitPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-[#F9F6E8]/30">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-[#D4AF37] mb-4">
-            Your Wardrobe
-          </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Manage your clothing collection and create stunning outfits. Select
-            items to mix and match, or use filters to find specific pieces.
-          </p>
+        {/* Header Section with Back Button */}
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <Button
+              onClick={() => router.push("/registered-user-view")}
+              variant="ghost"
+              className="text-[#D4AF37] hover:text-[#B4941F] hover:bg-[#F9F6E8]"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Dashboard
+            </Button>
+          </div>
+          
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-[#D4AF37] mb-4">
+              Your Wardrobe
+            </h1>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Manage your clothing collection and create stunning outfits. Select
+              items to mix and match, or use filters to find specific pieces.
+            </p>
+          </div>
         </div>
 
         {/* Stats Bar */}
