@@ -15,7 +15,7 @@ import { User } from "lucide-react";
 
 const navigationLinks = [
   { href: "/upload", label: "Upload Clothing" },
-  { href: "/create-outfits", label: "Outfits" },
+  { href: "/product", label: "Create Outfits" },
   { href: "/analysis", label: "Analysis" },
   { href: "/project-team", label: "Meet the Team" },
 ];

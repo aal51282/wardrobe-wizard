@@ -6,7 +6,7 @@ import { ProductCard } from "@/components/custom/product/product-card";
 import { FilterBar } from "@/components/custom/product/filter-bar";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Shirt } from "lucide-react";
-import { OutfitCanvas } from "@/components/custom/create-outfits/outfit-canvas";
+import { OutfitCanvas } from "@/components/custom/product/outfit-canvas";
 
 interface Item {
   id: string;
@@ -123,7 +123,7 @@ export default function ProductPage() {
     }
     // Pass selected items via query params or state management
     router.push({
-      pathname: "/create-outfits",
+      pathname: "/product",
       query: { selected: JSON.stringify(selectedItems) },
     });
   };
