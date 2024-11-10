@@ -78,7 +78,14 @@ export function RegisterForm() {
       // Here you would make an API call to register the user
       await new Promise(resolve => setTimeout(resolve, 1500)); // Simulated API call
 
+      // Show success message briefly before redirect
       setShowSuccess(true);
+      
+      // Automatically redirect after a short delay
+      setTimeout(() => {
+        router.push("/user-view");
+      }, 4000);
+
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: FormErrors = {};
@@ -193,17 +200,18 @@ export function RegisterForm() {
       <AlertDialog open={showSuccess} onOpenChange={setShowSuccess}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Account Created Successfully!</AlertDialogTitle>
+            <AlertDialogTitle>Welcome aboard!</AlertDialogTitle>
             <AlertDialogDescription>
-              Your account has been created. You can now sign in with your email and password.
+              Your account has been created successfully. 
+              Redirecting you to your dashboard...
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction
-              onClick={() => router.push("/login")}
+              onClick={() => router.push("/user-view")}
               className="bg-[#D4AF37] hover:bg-[#B4941F] text-white"
             >
-              Continue to Login
+              Go to Dashboard
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
