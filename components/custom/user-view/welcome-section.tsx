@@ -1,20 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
-export function WelcomeSection() {
+interface WelcomeSectionProps {
+  firstName?: string;
+}
+
+export function WelcomeSection({ firstName = "User" }: WelcomeSectionProps) {
   return (
     <section
       className="flex flex-col items-center text-center justify-center 
                       space-y-8 animate-fade-in max-w-4xl mx-auto"
     >
       <div className="space-y-4">
-        <h1 className="text-6xl md:text-7xl font-bold">
-          <span className="text-[#D4AF37]">Welcome back,</span>
-          <br />
-          <span className="text-[#B4941F] inline-block mt-2">Username</span>
+        <h1 className="text-4xl font-bold text-[#D4AF37]">
+          Welcome, {firstName}!
         </h1>
-        <p className="text-xl md:text-2xl text-[#D4AF37]/80 max-w-2xl mx-auto">
-          Ready to create your next perfect outfit?
+        <p className="text-gray-600 max-w-2xl mx-auto">
+          Ready to organize your wardrobe? Start by uploading your clothes or 
+          creating your first outfit.
         </p>
       </div>
 

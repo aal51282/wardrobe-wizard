@@ -64,7 +64,7 @@ export default function AccountPage() {
               photoUrl={profilePhoto}
               onPhotoUpload={handlePhotoUpload}
             />
-            <UserInfo initialUsername="User's Username" email={userEmail} />
+            <UserInfo email={userEmail} />
             <PasswordUpdate
               showFields={showPasswordFields}
               onToggleFields={() => setShowPasswordFields(!showPasswordFields)}
