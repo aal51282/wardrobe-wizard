@@ -4,7 +4,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import styles from "./Product.module.css";
 import React from "react";
 
 interface Item {
@@ -77,48 +76,48 @@ export default function ProductPage() {
   };
 
   return (
-    <div className={styles.productPageContainer}>
-      <h1 className={styles.pageTitle}>Products</h1>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Products</h1>
 
       {/* Filter buttons at the top */}
-      <div className={styles.filterButtonsContainer}>
-        <button className={styles.filterButton}>Men&apos;s</button>
-        <button className={styles.filterButton}>Women&apos;s</button>
-        <button className={styles.filterButton}>Accessories</button>
+      <div className="flex space-x-4 mb-4">
+        <button className="px-4 py-2 bg-blue-500 text-white rounded">Men&apos;s</button>
+        <button className="px-4 py-2 bg-green-500 text-white rounded">Women&apos;s</button>
+        <button className="px-4 py-2 bg-yellow-500 text-white rounded">Accessories</button>
       </div>
 
       {/* Search bar */}
       <input
         type="text"
         placeholder="Search..."
-        className={styles.searchBar}
+        className="w-full p-2 border rounded"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
 
       {/* Grid of items */}
-      <div className={styles.itemsGrid}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {filteredItems.map((item) => (
-          <div key={item.id} className={styles.itemCard}>
+          <div key={item.id} className="bg-white p-4 rounded shadow">
             <Image
               src={item.image || ''}
               alt={item.name || ''}
               width={150}
               height={150}
-              className={styles.itemImage}
+              className="w-full h-40 object-cover mb-4"
             />
-            <h3 className={styles.itemName}>{item.name}</h3>
-            <div className={styles.itemButtonsContainer}>
+            <h3 className="text-lg font-semibold mb-2">{item.name}</h3>
+            <div className="flex space-x-2">
               <button
                 className={
-                  item.selected ? styles.deselectButton : styles.addButton
+                  item.selected ? "bg-red-500 text-white px-4 py-2 rounded" : "bg-blue-500 text-white px-4 py-2 rounded"
                 }
                 onClick={() => toggleSelection(item.id)}
               >
                 {item.selected ? "Deselect Item" : "Add Item"}
               </button>
               <button
-                className={styles.deleteButton}
+                className="bg-gray-500 text-white px-4 py-2 rounded"
                 onClick={() => deleteItem(item.id)}
               >
                 Delete
@@ -130,13 +129,13 @@ export default function ProductPage() {
 
       {/* Saved outfits dropdown button */}
       <button
-        className={styles.savedOutfitButton}
+        className="bg-purple-500 text-white px-4 py-2 rounded"
         onClick={() => setShowSavedOutfits(!showSavedOutfits)}
       >
         Show Saved Outfits
       </button>
       {showSavedOutfits && (
-        <div className={styles.savedOutfitDropdown}>
+        <div className="bg-gray-100 p-4 rounded">
           <p>Saved outfit 1</p>
           <p>Saved outfit 2</p>
           <p>Saved outfit 3</p>
@@ -145,7 +144,7 @@ export default function ProductPage() {
       )}
 
       {/* Continue button */}
-      <button className={styles.continueButton} onClick={handleContinue}>
+      <button className="bg-green-500 text-white px-4 py-2 rounded" onClick={handleContinue}>
         Continue
       </button>
     </div>
