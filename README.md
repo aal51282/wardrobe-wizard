@@ -6,6 +6,12 @@ Wardrobe Wizard is a modern web application designed to help users organize and 
 
 - User authentication (login/register)
 - Wardrobe organization system
+- Product Management
+  - View all uploaded clothing items
+  - Filter and search through wardrobe
+  - Select items to create outfits
+- Outfit Creation
+  - Style Mannequin with selected clothing items
 - Modern, responsive design
 - Intuitive user interface
 

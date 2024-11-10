@@ -20,14 +20,17 @@ import {
 import { User, Mail, Lock } from "lucide-react";
 
 const registerSchema = z.object({
-  firstName: z.string()
+  firstName: z
+    .string()
     .min(2, "First name must be at least 2 characters")
     .regex(/^[a-zA-Z\s]+$/, "First name can only contain letters and spaces"),
-  lastName: z.string()
+  lastName: z
+    .string()
     .min(2, "Last name must be at least 2 characters")
     .regex(/^[a-zA-Z\s]+$/, "Last name can only contain letters and spaces"),
   email: z.string().email("Please enter a valid email address"),
-  password: z.string()
+  password: z
+    .string()
     .min(8, "Password must be at least 8 characters")
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
     .regex(/[a-z]/, "Password must contain at least one lowercase letter")
@@ -58,14 +61,13 @@ export function RegisterForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const handleInputChange = (field: keyof FormState) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setFormState(prev => ({ ...prev, [field]: e.target.value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: "" }));
-    }
-  };
+  const handleInputChange =
+    (field: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormState((prev) => ({ ...prev, [field]: e.target.value }));
+      if (errors[field]) {
+        setErrors((prev) => ({ ...prev, [field]: "" }));
+      }
+    };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,20 +78,19 @@ export function RegisterForm() {
       setIsSubmitting(true);
 
       // Here you would make an API call to register the user
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulated API call
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulated API call
 
       // Show success message briefly before redirect
       setShowSuccess(true);
-      
+
       // Automatically redirect after a short delay
       setTimeout(() => {
-        router.push("/user-view");
+        router.push("/registered-user-view");
       }, 4000);
-
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: FormErrors = {};
-        error.errors.forEach(err => {
+        error.errors.forEach((err) => {
           const path = err.path[0] as string;
           newErrors[path] = err.message;
         });
@@ -156,35 +157,39 @@ export function RegisterForm() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {inputFields.map(({ id, label, type, icon, placeholder, required }) => (
-              <div key={id} className="space-y-2">
-                <Label htmlFor={id} className="flex items-center">
-                  {label}
-                  {required && (
-                    <span className="text-red-500 ml-1" aria-label="required">*</span>
-                  )}
-                </Label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
-                    {icon}
+            {inputFields.map(
+              ({ id, label, type, icon, placeholder, required }) => (
+                <div key={id} className="space-y-2">
+                  <Label htmlFor={id} className="flex items-center">
+                    {label}
+                    {required && (
+                      <span className="text-red-500 ml-1" aria-label="required">
+                        *
+                      </span>
+                    )}
+                  </Label>
+                  <div className="relative">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                      {icon}
+                    </div>
+                    <Input
+                      id={id}
+                      type={type}
+                      value={formState[id as keyof FormState]}
+                      onChange={handleInputChange(id as keyof FormState)}
+                      className={`pl-10 ${errors[id] ? "border-red-500" : ""}`}
+                      placeholder={placeholder}
+                      disabled={isSubmitting}
+                      required={required}
+                      aria-required={required}
+                    />
                   </div>
-                  <Input
-                    id={id}
-                    type={type}
-                    value={formState[id as keyof FormState]}
-                    onChange={handleInputChange(id as keyof FormState)}
-                    className={`pl-10 ${errors[id] ? 'border-red-500' : ''}`}
-                    placeholder={placeholder}
-                    disabled={isSubmitting}
-                    required={required}
-                    aria-required={required}
-                  />
+                  {errors[id] && (
+                    <p className="text-sm text-red-500">{errors[id]}</p>
+                  )}
                 </div>
-                {errors[id] && (
-                  <p className="text-sm text-red-500">{errors[id]}</p>
-                )}
-              </div>
-            ))}
+              )
+            )}
 
             <Button
               type="submit"
@@ -213,13 +218,13 @@ export function RegisterForm() {
           <AlertDialogHeader>
             <AlertDialogTitle>Welcome aboard!</AlertDialogTitle>
             <AlertDialogDescription>
-              Your account has been created successfully. 
-              Redirecting you to your dashboard...
+              Your account has been created successfully. Redirecting you to
+              your dashboard...
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction
-              onClick={() => router.push("/user-view")}
+              onClick={() => router.push("/registered-user-view")}
               className="bg-[#D4AF37] hover:bg-[#B4941F] text-white"
             >
               Go to Dashboard

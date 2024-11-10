@@ -13,7 +13,7 @@ export default function AnalysisPage() {
         This page is under construction. Check back later!
       </p>
       <button
-        onClick={() => router.push("/user-view")}
+        onClick={() => router.push("/registered-user-view")}
         className={styles.backButton}
       >
         Back to User Page

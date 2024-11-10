@@ -105,7 +105,7 @@ export default function ProjectTeamPage() {
         {/* Back Button */}
         <div className="text-center">
           <Button
-            onClick={() => router.push("/user-view")}
+            onClick={() => router.push("/registered-user-view")}
             variant="outline"
             className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10"
           >
