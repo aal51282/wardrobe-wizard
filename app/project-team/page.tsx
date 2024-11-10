@@ -1,64 +1,119 @@
 "use client";
-// Import necessary components and hooks
+
 import Image from "next/image";
-import { useRouter } from "next/navigation"; // Next.js router for navigation
-import styles from "./ProjectTeam.module.css";
+import { useRouter } from "next/navigation";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft } from "lucide-react";
+
+interface TeamMember {
+  name: string;
+  role: string;
+  image: string;
+  description?: string;
+}
+
+const teamMembers: TeamMember[] = [
+  {
+    name: "Grace Walbrecher",
+    role: "Frontend Developer",
+    image: "/grace.png",
+    description: "Specializing in React and UI/UX design",
+  },
+  {
+    name: "Angel Loaiza",
+    role: "Frontend Developer",
+    image: "/angel.png",
+    description: "Expert in TypeScript and Next.js",
+  },
+  {
+    name: "Brenda Thornton",
+    role: "Backend Developer",
+    image: "/brenda.png",
+    description: "Focused on API development and server architecture",
+  },
+  {
+    name: "Lily Valdes",
+    role: "Database Manager",
+    image: "/lily.png",
+    description: "MongoDB and data structure specialist",
+  },
+];
 
 export default function ProjectTeamPage() {
   const router = useRouter();
 
-  // Team member data
-  const teamMembers = [
-    { name: "Grace Walbrecher", role: "Frontend Developer", image: "/grace.png" },
-    { name: "Angel Loaiza", role: "Frontend Developer", image: "/angel.png" },
-    { name: "Brenda Thornton", role: "Backend Developer", image: "/brenda.png" },
-    { name: "Lily Valdes", role: "Database Manager", image: "/lily.png" },
-  ];
-
   return (
-    <div className={styles.teamContainer}>
-      {/* Header section with title and illustration */}
-      <h2 className={styles.title}>Our Team</h2>
-      <div className={styles.illustrationContainer}>
-        <Image
-          src="/wardrobe.png"
-          alt="Team Illustration"
-          width={400}
-          height={200}
-        />
-      </div>
-
-      {/* Default AI Generated Description, I didnt know what to put here -G*/}
-      <p className={styles.description}>
-        We are a group of college students working together on this project as
-        part of our assignment. Our goal is to build a useful and functional
-        wardrobe organizer. Thank you for visiting our project!
-      </p>
-
-      {/* Team member profiles */}
-      <div className={styles.teamGrid}>
-        {teamMembers.map((member, index) => (
-          <div key={index} className={styles.teamMember}>
+    <div className="min-h-screen bg-gradient-to-b from-white to-[#F9F6E8]/30">
+      <div className="container mx-auto px-4 py-12 max-w-6xl">
+        {/* Header Section */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl font-bold text-[#D4AF37] mb-6">
+            Meet Our Team
+          </h1>
+          <div className="relative w-full max-w-lg mx-auto mb-8">
             <Image
-              src={member.image}
-              alt={member.name}
-              width={100}
-              height={100}
-              className={styles.profileImage}
+              src="/wardrobe.png"
+              alt="Team Illustration"
+              width={400}
+              height={200}
+              className="w-full h-auto object-contain"
+              priority
             />
-            <h3 className={styles.memberName}>{member.name}</h3>
-            <p className={styles.memberRole}>{member.role}</p>
           </div>
-        ))}
-      </div>
+          <p className="text-gray-600 max-w-2xl mx-auto text-lg leading-relaxed">
+            We are passionate students collaborating to create an innovative
+            wardrobe organization solution. Our diverse skills and dedication
+            drive us to deliver a seamless user experience.
+          </p>
+        </div>
 
-      {/* Back button */}
-      <button
-        className={styles.backButton}
-        onClick={() => router.push("/user-view")}
-      >
-        <span>⬅️</span> Back
-      </button>
+        {/* Team Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          {teamMembers.map((member, index) => (
+            <Card
+              key={index}
+              className="group hover:shadow-xl transition-all duration-300 border-[#D4AF37]/20"
+            >
+              <CardContent className="p-6">
+                <div className="relative mb-6 mx-auto w-32 h-32">
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    className="rounded-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="text-center">
+                  <h3 className="font-semibold text-xl text-[#D4AF37] mb-2">
+                    {member.name}
+                  </h3>
+                  <p className="text-[#D4AF37]/70 font-medium mb-3">
+                    {member.role}
+                  </p>
+                  {member.description && (
+                    <p className="text-gray-600 text-sm">
+                      {member.description}
+                    </p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Back Button */}
+        <div className="text-center">
+          <Button
+            onClick={() => router.push("/user-view")}
+            variant="outline"
+            className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10"
+          >
+            <ChevronLeft className="mr-2 h-4 w-4" />
+            Back to Dashboard
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
