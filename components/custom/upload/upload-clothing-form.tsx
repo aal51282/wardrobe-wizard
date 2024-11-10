@@ -273,10 +273,11 @@ export function UploadClothingForm() {
           <div className="space-y-4 pt-4">
             <Button
               type="submit"
+              disabled={isSubmitting}
               className="w-full bg-[#D4AF37] hover:bg-[#B4941F] text-white
-                       transition-colors duration-300"
+                       transition-colors duration-300 disabled:opacity-50"
             >
-              Upload Item
+              {isSubmitting ? "Uploading..." : "Upload Item"}
             </Button>
 
             <Link href="/user-view" className="block">
