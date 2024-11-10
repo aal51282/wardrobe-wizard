@@ -181,7 +181,7 @@ export function PasswordUpdate({
             />
             {hasAttemptedSubmit && confirmPassword !== newPassword && (
               <p className="text-sm text-red-500 mt-1">
-                Passwords don't match
+                Passwords don&apos;t match
               </p>
             )}
           </div>

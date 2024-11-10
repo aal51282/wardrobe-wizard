@@ -72,7 +72,7 @@ export default function ProductPage() {
   const handleContinue = () => {
     const selectedItems = items.filter((item) => item.selected);
     console.log("Selected items for the outfit:", selectedItems);
-    router.push("/analysis"); // Redirect to analytical page
+    router.push("/create-outfits"); // Redirect to create outfits page
   };
 
   return (
@@ -143,9 +143,9 @@ export default function ProductPage() {
         </div>
       )}
 
-      {/* Continue button */}
+      {/* Create button */}
       <button className={styles.continueButton} onClick={handleContinue}>
-        Continue
+        Create
       </button>
     </div>
   );
