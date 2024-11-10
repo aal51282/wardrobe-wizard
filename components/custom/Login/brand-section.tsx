@@ -1,5 +1,5 @@
-import Image from 'next/image';
-import styles from '../../../app/login/Login.module.css';
+import Image from "next/image";
+import styles from "../../../app/login/Login.module.css";
 
 export function BrandSection() {
   return (
@@ -14,7 +14,9 @@ export function BrandSection() {
           className={styles.brandImage}
         />
         <h1 className={styles.brandTitle}>Wardrobe Wizard</h1>
-        <p className={styles.brandTagline}>Don't get mad, get Wardrobe Wizard</p>
+        <p className={styles.brandTagline}>
+          Don&apos;t get mad, get Wardrobe Wizard
+        </p>
       </div>
     </div>
   );

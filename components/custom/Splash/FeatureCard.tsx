@@ -1,4 +1,4 @@
-import styles from '../../../app/Page.module.css';
+import styles from "../../../app/Page.module.css";
 
 interface FeatureCardProps {
   title: string;

@@ -1,19 +1,19 @@
 "use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import styles from './Register.module.css';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import styles from "./Register.module.css";
 
 export default function RegisterPage() {
   const router = useRouter();
 
   // State for form inputs
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [error, setError] = useState("");
 
   // Function to handle form submission
   const handleRegister = () => {
@@ -26,14 +26,16 @@ export default function RegisterPage() {
     console.log(`Creating user: ${username}, Email: ${email}`);
 
     // Redirect to the login page after successful registration
-    router.push('/login');
+    router.push("/login");
   };
 
   return (
     <div className={styles.registerContainer}>
       <h1 className={styles.registerTitle}>Register</h1>
       <div className={styles.inputSection}>
-        <label htmlFor="firstName" className={styles.inputLabel}>First Name</label>
+        <label htmlFor="firstName" className={styles.inputLabel}>
+          First Name
+        </label>
         <input
           type="text"
           id="firstName"
@@ -43,7 +45,9 @@ export default function RegisterPage() {
           className={styles.input}
         />
 
-        <label htmlFor="lastName" className={styles.inputLabel}>Last Name</label>
+        <label htmlFor="lastName" className={styles.inputLabel}>
+          Last Name
+        </label>
         <input
           type="text"
           id="lastName"
@@ -53,7 +57,9 @@ export default function RegisterPage() {
           className={styles.input}
         />
 
-        <label htmlFor="username" className={styles.inputLabel}>Login Username</label>
+        <label htmlFor="username" className={styles.inputLabel}>
+          Login Username
+        </label>
         <input
           type="text"
           id="username"
@@ -63,7 +69,9 @@ export default function RegisterPage() {
           className={styles.input}
         />
 
-        <label htmlFor="password" className={styles.inputLabel}>Password</label>
+        <label htmlFor="password" className={styles.inputLabel}>
+          Password
+        </label>
         <input
           type="password"
           id="password"
@@ -73,7 +81,9 @@ export default function RegisterPage() {
           className={styles.input}
         />
 
-        <label htmlFor="email" className={styles.inputLabel}>Email Address</label>
+        <label htmlFor="email" className={styles.inputLabel}>
+          Email Address
+        </label>
         <input
           type="email"
           id="email"

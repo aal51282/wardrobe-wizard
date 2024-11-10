@@ -1,11 +1,11 @@
 "use client";
 
-import { Suspense } from 'react';
-import { Header } from '@/components/custom/user-view/user-view-header';
-import { WelcomeSection } from '@/components/custom/user-view/welcome-section';
-import { HowItWorks } from '@/components/custom/user-view/how-it-works';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { RecentOutfits } from '@/components/custom/user-view/recent-outfits';
+import { Suspense } from "react";
+import { Header } from "@/components/custom/user-view/user-view-header";
+import { WelcomeSection } from "@/components/custom/user-view/welcome-section";
+import { HowItWorks } from "@/components/custom/user-view/how-it-works";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { RecentOutfits } from "@/components/custom/user-view/recent-outfits";
 
 export default function UserViewPage() {
   return (

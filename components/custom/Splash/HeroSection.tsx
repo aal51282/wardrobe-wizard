@@ -1,4 +1,4 @@
-import styles from '../../../app/Page.module.css';
+import styles from "../../../app/Page.module.css";
 
 export function HeroSection() {
   return (
@@ -7,7 +7,8 @@ export function HeroSection() {
         Transform Your Wardrobe Management Experience
       </h2>
       <p className={styles.heroSubtitle}>
-        Organize, plan, and elevate your style with AI-powered wardrobe management
+        Organize, plan, and elevate your style with AI-powered wardrobe
+        management
       </p>
     </div>
   );

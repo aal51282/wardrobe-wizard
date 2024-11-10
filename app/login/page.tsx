@@ -1,14 +1,14 @@
 "use client";
 
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LoginForm } from "@/components/custom/Login/login-form";
 import { BrandSection } from "@/components/custom/Login/brand-section";
 import { Divider } from "@/components/custom/Login/divider";
-import Link from 'next/link';
-import styles from './Login.module.css';
+import Link from "next/link";
+import styles from "./Login.module.css";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -27,7 +27,7 @@ export default function LoginPage() {
               className={styles.logoImage}
             />
           </div>
-          
+
           <h1 className={styles.loginTitle}>Login</h1>
           <p className={styles.subtitle}>Sign in to your account</p>
 
@@ -35,8 +35,8 @@ export default function LoginPage() {
             <LoginForm />
 
             <div className="mt-4 text-center text-sm">
-              <Link 
-                href="/reset-password" 
+              <Link
+                href="/reset-password"
                 className="text-amber-600 hover:text-amber-700 hover:underline"
               >
                 Forgot your password?
@@ -48,7 +48,7 @@ export default function LoginPage() {
             <Button
               variant="outline"
               className={styles.registerButton}
-              onClick={() => router.push('/register')}
+              onClick={() => router.push("/register")}
             >
               Register new account
             </Button>

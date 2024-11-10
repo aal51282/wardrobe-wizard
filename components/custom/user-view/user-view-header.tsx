@@ -34,11 +34,9 @@ export function Header() {
             className="object-contain"
             priority
           />
-          <h1 className="text-3xl font-bold text-[#D4AF37]">
-            Wardrobe Wizard
-          </h1>
+          <h1 className="text-3xl font-bold text-[#D4AF37]">Wardrobe Wizard</h1>
         </div>
-        
+
         <div className="ml-auto flex items-center space-x-4">
           <nav className="hidden md:flex items-center">
             {navigationLinks.map(({ href, label }, index) => (
@@ -61,22 +59,24 @@ export function Header() {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 className="relative h-10 w-10 rounded-full hover:bg-[#F9F6E8]"
               >
                 <Avatar>
                   <AvatarImage src="/placeholder-avatar.jpg" alt="User" />
-                  <AvatarFallback className="bg-[#F9F6E8] text-[#D4AF37]">UN</AvatarFallback>
+                  <AvatarFallback className="bg-[#F9F6E8] text-[#D4AF37]">
+                    UN
+                  </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent 
+            <DropdownMenuContent
               align="end"
               className="bg-white border-[#D4AF37]"
             >
-              <DropdownMenuItem 
-                onClick={() => router.push('/account')}
+              <DropdownMenuItem
+                onClick={() => router.push("/account")}
                 className="text-[#D4AF37] hover:bg-[#F9F6E8] cursor-pointer"
               >
                 <User className="mr-2 h-4 w-4" />
@@ -89,4 +89,4 @@ export function Header() {
       </div>
     </header>
   );
-} 
+}
