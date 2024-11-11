@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { Header } from "@/components/custom/registered-user-view/registered-user-view-header";
+import { Header } from "@/components/custom/registered-user-view/header";
 import { WelcomeSection } from "@/components/custom/registered-user-view/welcome-section";
 import { HowItWorks } from "@/components/custom/registered-user-view/how-it-works";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";

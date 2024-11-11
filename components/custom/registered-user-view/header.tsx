@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -42,13 +43,14 @@ export function Header() {
           <nav className="hidden md:flex items-center">
             {navigationLinks.map(({ href, label }, index) => (
               <div key={href} className="flex items-center">
-                <Button
-                  variant="ghost"
-                  className="text-[#D4AF37] hover:text-[#B4941F] hover:bg-[#F9F6E8] text-lg"
-                  onClick={() => router.push(href)}
-                >
-                  {label}
-                </Button>
+                <Link href={href} passHref>
+                  <Button
+                    variant="ghost"
+                    className="text-[#D4AF37] hover:text-[#B4941F] hover:bg-[#F9F6E8] text-lg"
+                  >
+                    {label}
+                  </Button>
+                </Link>
                 {index < navigationLinks.length - 1 && (
                   <div className="h-4 w-px bg-[#D4AF37] mx-2" />
                 )}
