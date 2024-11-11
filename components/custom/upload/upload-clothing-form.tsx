@@ -128,7 +128,7 @@ export function UploadClothingForm() {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
-    
+
     setFormState((prev) => ({ ...prev, images: Array.from(files) }));
   };
 

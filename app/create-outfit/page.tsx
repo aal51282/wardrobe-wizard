@@ -10,7 +10,6 @@ import { OutfitCanvas } from "@/components/custom/create-outfits/outfit-canvas";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Save, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
-import Image from "next/image"
 
 interface Item {
   id: string;

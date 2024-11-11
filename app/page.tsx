@@ -1,4 +1,4 @@
-import { Header } from "@/components/shared/Header";
+import { Header } from "@/components/custom/unregistered-user-view/Header";
 import { HeroSection } from "@/components/custom/unregistered-user-view/HeroSection";
 import { FeatureGrid } from "@/components/custom/unregistered-user-view/FeatureGrid";
 import { CTASection } from "@/components/custom/unregistered-user-view/CTASection";

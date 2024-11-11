@@ -9,19 +9,18 @@ interface LoadingSpinnerProps {
 const sizeMap = {
   sm: "h-4 w-4",
   default: "h-8 w-8",
-  lg: "h-12 w-12"
+  lg: "h-12 w-12",
 };
 
-export function LoadingSpinner({ className, size = "default" }: LoadingSpinnerProps) {
+export function LoadingSpinner({
+  className,
+  size = "default",
+}: LoadingSpinnerProps) {
   return (
     <div className="flex items-center justify-center p-4">
-      <Loader2 
-        className={cn(
-          "animate-spin text-amber-600",
-          sizeMap[size],
-          className
-        )} 
+      <Loader2
+        className={cn("animate-spin text-amber-600", sizeMap[size], className)}
       />
     </div>
   );
-} 
+}
