@@ -95,6 +95,14 @@ export function UploadClothingForm() {
       return;
     }
 
+    console.log("Submitted Data:", {
+      category: formState.category,
+      color: formState.color,
+      size: formState.size,
+      brand: formState.brand,
+      images: formState.images.map(img => img.name)
+    });
+
     setIsSubmitting(true);
 
     try {
