@@ -27,22 +27,22 @@ export function LogoutButton() {
     <>
       <DropdownMenuItem
         onClick={handleLogoutClick}
-        className="text-[#D4AF37] hover:bg-[#F9F6E8] cursor-pointer"
+        className="text-red-600 hover:bg-red-50 cursor-pointer font-medium"
       >
-        <LogOut className="mr-2 h-4 w-4" />
+        <LogOut className="mr-2 h-4 w-4 text-red-600" />
         Logout
       </DropdownMenuItem>
 
       <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
         <DialogContent
-          className="sm:max-w-md border-[#D4AF37]"
+          className="sm:max-w-md border-red-600"
           onClick={(e) => e.stopPropagation()}
         >
           <DialogHeader>
-            <DialogTitle className="text-[#D4AF37] text-xl">
+            <DialogTitle className="text-red-600 text-xl">
               Confirm Logout
             </DialogTitle>
-            <DialogDescription className="text-[#D4AF37]/70">
+            <DialogDescription className="text-gray-600">
               Are you sure you want to logout from Wardrobe Wizard?
             </DialogDescription>
           </DialogHeader>
@@ -50,12 +50,12 @@ export function LogoutButton() {
             <Button
               variant="outline"
               onClick={() => setShowConfirmation(false)}
-              className="flex-1 border-[#D4AF37] text-[#D4AF37] hover:bg-[#F9F6E8]"
+              className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50"
             >
               Cancel
             </Button>
             <Link href="/" className="flex-1">
-              <Button className="w-full bg-[#D4AF37] text-white hover:bg-[#B4941F]">
+              <Button className="w-full bg-red-600 text-white hover:bg-red-700">
                 Confirm Logout
               </Button>
             </Link>
