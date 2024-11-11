@@ -28,7 +28,7 @@ export function Header() {
       <div className="flex items-center h-16 px-8">
         <div className="flex items-center gap-3">
           <Image
-            src="/logo.png"
+            src="/big-logo.png"
             alt="Wardrobe Wizard Logo"
             width={45}
             height={45}

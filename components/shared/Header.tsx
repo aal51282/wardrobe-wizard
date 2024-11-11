@@ -9,7 +9,7 @@ export function Header() {
       <div className={styles.headerContent}>
         <div className={styles.logoContainer}>
           <Image
-            src="/logo.png"
+            src="/big-logo.png"
             alt="Wardrobe Wizard Logo"
             width={40}
             height={40}

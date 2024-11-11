@@ -6,7 +6,7 @@ export function BrandSection() {
     <div className={styles.brandSection}>
       <div className={styles.brandContent}>
         <Image
-          src="/logo.png"
+          src="/big-logo.png"
           alt="Wardrobe Wizard"
           width={400}
           height={400}
