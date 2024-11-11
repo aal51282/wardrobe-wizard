@@ -95,6 +95,7 @@ export function UploadClothingForm() {
       return;
     }
 
+    // Console log for Sprint 1
     console.log("Submitted Data:", {
       category: formState.category,
       color: formState.color,
