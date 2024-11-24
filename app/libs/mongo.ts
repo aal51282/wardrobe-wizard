@@ -37,9 +37,6 @@ await new Promise<void>((resolve, reject) => {
         }
 */
 
-        // Type assertion to ensure `conn.db` is of type `Db`
-        //const db: Db = conn.db as mongoose.Mongoose['connection']['db']; // `conn.db` should be of type `Db` but may be undefined
-
 const db: Db = conn.db as unknown as Db;
 
         if (!db) {

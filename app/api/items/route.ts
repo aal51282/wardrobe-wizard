@@ -1,122 +1,41 @@
 //SERVER ROUTES FOR IMAGE UPLOAD FUNCTIONALITY
 
 import { NextResponse, NextRequest } from "next/server";
-import {connectMongo, gfs} from "../../libs/mongo";
-//import { runMiddleware, multerMiddleware } from "../../../util/multerHelper";
-//import mongoose from "mongoose";
-//import multer from 'multer';
+import connectMongoDB from "../../libs/mongodb";
 import userClothing from '../../models/Clothing';
-import {Readable} from "stream";
-import formidable, {IncomingForm} from 'formidable';
-import fs from 'fs';
-import { IncomingMessage } from "http";
-//import Grid from "gridfs-stream";
-
-
-
-
-
-// Disable Next.js body parsing
-export const config = {
-    api: {
-      bodyParser: false,
-    },
-  };
-
-
-  const parseForm = (req: IncomingMessage) =>
-    new Promise<{ fields: formidable.Fields; files: formidable.Files }>((resolve, reject) => {
-        const form = new IncomingForm();
-      form.parse(req, (err, fields, files) => {
-        if (err) {
-            console.error('Form parsing error:', err);
-            reject(err);
-          }
-          console.log('Parsed fields:', fields);
-          console.log('Parsed files:', files);
-        resolve({ fields, files });
-      });
-    });
-
-
-/*
-async function parseImageData(request: NextRequest) {
-    const imageData = await request.formData();
-    const imageFile = imageData.get("image") as File;
-
-    if (!imageFile) {
-        throw new Error("Missing required fields or image file.");
-    }
-
-    return imageFile;
-}
-    */
 
 //POST ROUTE
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
     console.log("POST Request Receieved")
     try {
-     
+// Get the FormData from the incoming request
+const formData = await req.formData();
 
-   // Convert NextRequest to Node.js IncomingMessage
-   const req = request as unknown as IncomingMessage;
-   console.log ("REQUEST INITIALIZED", req);
-   //const req = request.body; // Access raw body as Node.js Readable Stream
-   if (!req) throw new Error("Invalid request.");
+// Get form fields
+const category = formData.get("category");
+const color = formData.get("color");
+const size = formData.get("size");
+const brand = formData.get("brand");
 
-   console.log("ENTERING PARSE FORM FUNCTION");
-   const { fields, files } = await parseForm(req);
-   console.log("LEAVING PARSE FORM FUNCTION");
+// Get the image file
+const image = formData.get("image") as File;
 
-   console.log('Fields:', fields);
-    console.log('Files:', files);
-
-   // Type guard to handle single file or file array
-   const imageFile = Array.isArray(files.image) ? files.image[0] : files.image;
-
-   if (!imageFile) {
-     throw new Error("Image file is required.");
-   }
-
-   // Extract fields
-   const { category, color, size, brand } = fields;
-   console.log("Received data:", { category, color, size, brand, imageFile });
-       
-   // const imageFile = await parseImageData(request);
-   //const { category, color, size, brand } = await request.json();
-   // console.log('Received data:', { category, color, size, brand, imageFile });
-        
-    await connectMongo();
-
-// Save the image to GridFS
-console.log("GFS VALUE: ", gfs);
-
-const writeStream = gfs!.openUploadStream(imageFile.originalFilename!, {
-    contentType: imageFile.mimetype ?? undefined,
-  });
-
-  const readable = new Readable();
-    readable._read = () => {}; // No-op
-    readable.push(Buffer.from(await fs.promises.readFile(imageFile.filepath)));
-    readable.push(null);
-
-    readable.pipe(writeStream);
-
-    const savedImage = await new Promise((resolve, reject) => {
-      writeStream.on("finish", resolve);
-      writeStream.on("error", reject);
-    });
-
-    const imageUrl = `/api/images/${(savedImage as { _id: string })._id}`; //image retrieval URL
-
+if (!image) {
+  throw new Error("Image is required");
+}
+ 
+   console.log("Received data:", { category, color, size, brand});
+   console.log('Image: ', image)
     
+    await connectMongoDB();
+  
     // Save clothing item with image reference
     const clothing = await userClothing.create({
         category,
         color,
         size,
         brand,
-        image: imageUrl,
+        image,
       });
 
         return NextResponse.json({
@@ -140,7 +59,7 @@ const writeStream = gfs!.openUploadStream(imageFile.originalFilename!, {
 
  //GET 
  export async function GET() {
-    await connectMongo();
+    await connectMongoDB();
     const clothes = await userClothing.find();
     return NextResponse.json({clothes});
   }

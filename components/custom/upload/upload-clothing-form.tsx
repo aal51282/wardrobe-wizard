@@ -116,7 +116,7 @@ export function UploadClothingForm() {
 
   // Append each image to FormData
   formState.images.forEach((image) => {
-    formData.append("image", image); // The 'images' field is the name you'll use on the server to access the files
+    formData.append("image", image); 
   });
 
   // Send the FormData object to the backend via POST request
