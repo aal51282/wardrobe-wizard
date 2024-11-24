@@ -95,34 +95,44 @@ export function UploadClothingForm() {
       return;
     }
 
-    // Console log for Sprint 1
-    console.log("Submitted Data:", {
-      category: formState.category,
-      color: formState.color,
-      size: formState.size,
-      brand: formState.brand,
-      images: formState.images.map(img => img.name)
-    });
-
     setIsSubmitting(true);
 
+    const formData = new FormData();
+    formData.append("category", formState.category);
+    formData.append("color", formState.color);
+    formData.append("size", formState.size);
+    formData.append("brand", formState.brand);
+    formState.images.forEach((file) => {
+      formData.append("images", file);
+    });
+
     try {
-      // Simulated API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      toast({
-        title: "Success!",
-        description: "Item uploaded successfully",
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
       });
 
-      // Clear form
-      setFormState({
-        category: "",
-        color: "",
-        size: "",
-        brand: "",
-        images: [],
-      });
+      if (response.ok) {
+        toast({
+          title: "Success!",
+          description: "Item uploaded successfully",
+        });
+        // Clear form
+        setFormState({
+          category: "",
+          color: "",
+          size: "",
+          brand: "",
+          images: [],
+        });
+      } else {
+        const errorData = await response.json();
+        toast({
+          title: "Error",
+          description: errorData.message || "Failed to upload item",
+          variant: "destructive",
+        });
+      }
     } catch {
       toast({
         title: "Error",
@@ -276,6 +286,7 @@ export function UploadClothingForm() {
                     className="hidden"
                     onChange={handleFileChange}
                     accept="image/png,image/jpeg,image/webp"
+                    multiple
                   />
                 </label>
               </div>
