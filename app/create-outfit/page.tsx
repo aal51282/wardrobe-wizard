@@ -236,12 +236,12 @@ export default function CreateOutfitPage() {
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
             <Button
-              onClick={() => router.push("/registered-user-view")}
+              onClick={() => router.push("/upload")}
               variant="ghost"
               className="text-[#D4AF37] hover:text-[#B4941F] hover:bg-[#F9F6E8]"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
+              Back to Upload
             </Button>
           </div>
 
