@@ -45,7 +45,7 @@ export default function CreateOutfitPage() {
   const router = useRouter();
   const [items, setItems] = useState<Item[]>([]);
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
-  const [] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilters, setSelectedFilters] = useState<FilterState>({
     categories: [],
@@ -54,116 +54,28 @@ export default function CreateOutfitPage() {
     brands: [],
   });
 
-  // Fetch items from API or context
+  // Fetch items from API
   useEffect(() => {
-    // Replace with actual data fetching logic
     const fetchItems = async () => {
-      // Example placeholder data
-      const fetchedItems = [
-        {
-          id: "1",
-          name: "Classic White Oxford Shirt",
-          image: "/images/shirt.jpg",
-          category: "T-Shirts",
-          color: "White",
-          size: "M",
-          brand: "Uniqlo",
-          selected: false,
-        },
-        {
-          id: "2",
-          name: "Slim Fit Dark Jeans",
-          image: "/images/jeans.jpg",
-          category: "Jeans",
-          color: "Navy",
-          size: "L",
-          brand: "Zara",
-          selected: false,
-        },
-        {
-          id: "3",
-          name: "Wool Blend Sweater",
-          image: "/images/sweater.jpg",
-          category: "Sweaters",
-          color: "White",
-          size: "M",
-          brand: "H&M",
-          selected: false,
-        },
-        {
-          id: "4",
-          name: "Leather Bomber Jacket",
-          image: "/images/leather_jacket.jpg",
-          category: "Jackets",
-          color: "Black",
-          size: "L",
-          brand: "Nike",
-          selected: false,
-        },
-        {
-          id: "5",
-          name: "Cotton Chino Pants",
-          image: "/images/pants.jpg",
-          category: "Pants",
-          color: "Khaki",
-          size: "M",
-          brand: "Uniqlo",
-          selected: false,
-        },
-        {
-          id: "6",
-          name: "Graphic Print T-Shirt",
-          image: "/images/graphic_T.jpg",
-          category: "T-Shirts",
-          color: "Navy",
-          size: "S",
-          brand: "Adidas",
-          selected: false,
-        },
-        {
-          id: "7",
-          name: "Hooded Sweatshirt",
-          image: "/images/sweatshirt.jpg",
-          category: "Sweaters",
-          color: "Green",
-          size: "XL",
-          brand: "Nike",
-          selected: false,
-        },
-        {
-          id: "8",
-          name: "Denim Jacket",
-          image: "/images/denim-jacket.jpg",
-          category: "Jackets",
-          color: "Blue",
-          size: "M",
-          brand: "Zara",
-          selected: false,
-        },
-        {
-          id: "9",
-          name: "Formal Dress Shirt",
-          image: "/images/dress-shirt.jpg",
-          category: "T-Shirts",
-          color: "White",
-          size: "L",
-          brand: "H&M",
-          selected: false,
-        },
-        {
-          id: "10",
-          name: "Athletic Performance Shorts",
-          image: "/images/shorts.jpg",
-          category: "Pants",
-          color: "Light Grey",
-          size: "M",
-          brand: "Adidas",
-          selected: false,
+      try {
+        setIsLoading(true);
+        const response = await fetch("/api/clothing");
+        
+        if (!response.ok) {
+          throw new Error("Failed to fetch items");
         }
-      ];
-      setItems(fetchedItems);
-      setFilteredItems(fetchedItems);
+
+        const data = await response.json();
+        setItems(data);
+        setFilteredItems(data);
+      } catch (error) {
+        console.error("Error fetching items:", error);
+        toast.error("Failed to load clothing items");
+      } finally {
+        setIsLoading(false);
+      }
     };
+
     fetchItems();
   }, []);
 
@@ -266,9 +178,25 @@ export default function CreateOutfitPage() {
   };
 
   // Handle item deletion
-  const deleteItem = (id: string) => {
-    // Implement deletion logic (API call)
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  const deleteItem = async (id: string) => {
+    try {
+      const response = await fetch(`/api/clothing/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete item");
+      }
+
+      // Update local state
+      setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+      setFilteredItems((prevItems) => prevItems.filter((item) => item.id !== id));
+      
+      toast.success("Item deleted successfully");
+    } catch (error) {
+      console.error("Error deleting item:", error);
+      toast.error("Failed to delete item");
+    }
   };
 
   const handleSaveOutfit = () => {
@@ -375,7 +303,11 @@ export default function CreateOutfitPage() {
             {/* Items Grid */}
             <Suspense fallback={<LoadingSpinner />}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-                {filteredItems.length > 0 ? (
+                {isLoading ? (
+                  <div className="col-span-full flex justify-center py-12">
+                    <LoadingSpinner />
+                  </div>
+                ) : filteredItems.length > 0 ? (
                   filteredItems.map((item) => (
                     <ProductCard
                       key={item.id}
