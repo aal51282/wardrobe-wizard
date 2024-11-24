@@ -104,6 +104,31 @@ export function UploadClothingForm() {
       images: formState.images.map(img => img.name)
     });
 
+
+    // Create a FormData object to send the form data including images
+  const formData = new FormData();
+  
+  // Append form fields to the FormData object
+  formData.append("category", formState.category);
+  formData.append("color", formState.color);
+  formData.append("size", formState.size);
+  formData.append("brand", formState.brand);
+
+  // Append each image to FormData
+  formState.images.forEach((image) => {
+    formData.append("image", image); // The 'images' field is the name you'll use on the server to access the files
+  });
+
+  // Send the FormData object to the backend via POST request
+  const response = await fetch("/api/items", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to upload item");
+  }
+
     setIsSubmitting(true);
 
     try {
