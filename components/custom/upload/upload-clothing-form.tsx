@@ -97,46 +97,48 @@ export function UploadClothingForm() {
 
     setIsSubmitting(true);
 
-    const formData = new FormData();
-    formData.append("category", formState.category);
-    formData.append("color", formState.color);
-    formData.append("size", formState.size);
-    formData.append("brand", formState.brand);
-    formState.images.forEach((file) => {
-      formData.append("images", file);
-    });
-
     try {
+      const formData = new FormData();
+      formData.append("category", formState.category);
+      formData.append("color", formState.color);
+      formData.append("size", formState.size);
+      formData.append("brand", formState.brand);
+      
+      // Append each image file
+      formState.images.forEach((file) => {
+        formData.append("images", file);
+      });
+
       const response = await fetch("/api/upload", {
         method: "POST",
         body: formData,
       });
 
-      if (response.ok) {
-        toast({
-          title: "Success!",
-          description: "Item uploaded successfully",
-        });
-        // Clear form
-        setFormState({
-          category: "",
-          color: "",
-          size: "",
-          brand: "",
-          images: [],
-        });
-      } else {
+      if (!response.ok) {
         const errorData = await response.json();
-        toast({
-          title: "Error",
-          description: errorData.message || "Failed to upload item",
-          variant: "destructive",
-        });
+        throw new Error(errorData.message || "Upload failed");
       }
-    } catch {
+
+      const data = await response.json();
+      
+      toast({
+        title: "Success!",
+        description: "Item uploaded successfully",
+      });
+
+      // Clear form
+      setFormState({
+        category: "",
+        color: "",
+        size: "",
+        brand: "",
+        images: [],
+      });
+    } catch (error) {
+      console.error("Upload error:", error);
       toast({
         title: "Error",
-        description: "Failed to upload item. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to upload item",
         variant: "destructive",
       });
     } finally {
