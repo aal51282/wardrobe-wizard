@@ -8,6 +8,16 @@ import { initUploadsDirectory } from "@/app/lib/init-uploads";
 
 export const runtime = "nodejs";
 
+// Helper function to capitalize first letter
+function capitalizeFirstLetter(string: string): string {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
+// Helper function to format size to uppercase
+function formatSize(size: string): string {
+  return size.toUpperCase();
+}
+
 export async function POST(req: NextRequest) {
   try {
     initUploadsDirectory();
@@ -15,11 +25,11 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData();
     
-    // Extract form fields
-    const category = formData.get("category") as string;
-    const color = formData.get("color") as string;
-    const size = formData.get("size") as string;
-    const brand = formData.get("brand") as string;
+    // Extract and format form fields
+    const category = capitalizeFirstLetter(formData.get("category") as string);
+    const color = capitalizeFirstLetter(formData.get("color") as string);
+    const size = formatSize(formData.get("size") as string);
+    const brand = capitalizeFirstLetter(formData.get("brand") as string);
     const imageFiles = formData.getAll("images") as File[];
 
     if (!category || !color || !size || !brand || imageFiles.length === 0) {
@@ -58,7 +68,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Create and save the clothing item
+    // Create and save the clothing item with formatted data
     const newClothingItem = new ClothingItem({
       category,
       color,

@@ -22,11 +22,17 @@ interface Item {
   selected: boolean;
 }
 
-interface FilterState {
-  categories: string[];
-  colors: string[];
-  sizes: string[];
-  brands: string[];
+interface FilterOption {
+  id: string;
+  value: string;
+  label: string;
+}
+
+interface Filters {
+  categories: FilterOption[];
+  colors: FilterOption[];
+  sizes: FilterOption[];
+  brands: FilterOption[];
 }
 
 function getSelectedItemsByCategory(items: Item[]) {
@@ -53,6 +59,12 @@ export default function CreateOutfitPage() {
     sizes: [],
     brands: [],
   });
+  const [filterOptions, setFilterOptions] = useState<Filters>({
+    categories: [],
+    colors: [],
+    sizes: [],
+    brands: []
+  });
 
   // Fetch items from API
   useEffect(() => {
@@ -66,8 +78,9 @@ export default function CreateOutfitPage() {
         }
 
         const data = await response.json();
-        setItems(data);
-        setFilteredItems(data);
+        setItems(data.items);
+        setFilteredItems(data.items);
+        setFilterOptions(data.filters);
       } catch (error) {
         console.error("Error fetching items:", error);
         toast.error("Failed to load clothing items");
@@ -288,9 +301,10 @@ export default function CreateOutfitPage() {
             <Suspense fallback={<LoadingSpinner />}>
               <FilterBar
                 selectedFilters={selectedFilters}
-                setSelectedFilters={(filters) => setSelectedFilters(filters)}
+                setSelectedFilters={setSelectedFilters}
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
+                filterOptions={filterOptions}
               />
             </Suspense>
           </div>
