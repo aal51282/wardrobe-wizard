@@ -69,9 +69,11 @@ export function RecentOutfits() {
   }
 
   return (
-    <Card className="border-[#D4AF37] bg-white/80 backdrop-blur-sm shadow-xl
+    <Card
+      className="border-[#D4AF37] bg-white/80 backdrop-blur-sm shadow-xl
                     hover:shadow-2xl transition-shadow duration-300
-                    animate-fade-in">
+                    animate-fade-in"
+    >
       <CardHeader className="space-y-2">
         <CardTitle className="text-[#D4AF37] text-xl font-bold flex items-center gap-2">
           Recent Outfits
@@ -110,14 +112,17 @@ export function RecentOutfits() {
                       priority
                     />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#D4AF37]/80 to-transparent 
-                              opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div
+                    className="absolute inset-0 bg-gradient-to-t from-[#D4AF37]/80 to-transparent 
+                              opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  >
                     <div className="absolute bottom-3 left-3 right-3">
                       <p className="text-white font-medium tracking-wide mb-1">
                         {outfit.name}
                       </p>
                       <p className="text-white/80 text-xs">
-                        {outfit.items.length} items • {new Date(outfit.createdAt).toLocaleDateString()}
+                        {outfit.items.length} items •{" "}
+                        {new Date(outfit.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
@@ -125,14 +130,18 @@ export function RecentOutfits() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="text-[#D4AF37] hover:bg-[#F9F6E8] border-[#D4AF37]
+          <CarouselPrevious
+            className="text-[#D4AF37] hover:bg-[#F9F6E8] border-[#D4AF37]
                                      -left-4 hover:scale-110 transition-transform scale-90
-                                     h-8 w-8" />
-          <CarouselNext className="text-[#D4AF37] hover:bg-[#F9F6E8] border-[#D4AF37]
+                                     h-8 w-8"
+          />
+          <CarouselNext
+            className="text-[#D4AF37] hover:bg-[#F9F6E8] border-[#D4AF37]
                                  -right-4 hover:scale-110 transition-transform scale-90
-                                 h-8 w-8" />
+                                 h-8 w-8"
+          />
         </Carousel>
       </CardContent>
     </Card>
   );
-} 
+}

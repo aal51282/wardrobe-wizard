@@ -8,7 +8,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Shirt } from "lucide-react";
 import { OutfitCanvas } from "@/components/custom/create-outfits/outfit-canvas";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Save, ArrowLeft } from "lucide-react";
+import { ArrowRight, Save, ArrowLeft, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -61,6 +61,13 @@ interface SavedOutfit {
   createdAt: string;
 }
 
+interface EditOutfitDialogProps {
+  outfit: SavedOutfit;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSave: (name: string) => Promise<void>;
+}
+
 function getSelectedItemsByCategory(items: Item[]) {
   return items.reduce(
     (acc, item) => {
@@ -70,6 +77,60 @@ function getSelectedItemsByCategory(items: Item[]) {
       return acc;
     },
     {} as Record<string, number>
+  );
+}
+
+function EditOutfitDialog({ outfit, isOpen, onOpenChange, onSave }: EditOutfitDialogProps) {
+  const [name, setName] = useState(outfit.name);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSave = async () => {
+    if (!name.trim()) {
+      toast.error("Please enter an outfit name");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await onSave(name);
+      onOpenChange(false);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Edit Outfit</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-4">
+          <div className="space-y-2">
+            <Label>Outfit Name</Label>
+            <Input
+              placeholder="Enter outfit name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="flex justify-end gap-3">
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSave}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Saving..." : "Save Changes"}
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -96,6 +157,7 @@ export default function CreateOutfitPage() {
   const [outfitName, setOutfitName] = useState("");
   const [savedOutfits, setSavedOutfits] = useState<SavedOutfit[]>([]);
   const [isLoadingOutfits, setIsLoadingOutfits] = useState(false);
+  const [editingOutfit, setEditingOutfit] = useState<SavedOutfit | null>(null);
 
   // Fetch items from API
   useEffect(() => {
@@ -346,6 +408,36 @@ export default function CreateOutfitPage() {
     toast.success(`Loaded outfit: ${outfit.name}`);
   };
 
+  const handleUpdateOutfit = async (outfitId: string, newName: string) => {
+    try {
+      const response = await fetch(`/api/outfits/${outfitId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: newName,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update outfit");
+
+      // Update local state
+      setSavedOutfits(prevOutfits =>
+        prevOutfits.map(outfit =>
+          outfit._id === outfitId
+            ? { ...outfit, name: newName }
+            : outfit
+        )
+      );
+
+      toast.success("Outfit updated successfully");
+    } catch (error) {
+      console.error("Error updating outfit:", error);
+      toast.error("Failed to update outfit");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-[#F9F6E8]/30">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -480,25 +572,46 @@ export default function CreateOutfitPage() {
                               <div
                                 key={outfit._id}
                                 className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer"
-                                onClick={() => loadSavedOutfit(outfit)}
                               >
-                                <h3 className="font-medium text-[#D4AF37]">
-                                  {outfit.name}
-                                </h3>
-                                <p className="text-sm text-gray-500 mt-1">
-                                  {outfit.items.length} items • 
-                                  {new Date(outfit.createdAt).toLocaleDateString()}
-                                </p>
-                                <div className="flex gap-2 mt-2 flex-wrap">
-                                  {outfit.items.map((item) => (
-                                    <Badge
-                                      key={item._id}
-                                      variant="secondary"
-                                      className="text-xs"
-                                    >
-                                      {item.category}
-                                    </Badge>
-                                  ))}
+                                <div className="flex justify-between items-start mb-2">
+                                  <div 
+                                    className="flex-1"
+                                    onClick={() => loadSavedOutfit(outfit)}
+                                  >
+                                    <h3 className="font-medium text-[#D4AF37]">
+                                      {outfit.name}
+                                    </h3>
+                                  </div>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0 ml-2"
+                                    onClick={(e) => {
+                                      e.stopPropagation(); // Prevent triggering the parent click
+                                      setEditingOutfit(outfit);
+                                    }}
+                                  >
+                                    <Pencil className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                                <div 
+                                  onClick={() => loadSavedOutfit(outfit)}
+                                >
+                                  <p className="text-sm text-gray-500 mt-1">
+                                    {outfit.items.length} items • 
+                                    {new Date(outfit.createdAt).toLocaleDateString()}
+                                  </p>
+                                  <div className="flex gap-2 mt-2 flex-wrap">
+                                    {outfit.items.map((item) => (
+                                      <Badge
+                                        key={item._id}
+                                        variant="secondary"
+                                        className="text-xs"
+                                      >
+                                        {item.category}
+                                      </Badge>
+                                    ))}
+                                  </div>
                                 </div>
                               </div>
                             ))}
@@ -590,6 +703,17 @@ export default function CreateOutfitPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {editingOutfit && (
+        <EditOutfitDialog
+          outfit={editingOutfit}
+          isOpen={!!editingOutfit}
+          onOpenChange={(open) => !open && setEditingOutfit(null)}
+          onSave={async (newName) => {
+            await handleUpdateOutfit(editingOutfit._id, newName);
+          }}
+        />
+      )}
     </div>
   );
 }
