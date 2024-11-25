@@ -8,9 +8,12 @@ import { initUploadsDirectory } from "@/app/lib/init-uploads";
 
 export const runtime = "nodejs";
 
-// Helper function to capitalize first letter
-function capitalizeFirstLetter(string: string): string {
-  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+// Helper function to capitalize every word
+function capitalizeWords(string: string): string {
+  return string
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
 }
 
 // Helper function to format size to uppercase
@@ -26,10 +29,10 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     
     // Extract and format form fields
-    const category = capitalizeFirstLetter(formData.get("category") as string);
-    const color = capitalizeFirstLetter(formData.get("color") as string);
+    const category = capitalizeWords(formData.get("category") as string);
+    const color = capitalizeWords(formData.get("color") as string);
     const size = formatSize(formData.get("size") as string);
-    const brand = capitalizeFirstLetter(formData.get("brand") as string);
+    const brand = capitalizeWords(formData.get("brand") as string);
     const imageFiles = formData.getAll("images") as File[];
 
     if (!category || !color || !size || !brand || imageFiles.length === 0) {
