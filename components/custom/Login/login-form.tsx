@@ -10,7 +10,7 @@ import styles from "../../../app/login/Login.module.css";
 import { useToast } from "@/hooks/use-toast";
 
 interface LoginFormData {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -19,17 +19,27 @@ export function LoginForm() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<LoginFormData>({
-    username: "",
+    email: "",
     password: "",
   });
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
+    
+    if (!formData.email || !formData.password) {
+      toast({
+        title: "Error",
+        description: "Please enter both email and password",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       const result = await signIn("credentials", {
-        username: formData.username,
+        email: formData.email,
         password: formData.password,
         redirect: false,
       });
@@ -37,7 +47,7 @@ export function LoginForm() {
       if (result?.error) {
         toast({
           title: "Error",
-          description: "Invalid username or password",
+          description: "Invalid email or password",
           variant: "destructive",
         });
       } else {
@@ -61,13 +71,13 @@ export function LoginForm() {
   return (
     <form onSubmit={handleLogin} className={styles.loginForm}>
       <div className={styles.inputGroup}>
-        <span className={styles.icon}>👤</span>
+        <span className={styles.icon}>📧</span>
         <Input
-          type="text"
-          placeholder="Username"
-          value={formData.username}
+          type="email"
+          placeholder="Email"
+          value={formData.email}
           onChange={(e) =>
-            setFormData({ ...formData, username: e.target.value })
+            setFormData({ ...formData, email: e.target.value })
           }
           disabled={isLoading}
           className={styles.input}

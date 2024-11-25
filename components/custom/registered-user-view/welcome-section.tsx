@@ -1,11 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface WelcomeSectionProps {
   firstName?: string;
 }
 
 export function WelcomeSection({ firstName = "User" }: WelcomeSectionProps) {
+  const router = useRouter();
+
   return (
     <section
       className="flex flex-col items-center text-center justify-center 
@@ -26,7 +29,7 @@ export function WelcomeSection({ firstName = "User" }: WelcomeSectionProps) {
         className="bg-[#D4AF37] hover:bg-[#B4941F] text-white px-10 py-8 text-xl
                    w-fit transform transition-all duration-200 hover:scale-105
                    shadow-lg hover:shadow-[#D4AF37]/20"
-        onClick={() => (window.location.href = "/create-outfit")}
+        onClick={() => router.push("/upload")}
       >
         Get Started
         <ArrowRight className="ml-2 h-7 w-7 animate-bounce-x" />

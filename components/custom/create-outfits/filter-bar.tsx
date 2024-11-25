@@ -9,8 +9,20 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
-import { filterData, FilterOption } from "@/util/example-data";
 import { Button } from "@/components/ui/button";
+
+interface FilterOption {
+  id: string;
+  value: string;
+  label: string;
+}
+
+interface Filters {
+  categories: FilterOption[];
+  colors: FilterOption[];
+  sizes: FilterOption[];
+  brands: FilterOption[];
+}
 
 interface FilterBarProps {
   selectedFilters: {
@@ -27,6 +39,7 @@ interface FilterBarProps {
   }) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  filterOptions: Filters;
 }
 
 interface FilterDropdownProps {
@@ -84,6 +97,7 @@ export function FilterBar({
   setSelectedFilters,
   searchQuery,
   setSearchQuery,
+  filterOptions,
 }: FilterBarProps) {
   const clearFilters = () => {
     setSelectedFilters({
@@ -136,25 +150,25 @@ export function FilterBar({
         <div className="flex flex-wrap gap-2">
           <FilterDropdown
             title="Category"
-            options={filterData.categories}
+            options={filterOptions.categories}
             selected={selectedFilters.categories}
             onSelectionChange={updateFilter('categories')}
           />
           <FilterDropdown
             title="Color"
-            options={filterData.colors}
+            options={filterOptions.colors}
             selected={selectedFilters.colors}
             onSelectionChange={updateFilter('colors')}
           />
           <FilterDropdown
             title="Size"
-            options={filterData.sizes}
+            options={filterOptions.sizes}
             selected={selectedFilters.sizes}
             onSelectionChange={updateFilter('sizes')}
           />
           <FilterDropdown
             title="Brand"
-            options={filterData.brands}
+            options={filterOptions.brands}
             selected={selectedFilters.brands}
             onSelectionChange={updateFilter('brands')}
           />
