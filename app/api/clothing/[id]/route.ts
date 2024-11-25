@@ -4,6 +4,19 @@ import { ClothingItem } from "@/app/models/clothingItem";
 import fs from "fs/promises";
 import path from "path";
 
+// Helper function to capitalize every word
+function capitalizeWords(string: string): string {
+  return string
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
+// Helper function to format size to uppercase
+function formatSize(size: string): string {
+  return size.toUpperCase();
+}
+
 export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -39,6 +52,46 @@ export async function DELETE(
     console.error("Failed to delete item:", error);
     return NextResponse.json(
       { message: "Failed to delete item" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await connectToDatabase();
+
+    const data = await req.json();
+    
+    // Format the data
+    const formattedData = {
+      category: capitalizeWords(data.category),
+      color: capitalizeWords(data.color),
+      size: formatSize(data.size),
+      brand: capitalizeWords(data.brand),
+    };
+
+    const updatedItem = await ClothingItem.findByIdAndUpdate(
+      params.id,
+      formattedData,
+      { new: true }
+    );
+
+    if (!updatedItem) {
+      return NextResponse.json(
+        { message: "Item not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(updatedItem);
+  } catch (error) {
+    console.error("Failed to update item:", error);
+    return NextResponse.json(
+      { message: "Failed to update item" },
       { status: 500 }
     );
   }
