@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { User, Mail, Lock } from "lucide-react";
 
+
 const registerSchema = z.object({
   firstName: z
     .string()
@@ -74,21 +75,33 @@ export function RegisterForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
+    setIsSubmitting(true);
 
     try {
+      // Validate form data
       registerSchema.parse(formState);
-      setIsSubmitting(true);
 
-      // Here you would make an API call to register the user
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulated API call
+      // Send registration request to your API
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formState),
+      });
 
-      // Show success message briefly before redirect
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Registration failed');
+      }
+
+      // Show success message and redirect to login
       setShowSuccess(true);
-
-      // Automatically redirect after a short delay
       setTimeout(() => {
-        router.push("/registered-user-view");
-      }, 4000);
+        router.push('/login');
+      }, 2000);
+
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: FormErrors = {};
@@ -97,18 +110,13 @@ export function RegisterForm() {
           newErrors[path] = err.message;
         });
         setErrors(newErrors);
-        toast({
-          title: "Validation Error",
-          description: "Please check the form for errors",
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Error",
-          description: "Failed to create account. Please try again.",
-          variant: "destructive",
-        });
       }
+      
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to create account",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -226,18 +234,17 @@ export function RegisterForm() {
       <AlertDialog open={showSuccess} onOpenChange={setShowSuccess}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Welcome aboard!</AlertDialogTitle>
+            <AlertDialogTitle>Account Created Successfully!</AlertDialogTitle>
             <AlertDialogDescription>
-              Your account has been created successfully. Redirecting you to
-              your dashboard...
+              Your account has been created. Redirecting you to login...
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction
-              onClick={() => router.push("/registered-user-view")}
+              onClick={() => router.push("/login")}
               className="bg-[#D4AF37] hover:bg-[#B4941F] text-white"
             >
-              Go to Dashboard
+              Go to Login
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/ui/icons";
+import { signIn } from "next-auth/react";
 import styles from "../../../app/login/Login.module.css";
+import { useToast } from "@/hooks/use-toast";
 
 interface LoginFormData {
   username: string;
@@ -14,6 +16,7 @@ interface LoginFormData {
 
 export function LoginForm() {
   const router = useRouter();
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<LoginFormData>({
     username: "",
@@ -22,27 +25,45 @@ export function LoginForm() {
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    if (!formData.username || !formData.password) {
-      alert("Please enter both username and password.");
-      return;
-    }
-
     setIsLoading(true);
+
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/registered-user-view");
-    } catch (error) {
-      console.error("Login failed:", error);
+      const result = await signIn("credentials", {
+        username: formData.username,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        toast({
+          title: "Error",
+          description: "Invalid username or password",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Login successful",
+        });
+        router.push("/registered-user-view");
+      }
+    } catch {
+      toast({
+        title: "Error",
+        description: "An error occurred during login",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
   }
 
   return (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleLogin} className={styles.loginForm}>
       <div className={styles.inputGroup}>
         <span className={styles.icon}>👤</span>
         <Input
+          type="text"
           placeholder="Username"
           value={formData.username}
           onChange={(e) =>
@@ -50,8 +71,10 @@ export function LoginForm() {
           }
           disabled={isLoading}
           className={styles.input}
+          required
         />
       </div>
+
       <div className={styles.inputGroup}>
         <span className={styles.icon}>🔒</span>
         <Input
@@ -63,12 +86,23 @@ export function LoginForm() {
           }
           disabled={isLoading}
           className={styles.input}
+          required
         />
       </div>
 
-      <Button type="submit" className={styles.loginButton} disabled={isLoading}>
-        {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-        Login
+      <Button
+        type="submit"
+        className={styles.loginButton}
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <>
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            Logging in...
+          </>
+        ) : (
+          "Login"
+        )}
       </Button>
     </form>
   );

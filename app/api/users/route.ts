@@ -1,13 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse, NextRequest } from "next/server";
 import connectMongoDB from "../../libs/mongodb";
-import User from "../../models/userModel"; ; 
+import User from "../../models/userModel";  
 
 export async function GET() {
-    await connectMongoDB() ;
-    const users = await User.find();
-    return NextResponse.json({ users});
+    // implemented get request to get all users
+    
+    await connectMongoDB();
+    const users = await User.find().select("-password"); // Exclude passwords
+    return NextResponse.json({ users });
 } 
+
 export async function POST(request: NextRequest) {
     try {
         const { username, email, password, firstName, lastName } = await request.json();
