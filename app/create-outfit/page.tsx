@@ -8,7 +8,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Shirt } from "lucide-react";
 import { OutfitCanvas } from "@/components/custom/create-outfits/outfit-canvas";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Save, ArrowLeft, Pencil } from "lucide-react";
+import { ArrowRight, Save, ArrowLeft, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -29,6 +29,18 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Library } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface Item {
   id: string;
@@ -65,7 +77,8 @@ interface EditOutfitDialogProps {
   outfit: SavedOutfit;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (name: string) => Promise<void>;
+  onSave: (name: string, selectedItems: string[]) => Promise<void>;
+  allItems: Item[];
 }
 
 function getSelectedItemsByCategory(items: Item[]) {
@@ -80,9 +93,17 @@ function getSelectedItemsByCategory(items: Item[]) {
   );
 }
 
-function EditOutfitDialog({ outfit, isOpen, onOpenChange, onSave }: EditOutfitDialogProps) {
+function EditOutfitDialog({ outfit, isOpen, onOpenChange, onSave, allItems }: EditOutfitDialogProps) {
   const [name, setName] = useState(outfit.name);
+  const [selectedItems, setSelectedItems] = useState<string[]>(
+    outfit.items.map(item => item.id || item._id)
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    setSelectedItems(outfit.items.map(item => item.id || item._id));
+    setName(outfit.name);
+  }, [outfit]);
 
   const handleSave = async () => {
     if (!name.trim()) {
@@ -90,22 +111,44 @@ function EditOutfitDialog({ outfit, isOpen, onOpenChange, onSave }: EditOutfitDi
       return;
     }
 
+    if (selectedItems.length === 0) {
+      toast.error("Please select at least one item");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      await onSave(name);
+      await onSave(name, selectedItems);
       onOpenChange(false);
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const toggleItem = (itemId: string, category: string) => {
+    setSelectedItems(prev => {
+      // If item is already selected, remove it
+      if (prev.includes(itemId)) {
+        return prev.filter(id => id !== itemId);
+      }
+      
+      // If adding a new item, remove any other item from the same category
+      const updatedSelection = prev.filter(id => {
+        const item = allItems.find(i => i.id === id);
+        return item?.category !== category;
+      });
+      
+      return [...updatedSelection, itemId];
+    });
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-w-3xl max-h-[80vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle>Edit Outfit</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4 py-4">
+        <div className="flex flex-col space-y-4 flex-1 overflow-hidden">
           <div className="space-y-2">
             <Label>Outfit Name</Label>
             <Input
@@ -114,8 +157,46 @@ function EditOutfitDialog({ outfit, isOpen, onOpenChange, onSave }: EditOutfitDi
               onChange={(e) => setName(e.target.value)}
             />
           </div>
+          
+          <div className="flex-1 overflow-hidden">
+            <Label>Select Items</Label>
+            <ScrollArea className="h-[50vh] mt-2 border rounded-md p-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {allItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                      selectedItems.includes(item.id)
+                        ? "border-[#D4AF37] bg-[#F9F6E8]"
+                        : "hover:border-gray-400"
+                    }`}
+                    onClick={() => toggleItem(item.id, item.category)}
+                  >
+                    <div className="aspect-square relative mb-2">
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        layout="fill"
+                        objectFit="cover"
+                        className="rounded-md"
+                      />
+                    </div>
+                    <h4 className="font-medium text-sm">{item.name}</h4>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      <Badge variant="secondary" className="text-xs">
+                        {item.category}
+                      </Badge>
+                      <Badge variant="secondary" className="text-xs">
+                        {item.size}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
         </div>
-        <div className="flex justify-end gap-3">
+        <div className="flex justify-end gap-3 pt-4">
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
@@ -408,7 +489,7 @@ export default function CreateOutfitPage() {
     toast.success(`Loaded outfit: ${outfit.name}`);
   };
 
-  const handleUpdateOutfit = async (outfitId: string, newName: string) => {
+  const handleUpdateOutfit = async (outfitId: string, newName: string, selectedItemIds: string[]) => {
     try {
       const response = await fetch(`/api/outfits/${outfitId}`, {
         method: "PATCH",
@@ -417,6 +498,7 @@ export default function CreateOutfitPage() {
         },
         body: JSON.stringify({
           name: newName,
+          items: selectedItemIds,
         }),
       });
 
@@ -426,7 +508,11 @@ export default function CreateOutfitPage() {
       setSavedOutfits(prevOutfits =>
         prevOutfits.map(outfit =>
           outfit._id === outfitId
-            ? { ...outfit, name: newName }
+            ? {
+                ...outfit,
+                name: newName,
+                items: items.filter(item => selectedItemIds.includes(item.id))
+              }
             : outfit
         )
       );
@@ -435,6 +521,26 @@ export default function CreateOutfitPage() {
     } catch (error) {
       console.error("Error updating outfit:", error);
       toast.error("Failed to update outfit");
+    }
+  };
+
+  const handleDeleteOutfit = async (outfitId: string) => {
+    try {
+      const response = await fetch(`/api/outfits/${outfitId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) throw new Error("Failed to delete outfit");
+
+      // Update local state
+      setSavedOutfits(prevOutfits => 
+        prevOutfits.filter(outfit => outfit._id !== outfitId)
+      );
+
+      toast.success("Outfit deleted successfully");
+    } catch (error) {
+      console.error("Error deleting outfit:", error);
+      toast.error("Failed to delete outfit");
     }
   };
 
@@ -582,17 +688,50 @@ export default function CreateOutfitPage() {
                                       {outfit.name}
                                     </h3>
                                   </div>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-8 w-8 p-0 ml-2"
-                                    onClick={(e) => {
-                                      e.stopPropagation(); // Prevent triggering the parent click
-                                      setEditingOutfit(outfit);
-                                    }}
-                                  >
-                                    <Pencil className="h-4 w-4" />
-                                  </Button>
+                                  <div className="flex gap-1">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-8 w-8 p-0"
+                                      onClick={(e) => {
+                                        e.stopPropagation(); // Prevent triggering the parent click
+                                        setEditingOutfit(outfit);
+                                      }}
+                                    >
+                                      <Pencil className="h-4 w-4" />
+                                    </Button>
+                                    <AlertDialog>
+                                      <AlertDialogTrigger asChild>
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50"
+                                          onClick={(e) => {
+                                            e.stopPropagation(); // Prevent triggering the parent click
+                                          }}
+                                        >
+                                          <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                      </AlertDialogTrigger>
+                                      <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                          <AlertDialogTitle>Delete Outfit</AlertDialogTitle>
+                                          <AlertDialogDescription>
+                                            Are you sure you want to delete "{outfit.name}"? This action cannot be undone.
+                                          </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                          <AlertDialogAction
+                                            onClick={() => handleDeleteOutfit(outfit._id)}
+                                            className="bg-red-500 hover:bg-red-600 text-white"
+                                          >
+                                            Delete
+                                          </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                      </AlertDialogContent>
+                                    </AlertDialog>
+                                  </div>
                                 </div>
                                 <div 
                                   onClick={() => loadSavedOutfit(outfit)}
@@ -709,9 +848,10 @@ export default function CreateOutfitPage() {
           outfit={editingOutfit}
           isOpen={!!editingOutfit}
           onOpenChange={(open) => !open && setEditingOutfit(null)}
-          onSave={async (newName) => {
-            await handleUpdateOutfit(editingOutfit._id, newName);
+          onSave={async (newName, selectedItems) => {
+            await handleUpdateOutfit(editingOutfit._id, newName, selectedItems);
           }}
+          allItems={items}
         />
       )}
     </div>
