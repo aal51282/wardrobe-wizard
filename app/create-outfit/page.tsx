@@ -93,17 +93,18 @@ function getSelectedItemsByCategory(items: Item[]) {
   );
 }
 
-function EditOutfitDialog({ outfit, isOpen, onOpenChange, onSave, allItems }: EditOutfitDialogProps) {
+function EditOutfitDialog({
+  outfit,
+  isOpen,
+  onOpenChange,
+  onSave,
+  allItems,
+}: EditOutfitDialogProps) {
   const [name, setName] = useState(outfit.name);
   const [selectedItems, setSelectedItems] = useState<string[]>(
-    outfit.items.map(item => item.id || item._id)
+    outfit.items.map((item) => item.id)
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    setSelectedItems(outfit.items.map(item => item.id || item._id));
-    setName(outfit.name);
-  }, [outfit]);
 
   const handleSave = async () => {
     if (!name.trim()) {
@@ -126,18 +127,18 @@ function EditOutfitDialog({ outfit, isOpen, onOpenChange, onSave, allItems }: Ed
   };
 
   const toggleItem = (itemId: string, category: string) => {
-    setSelectedItems(prev => {
+    setSelectedItems((prev) => {
       // If item is already selected, remove it
       if (prev.includes(itemId)) {
-        return prev.filter(id => id !== itemId);
+        return prev.filter((id) => id !== itemId);
       }
-      
+
       // If adding a new item, remove any other item from the same category
-      const updatedSelection = prev.filter(id => {
-        const item = allItems.find(i => i.id === id);
+      const updatedSelection = prev.filter((id) => {
+        const item = allItems.find((i) => i.id === id);
         return item?.category !== category;
       });
-      
+
       return [...updatedSelection, itemId];
     });
   };
@@ -157,7 +158,7 @@ function EditOutfitDialog({ outfit, isOpen, onOpenChange, onSave, allItems }: Ed
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          
+
           <div className="flex-1 overflow-hidden">
             <Label>Select Items</Label>
             <ScrollArea className="h-[50vh] mt-2 border rounded-md p-4">
@@ -197,16 +198,10 @@ function EditOutfitDialog({ outfit, isOpen, onOpenChange, onSave, allItems }: Ed
           </div>
         </div>
         <div className="flex justify-end gap-3 pt-4">
-          <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-          >
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button
-            onClick={handleSave}
-            disabled={isSubmitting}
-          >
+          <Button onClick={handleSave} disabled={isSubmitting}>
             {isSubmitting ? "Saving..." : "Save Changes"}
           </Button>
         </div>
@@ -231,7 +226,7 @@ export default function CreateOutfitPage() {
     categories: [],
     colors: [],
     sizes: [],
-    brands: []
+    brands: [],
   });
   const [isSaving, setIsSaving] = useState(false);
   const [isOutfitDialogOpen, setIsOutfitDialogOpen] = useState(false);
@@ -246,7 +241,7 @@ export default function CreateOutfitPage() {
       try {
         setIsLoading(true);
         const response = await fetch("/api/clothing");
-        
+
         if (!response.ok) {
           throw new Error("Failed to fetch items");
         }
@@ -397,8 +392,10 @@ export default function CreateOutfitPage() {
 
       // Update local state
       setItems((prevItems) => prevItems.filter((item) => item.id !== id));
-      setFilteredItems((prevItems) => prevItems.filter((item) => item.id !== id));
-      
+      setFilteredItems((prevItems) =>
+        prevItems.filter((item) => item.id !== id)
+      );
+
       toast.success("Item deleted successfully");
     } catch (error) {
       console.error("Error deleting item:", error);
@@ -429,7 +426,7 @@ export default function CreateOutfitPage() {
     setIsSaving(true);
     try {
       const selectedItems = items.filter((item) => item.selected);
-      
+
       const response = await fetch("/api/outfits", {
         method: "POST",
         headers: {
@@ -437,7 +434,7 @@ export default function CreateOutfitPage() {
         },
         body: JSON.stringify({
           name: outfitName,
-          items: selectedItems.map(item => item.id),
+          items: selectedItems.map((item) => item.id),
         }),
       });
 
@@ -474,22 +471,26 @@ export default function CreateOutfitPage() {
 
   const loadSavedOutfit = (outfit: SavedOutfit) => {
     // Reset all items to unselected
-    setItems(prevItems => 
-      prevItems.map(item => ({ ...item, selected: false }))
+    setItems((prevItems) =>
+      prevItems.map((item) => ({ ...item, selected: false }))
     );
 
     // Select the items from the saved outfit
-    setItems(prevItems => 
-      prevItems.map(item => ({
+    setItems((prevItems) =>
+      prevItems.map((item) => ({
         ...item,
-        selected: outfit.items.some(outfitItem => outfitItem._id === item.id)
+        selected: outfit.items.some((outfitItem) => outfitItem._id === item.id),
       }))
     );
 
     toast.success(`Loaded outfit: ${outfit.name}`);
   };
 
-  const handleUpdateOutfit = async (outfitId: string, newName: string, selectedItemIds: string[]) => {
+  const handleUpdateOutfit = async (
+    outfitId: string,
+    newName: string,
+    selectedItemIds: string[]
+  ) => {
     try {
       const response = await fetch(`/api/outfits/${outfitId}`, {
         method: "PATCH",
@@ -505,13 +506,15 @@ export default function CreateOutfitPage() {
       if (!response.ok) throw new Error("Failed to update outfit");
 
       // Update local state
-      setSavedOutfits(prevOutfits =>
-        prevOutfits.map(outfit =>
+      setSavedOutfits((prevOutfits) =>
+        prevOutfits.map((outfit) =>
           outfit._id === outfitId
             ? {
                 ...outfit,
                 name: newName,
-                items: items.filter(item => selectedItemIds.includes(item.id))
+                items: items.filter((item) =>
+                  selectedItemIds.includes(item.id)
+                ),
               }
             : outfit
         )
@@ -533,8 +536,8 @@ export default function CreateOutfitPage() {
       if (!response.ok) throw new Error("Failed to delete outfit");
 
       // Update local state
-      setSavedOutfits(prevOutfits => 
-        prevOutfits.filter(outfit => outfit._id !== outfitId)
+      setSavedOutfits((prevOutfits) =>
+        prevOutfits.filter((outfit) => outfit._id !== outfitId)
       );
 
       toast.success("Outfit deleted successfully");
@@ -680,7 +683,7 @@ export default function CreateOutfitPage() {
                                 className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer"
                               >
                                 <div className="flex justify-between items-start mb-2">
-                                  <div 
+                                  <div
                                     className="flex-1"
                                     onClick={() => loadSavedOutfit(outfit)}
                                   >
@@ -715,15 +718,23 @@ export default function CreateOutfitPage() {
                                       </AlertDialogTrigger>
                                       <AlertDialogContent>
                                         <AlertDialogHeader>
-                                          <AlertDialogTitle>Delete Outfit</AlertDialogTitle>
+                                          <AlertDialogTitle>
+                                            Delete Outfit
+                                          </AlertDialogTitle>
                                           <AlertDialogDescription>
-                                            Are you sure you want to delete "{outfit.name}"? This action cannot be undone.
+                                            Are you sure you want to delete "
+                                            {outfit.name}"? This action cannot
+                                            be undone.
                                           </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
-                                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                          <AlertDialogCancel>
+                                            Cancel
+                                          </AlertDialogCancel>
                                           <AlertDialogAction
-                                            onClick={() => handleDeleteOutfit(outfit._id)}
+                                            onClick={() =>
+                                              handleDeleteOutfit(outfit._id)
+                                            }
                                             className="bg-red-500 hover:bg-red-600 text-white"
                                           >
                                             Delete
@@ -733,12 +744,12 @@ export default function CreateOutfitPage() {
                                     </AlertDialog>
                                   </div>
                                 </div>
-                                <div 
-                                  onClick={() => loadSavedOutfit(outfit)}
-                                >
+                                <div onClick={() => loadSavedOutfit(outfit)}>
                                   <p className="text-sm text-gray-500 mt-1">
-                                    {outfit.items.length} items • 
-                                    {new Date(outfit.createdAt).toLocaleDateString()}
+                                    {outfit.items.length} items •
+                                    {new Date(
+                                      outfit.createdAt
+                                    ).toLocaleDateString()}
                                   </p>
                                   <div className="flex gap-2 mt-2 flex-wrap">
                                     {outfit.items.map((item) => (
@@ -763,7 +774,7 @@ export default function CreateOutfitPage() {
                       </ScrollArea>
                     </SheetContent>
                   </Sheet>
-                  
+
                   <Button
                     onClick={handleSaveOutfit}
                     variant="outline"
@@ -833,10 +844,7 @@ export default function CreateOutfitPage() {
             >
               Cancel
             </Button>
-            <Button
-              onClick={handleSaveOutfitConfirm}
-              disabled={isSaving}
-            >
+            <Button onClick={handleSaveOutfitConfirm} disabled={isSaving}>
               {isSaving ? "Saving..." : "Save Outfit"}
             </Button>
           </div>

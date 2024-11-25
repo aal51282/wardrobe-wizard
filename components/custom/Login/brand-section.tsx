@@ -15,7 +15,7 @@ export function BrandSection() {
         />
         <h1 className={styles.brandTitle}>Wardrobe Wizard</h1>
         <p className={styles.brandTagline}>
-          Don&apos;t get mad, get Wardrobe Wizard
+          Hocus Pocus, Fashion Focus
         </p>
       </div>
     </div>
