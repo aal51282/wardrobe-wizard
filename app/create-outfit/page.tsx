@@ -19,6 +19,16 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Library } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface Item {
   id: string;
@@ -42,6 +52,13 @@ interface Filters {
   colors: FilterOption[];
   sizes: FilterOption[];
   brands: FilterOption[];
+}
+
+interface SavedOutfit {
+  _id: string;
+  name: string;
+  items: Item[];
+  createdAt: string;
 }
 
 function getSelectedItemsByCategory(items: Item[]) {
@@ -77,6 +94,8 @@ export default function CreateOutfitPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isOutfitDialogOpen, setIsOutfitDialogOpen] = useState(false);
   const [outfitName, setOutfitName] = useState("");
+  const [savedOutfits, setSavedOutfits] = useState<SavedOutfit[]>([]);
+  const [isLoadingOutfits, setIsLoadingOutfits] = useState(false);
 
   // Fetch items from API
   useEffect(() => {
@@ -102,6 +121,26 @@ export default function CreateOutfitPage() {
     };
 
     fetchItems();
+  }, []);
+
+  // Add this useEffect to fetch saved outfits
+  useEffect(() => {
+    const fetchSavedOutfits = async () => {
+      try {
+        setIsLoadingOutfits(true);
+        const response = await fetch("/api/outfits");
+        if (!response.ok) throw new Error("Failed to fetch outfits");
+        const data = await response.json();
+        setSavedOutfits(data);
+      } catch (error) {
+        console.error("Error fetching saved outfits:", error);
+        toast.error("Failed to load saved outfits");
+      } finally {
+        setIsLoadingOutfits(false);
+      }
+    };
+
+    fetchSavedOutfits();
   }, []);
 
   // Handle filtering
@@ -290,6 +329,23 @@ export default function CreateOutfitPage() {
     router.push("/analysis");
   };
 
+  const loadSavedOutfit = (outfit: SavedOutfit) => {
+    // Reset all items to unselected
+    setItems(prevItems => 
+      prevItems.map(item => ({ ...item, selected: false }))
+    );
+
+    // Select the items from the saved outfit
+    setItems(prevItems => 
+      prevItems.map(item => ({
+        ...item,
+        selected: outfit.items.some(outfitItem => outfitItem._id === item.id)
+      }))
+    );
+
+    toast.success(`Loaded outfit: ${outfit.name}`);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-[#F9F6E8]/30">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -330,7 +386,7 @@ export default function CreateOutfitPage() {
               label: "Categories",
               value: new Set(items.map((i) => i.category)).size,
             },
-            { label: "Outfits Created", value: "0" }, // Replace with actual data
+            { label: "Outfits Created", value: savedOutfits.length },
           ].map((stat) => (
             <div
               key={stat.label}
@@ -399,6 +455,63 @@ export default function CreateOutfitPage() {
                   Preview Outfit
                 </h2>
                 <div className="flex gap-2">
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-white"
+                      >
+                        <Library className="h-4 w-4 mr-2" />
+                        <span>Saved Outfits</span>
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent>
+                      <SheetHeader>
+                        <SheetTitle>Saved Outfits</SheetTitle>
+                      </SheetHeader>
+                      <ScrollArea className="h-[calc(100vh-8rem)] mt-4">
+                        {isLoadingOutfits ? (
+                          <div className="flex justify-center py-4">
+                            <LoadingSpinner />
+                          </div>
+                        ) : savedOutfits.length > 0 ? (
+                          <div className="space-y-4">
+                            {savedOutfits.map((outfit) => (
+                              <div
+                                key={outfit._id}
+                                className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer"
+                                onClick={() => loadSavedOutfit(outfit)}
+                              >
+                                <h3 className="font-medium text-[#D4AF37]">
+                                  {outfit.name}
+                                </h3>
+                                <p className="text-sm text-gray-500 mt-1">
+                                  {outfit.items.length} items • 
+                                  {new Date(outfit.createdAt).toLocaleDateString()}
+                                </p>
+                                <div className="flex gap-2 mt-2 flex-wrap">
+                                  {outfit.items.map((item) => (
+                                    <Badge
+                                      key={item._id}
+                                      variant="secondary"
+                                      className="text-xs"
+                                    >
+                                      {item.category}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-8 text-gray-500">
+                            No saved outfits yet
+                          </div>
+                        )}
+                      </ScrollArea>
+                    </SheetContent>
+                  </Sheet>
+                  
                   <Button
                     onClick={handleSaveOutfit}
                     variant="outline"

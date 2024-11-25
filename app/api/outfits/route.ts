@@ -2,6 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/app/libs/mongodb";
 import { Outfit } from "@/app/models/outfitModel";
 
+export async function GET() {
+  try {
+    await connectToDatabase();
+    
+    const outfits = await Outfit.find({})
+      .populate('items')  // This will populate the actual clothing items
+      .sort({ createdAt: -1 });
+
+    return NextResponse.json(outfits);
+  } catch (error) {
+    console.error("Failed to fetch outfits:", error);
+    return NextResponse.json(
+      { message: "Failed to fetch outfits" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     await connectToDatabase();
