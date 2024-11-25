@@ -10,6 +10,15 @@ import { OutfitCanvas } from "@/components/custom/create-outfits/outfit-canvas";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Save, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface Item {
   id: string;
@@ -65,6 +74,9 @@ export default function CreateOutfitPage() {
     sizes: [],
     brands: []
   });
+  const [isSaving, setIsSaving] = useState(false);
+  const [isOutfitDialogOpen, setIsOutfitDialogOpen] = useState(false);
+  const [outfitName, setOutfitName] = useState("");
 
   // Fetch items from API
   useEffect(() => {
@@ -212,7 +224,7 @@ export default function CreateOutfitPage() {
     }
   };
 
-  const handleSaveOutfit = () => {
+  const handleSaveOutfit = async () => {
     const selectedItems = items.filter((item) => item.selected);
     const selectedByCategory = getSelectedItemsByCategory(items);
 
@@ -223,10 +235,46 @@ export default function CreateOutfitPage() {
       return;
     }
 
-    // Add your save logic here
-    toast.success("Outfit saved successfully!", {
-      description: `Saved ${Object.keys(selectedByCategory).length} items to your outfits.`,
-    });
+    setIsOutfitDialogOpen(true);
+  };
+
+  const handleSaveOutfitConfirm = async () => {
+    if (!outfitName.trim()) {
+      toast.error("Please enter an outfit name");
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const selectedItems = items.filter((item) => item.selected);
+      
+      const response = await fetch("/api/outfits", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: outfitName,
+          items: selectedItems.map(item => item.id),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save outfit");
+      }
+
+      toast.success("Outfit saved successfully!", {
+        description: `Saved ${selectedItems.length} items to your outfits.`,
+      });
+
+      setOutfitName("");
+      setIsOutfitDialogOpen(false);
+    } catch (error) {
+      console.error("Error saving outfit:", error);
+      toast.error("Failed to save outfit");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleCompleteOutfit = () => {
@@ -396,6 +444,39 @@ export default function CreateOutfitPage() {
           </div>
         </div>
       </div>
+
+      {/* Add this dialog component */}
+      <Dialog open={isOutfitDialogOpen} onOpenChange={setIsOutfitDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Save Outfit</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>Outfit Name</Label>
+              <Input
+                placeholder="Enter outfit name"
+                value={outfitName}
+                onChange={(e) => setOutfitName(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-3">
+            <Button
+              variant="outline"
+              onClick={() => setIsOutfitDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSaveOutfitConfirm}
+              disabled={isSaving}
+            >
+              {isSaving ? "Saving..." : "Save Outfit"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
