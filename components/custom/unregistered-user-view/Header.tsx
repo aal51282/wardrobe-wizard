@@ -16,10 +16,10 @@ export function Header() {
               height={40}
               className={styles.logo}
             />
-            <h1 className={styles.title}>Wardrobe Wizard</h1>
+            <h1 className={`ml-3 ${styles.title}`}>Wardrobe Wizard</h1>
           </div>
         </Link>
-        <nav className={styles.navLinks}>
+        <nav className={styles.navLinks}></nav>
           <Button variant="ghost" asChild>
             <Link href="/login">Login</Link>
           </Button>
