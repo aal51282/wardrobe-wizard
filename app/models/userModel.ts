@@ -5,6 +5,7 @@ interface IUser extends Document {
     password: string;
     firstName: string;
     lastName: string;
+    photoUrl?: string;
 }
 
 const userSchema = new Schema<IUser>({
@@ -29,6 +30,10 @@ const userSchema = new Schema<IUser>({
         type: String,
         required: true,
         trim: true
+    },
+    photoUrl: {
+        type: String,
+        default: '/default-avatar.png'
     }
 });
 
