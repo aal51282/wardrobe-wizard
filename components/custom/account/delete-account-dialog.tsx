@@ -4,22 +4,65 @@ import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader,
 import { Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useSession, signOut } from "next-auth/react";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 interface DeleteAccountDialogProps {
-  userEmail: string;
   onDelete: () => void;
 }
 
-export function DeleteAccountDialog({ userEmail, onDelete }: DeleteAccountDialogProps) {
+export function DeleteAccountDialog({ onDelete }: DeleteAccountDialogProps) {
+  const { data: session } = useSession();
+  const { toast } = useToast();
+  const router = useRouter();
+  const userEmail = session?.user?.email || "No email found";
   const [emailConfirmation, setEmailConfirmation] = useState("");
   const [error, setError] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (emailConfirmation.toLowerCase() !== userEmail.toLowerCase()) {
       setError("Email address doesn't match");
       return;
     }
-    onDelete();
+
+    try {
+      setIsDeleting(true);
+      
+      const response = await fetch('/api/users/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to delete account');
+      }
+
+      toast({
+        title: "Account Deleted",
+        description: "Your account has been successfully deleted",
+      });
+
+      // Sign out the user
+      await signOut({ redirect: false });
+      
+      // Redirect to home page
+      router.push('/');
+      
+      onDelete();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to delete account",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -62,8 +105,9 @@ export function DeleteAccountDialog({ userEmail, onDelete }: DeleteAccountDialog
           <AlertDialogAction
             onClick={handleDelete}
             className="bg-red-500 hover:bg-red-600"
+            disabled={isDeleting}
           >
-            Delete Account
+            {isDeleting ? "Deleting..." : "Delete Account"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
