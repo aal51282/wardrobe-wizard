@@ -3,8 +3,6 @@ import connectMongoDB from "../../libs/mongodb";
 import User from "../../models/userModel";
 
 export async function GET() {
-  // implemented get request to get all users
-
   await connectMongoDB();
   const users = await User.find().select("-password"); // Exclude passwords
   return NextResponse.json({ users });
@@ -12,12 +10,11 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { username, email, password, firstName, lastName } =
-      await request.json();
+    const { email, password, firstName, lastName } = await request.json();
 
-    console.log("Received data:", { username, email, firstName, lastName });
+    console.log("Received data:", { email, firstName, lastName });
 
-    if (!username || !email || !password || !firstName || !lastName) {
+    if (!email || !password || !firstName || !lastName) {
       return NextResponse.json(
         {
           error: "All fields are required",
@@ -29,7 +26,6 @@ export async function POST(request: NextRequest) {
     await connectMongoDB();
 
     const user = await User.create({
-      username,
       email,
       password,
       firstName,
@@ -41,7 +37,6 @@ export async function POST(request: NextRequest) {
         message: "User added successfully",
         user: {
           id: user._id,
-          username: user.username,
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,

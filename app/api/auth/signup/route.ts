@@ -5,10 +5,10 @@ import bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
   try {
-    const { username, email, password, firstName, lastName } = await request.json();
+    const { email, password, firstName, lastName } = await request.json();
 
     // Validate input fields
-    if (!username || !email || !password || !firstName || !lastName) {
+    if (!email || !password || !firstName || !lastName) {
       return NextResponse.json(
         { error: "All fields are required" },
         { status: 400 }
@@ -27,20 +27,11 @@ export async function POST(request: Request) {
       );
     }
 
-    const existingUsername = await User.findOne({ username });
-    if (existingUsername) {
-      return NextResponse.json(
-        { error: "Username is already taken" },
-        { status: 400 }
-      );
-    }
-
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user
     const user = new User({
-      username,
       email,
       password: hashedPassword,
       firstName,

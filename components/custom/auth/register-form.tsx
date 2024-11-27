@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { User, Mail, Lock } from "lucide-react";
 
-
 const registerSchema = z.object({
   firstName: z
     .string()
@@ -43,7 +42,6 @@ interface FormState {
   lastName: string;
   email: string;
   password: string;
-  username: string;
 }
 
 interface FormErrors {
@@ -58,7 +56,6 @@ export function RegisterForm() {
     lastName: "",
     email: "",
     password: "",
-    username: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -153,14 +150,6 @@ export function RegisterForm() {
       type: "password",
       icon: <Lock className="h-4 w-4" />,
       placeholder: "Create a password",
-      required: true,
-    },
-    {
-      id: "username",
-      label: "Username",
-      type: "text",
-      icon: <User className="h-4 w-4" />,
-      placeholder: "Enter a username",
       required: true,
     },
   ];

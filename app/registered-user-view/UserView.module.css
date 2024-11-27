@@ -2,7 +2,7 @@
 .userViewContainer {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Align content to the left */
+  align-items: flex-start;
   width: 100%;
   padding: 20px;
 }
@@ -12,17 +12,9 @@
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 15px 25px; /* Increased padding for more presence */
-  border-bottom: 1px solid #ddd; /* Light border line under header */
-  font-size: 18px; /* Larger font size for visibility */
-}
-
-/* Styling for the user's name displayed in the header */
-.userName {
-  font-weight: bold;
-  color: #a77e3e; /* Brown color matching the Figma design */
-  margin-right: auto; /* Aligns the username to the left */
-  font-size: 20px; /* Larger size for emphasis */
+  padding: 15px 25px;
+  border-bottom: 1px solid #ddd;
+  font-size: 18px;
 }
 
 /* Navigation links container for Upload Clothing, Outfits, and Meet the Team */
@@ -30,14 +22,14 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-left: auto; /* Aligns the navigation links to the right */
+  margin-left: auto;
 }
 
 /* Styling for each navigation link in the header */
 .navLinks a {
   color: #a77e3e;
   text-decoration: none;
-  font-size: 16px; /* Increased font size */
+  font-size: 16px;
 }
 
 /* Vertical line separator between navigation links */
@@ -50,20 +42,20 @@
 .accountButton {
   background: none;
   border: none;
-  color: #a77e3e; /* Matches brown color for consistency */
-  font-size: 16px; /* Larger font size */
+  color: #a77e3e;
+  font-size: 16px;
   cursor: pointer;
-  margin-left: 15px; /* Spacing to the right of the navigation links */
+  margin-left: 15px;
 }
 
 /* Styling for the logout button */
 .logoutButton {
   background: none;
   border: none;
-  color: #a77e3e; /* Matches the project's color scheme */
-  font-size: 16px; /* Larger font size */
+  color: #a77e3e;
+  font-size: 16px;
   cursor: pointer;
-  margin-left: 15px; /* Spacing to the right of the account button */
+  margin-left: 15px;
 }
 
 /* Main content section below the header */
@@ -71,43 +63,43 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: center; /* Centers content vertically */
+  justify-content: center;
   width: 100%;
-  height: calc(100vh - 100px); /* Full height minus header space */
+  height: calc(100vh - 100px);
   padding: 40px 20px;
 }
 
 /* Styling for the welcome title text */
 .welcomeTitle {
-  font-size: 48px; /* Larger for emphasis */
+  font-size: 48px;
   font-weight: bold;
-  color: #a77e3e; /* Brown color matching the Figma design */
+  color: #a77e3e;
   margin-bottom: 10px;
-  margin-left: 10px; /* Slightly offset from the left */
+  margin-left: 10px;
 }
 
 /* Styling for the tagline under the welcome title */
 .tagline {
-  font-size: 24px; /* Larger for visibility */
-  color: #666; /* Lighter gray color for tagline */
+  font-size: 24px;
+  color: #666;
   margin-bottom: 30px;
-  margin-left: 10px; /* Align with title */
+  margin-left: 10px;
 }
 
 /* Styling for the "Continue" button */
 .continueButton {
   display: inline-flex;
-  align-items: center; /* Centers icon and text vertically */
+  align-items: center;
   padding: 10px 20px;
   background-color: #fff;
-  color: #a77e3e; /* Matches brown color from Figma */
+  color: #a77e3e;
   border: 1px solid #a77e3e;
   border-radius: 8px;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 20px; /* Space below the tagline */
-  margin-left: 10px; /* Align with text */
+  margin-top: 20px;
+  margin-left: 10px;
 }
 
 /* Spacing for the icon inside the "Continue" button */
@@ -119,6 +111,6 @@
 .imageContainer {
   position: absolute;
   right: 20px;
-  top: 50%; /* Center vertically on screen */
-  transform: translateY(-50%); /* Adjust for perfect vertical centering */
+  top: 50%;
+  transform: translateY(-50%);
 }
