@@ -27,8 +27,8 @@ export function Header() {
   return (
     <header className="border-b border-[#D4AF37] bg-white sticky top-0 z-50">
       <div className="flex items-center h-16 px-8">
-        <Link 
-          href="/registered-user-view" 
+        <Link
+          href="/registered-user-view"
           className="flex items-center gap-3 cursor-pointer hover:opacity-90 transition-opacity"
         >
           <Image

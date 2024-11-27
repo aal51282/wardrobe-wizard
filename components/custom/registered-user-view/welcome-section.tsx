@@ -1,13 +1,14 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-interface WelcomeSectionProps {
-  firstName?: string;
-}
-
-export function WelcomeSection({ firstName = "User" }: WelcomeSectionProps) {
+export function WelcomeSection() {
   const router = useRouter();
+  const { data: session } = useSession();
+  const firstName = session?.user?.name?.split(' ')[0] || "User";
 
   return (
     <section
