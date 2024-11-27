@@ -1,5 +1,4 @@
 import { FeatureCard } from "./FeatureCard";
-import styles from "../../../app/Page.module.css";
 
 const features = [
   {
@@ -23,7 +22,7 @@ const features = [
 
 export function FeatureGrid() {
   return (
-    <div className={styles.featureGrid}>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto my-16 px-4">
       {features.map((feature) => (
         <FeatureCard
           key={feature.title}

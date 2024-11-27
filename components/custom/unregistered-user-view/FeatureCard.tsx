@@ -8,10 +8,10 @@ interface FeatureCardProps {
 
 export function FeatureCard({ title, description, icon }: FeatureCardProps) {
   return (
-    <div className={styles.featureCard}>
-      <div className={styles.featureIcon}>{icon}</div>
-      <h3 className={styles.featureTitle}>{title}</h3>
-      <p className={styles.featureDescription}>{description}</p>
+    <div className="p-6 bg-white/60 backdrop-blur-md border border-[#f3d19e] rounded-xl transition-shadow hover:shadow-lg">
+      <div className="text-4xl mb-4">{icon}</div>
+      <h3 className="text-xl font-semibold text-[#a77e3e] mb-2">{title}</h3>
+      <p className="text-[#b38c5a]">{description}</p>
     </div>
   );
 }
