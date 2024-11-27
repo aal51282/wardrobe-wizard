@@ -5,7 +5,7 @@ interface IUser extends Document {
     password: string;
     firstName: string;
     lastName: string;
-    photoUrl?: string;
+    photoUrl: string;
 }
 
 const userSchema = new Schema<IUser>({
@@ -33,38 +33,36 @@ const userSchema = new Schema<IUser>({
     },
     photoUrl: {
         type: String,
+        required: true,
         default: '/default-avatar.png'
     }
 });
 
-// Function to drop the username index
-async function dropUsernameIndex() {
+// Migration function to add photoUrl to existing users
+async function migrateExistingUsers() {
     try {
         const db = mongoose.connection.db;
         if (!db) return;
 
-        const collections = await db.listCollections({ name: 'users' }).toArray();
-        if (collections.length > 0) {
-            const indexes = await db.collection('users').indexes();
-            const hasUsernameIndex = indexes.some(index => index.name === 'username_1');
-            if (hasUsernameIndex) {
-                await db.collection('users').dropIndex('username_1');
-                console.log('Username index dropped successfully');
-            }
-        }
+        const users = await db.collection('users').updateMany(
+            { photoUrl: { $exists: false } },
+            { $set: { photoUrl: '/default-avatar.png' } }
+        );
+
+        console.log(`Migration complete: ${users.modifiedCount} users updated`);
     } catch (error) {
-        console.error('Error dropping username index:', error);
+        console.error('Error during migration:', error);
     }
 }
 
-// Drop index when the model is compiled
-if (mongoose.connection.readyState === 1) { // If connected
-    dropUsernameIndex();
+// Run migration when the model is compiled
+if (mongoose.connection.readyState === 1) {
+    migrateExistingUsers();
 }
 
-// Also attempt to drop index when connection is established
+// Also run migration when connection is established
 mongoose.connection.on('connected', () => {
-    dropUsernameIndex();
+    migrateExistingUsers();
 });
 
 const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>("User", userSchema);

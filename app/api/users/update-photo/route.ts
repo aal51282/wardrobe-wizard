@@ -15,27 +15,34 @@ export async function PUT(request: Request) {
     }
 
     const { photoUrl } = await request.json();
+    console.log("Updating photo for user:", session.user.email);
+    console.log("New photo URL:", photoUrl);
 
     await connectToDatabase();
 
     // Update the user's photo URL in the database
-    const result = await User.findOneAndUpdate(
+    const updatedUser = await User.findOneAndUpdate(
       { email: session.user.email },
       { $set: { photoUrl: photoUrl } },
       { new: true }
     );
 
-    if (!result) {
+    if (!updatedUser) {
+      console.log("User not found in database");
       return NextResponse.json(
         { error: "User not found" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(
-      { message: "Profile photo updated successfully", photoUrl },
-      { status: 200 }
-    );
+    console.log("Updated user:", updatedUser);
+
+    return NextResponse.json({
+      success: true,
+      photoUrl: photoUrl,
+      message: "Profile photo updated successfully"
+    });
+
   } catch (error) {
     console.error("Update photo error:", error);
     return NextResponse.json(

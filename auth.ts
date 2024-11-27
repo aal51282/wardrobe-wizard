@@ -50,6 +50,7 @@ export const {
             id: user._id.toString(),
             email: user.email,
             name: `${user.firstName} ${user.lastName}`,
+            image: user.photoUrl || '/default-avatar.png',
           };
         } catch (error) {
           console.error("Auth error:", error);
@@ -62,12 +63,14 @@ export const {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.image = user.image;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.image = token.image as string;
       }
       return session;
     },

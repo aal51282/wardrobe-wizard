@@ -13,6 +13,7 @@ import {
 import Image from "next/image";
 import { LogoutButton } from "@/components/custom/auth/logout-button";
 import { User } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 const navigationLinks = [
   { href: "/upload", label: "Upload Clothing" },
@@ -23,6 +24,8 @@ const navigationLinks = [
 
 export function Header() {
   const router = useRouter();
+  const { data: session } = useSession();
+  const userImage = session?.user?.image || "/default-avatar.png";
 
   return (
     <header className="border-b border-[#D4AF37] bg-white sticky top-0 z-50">
@@ -70,9 +73,9 @@ export function Header() {
                 className="relative h-10 w-10 rounded-full hover:bg-[#F9F6E8]"
               >
                 <Avatar>
-                  <AvatarImage src="/placeholder-avatar.jpg" alt="User" />
+                  <AvatarImage src={userImage} alt="User" />
                   <AvatarFallback className="bg-[#F9F6E8] text-[#D4AF37]">
-                    UN
+                    {session?.user?.name?.[0] || 'U'}
                   </AvatarFallback>
                 </Avatar>
               </Button>

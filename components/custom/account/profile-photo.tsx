@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -11,29 +11,14 @@ import { useSession } from "next-auth/react";
 export function ProfilePhoto() {
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
-  const { data: session, update } = useSession();
-  const [photoUrl, setPhotoUrl] = useState("/default-avatar.png");
+  const { data: session, update: updateSession } = useSession();
+  const [imageUrl, setImageUrl] = useState("/default-avatar.png");
 
-  const uploadToCloudinary = async (file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'wardrobe-wizard'); // Create this preset in your Cloudinary dashboard
-
-    const response = await fetch(
-      `https://api.cloudinary.com/v1_1/dia5ivuqq/image/upload`,
-      {
-        method: 'POST',
-        body: formData,
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error('Failed to upload image');
+  useEffect(() => {
+    if (session?.user?.image) {
+      setImageUrl(session.user.image);
     }
-
-    const data = await response.json();
-    return data.secure_url;
-  };
+  }, [session?.user?.image]);
 
   const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -42,7 +27,6 @@ export function ProfilePhoto() {
     try {
       setIsUploading(true);
 
-      // Validate file size (5MB limit)
       if (file.size > 5 * 1024 * 1024) {
         toast({
           title: "Error",
@@ -52,52 +36,60 @@ export function ProfilePhoto() {
         return;
       }
 
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        toast({
-          title: "Error",
-          description: "File must be an image",
-          variant: "destructive",
-        });
-        return;
+      // Upload to Cloudinary
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'wardrobe-wizard');
+
+      const uploadResponse = await fetch(
+        `https://api.cloudinary.com/v1_1/dia5ivuqq/image/upload`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+
+      if (!uploadResponse.ok) {
+        throw new Error('Failed to upload image');
       }
 
-      // Upload to Cloudinary
-      const cloudinaryUrl = await uploadToCloudinary(file);
+      const uploadData = await uploadResponse.json();
+      const newImageUrl = uploadData.secure_url;
 
-      // Update user profile in database
-      const response = await fetch('/api/users/update-photo', {
+      // Update in database
+      const updateResponse = await fetch('/api/users/update-photo', {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ photoUrl: cloudinaryUrl }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ photoUrl: newImageUrl }),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to update profile photo');
+      if (!updateResponse.ok) {
+        throw new Error('Failed to update profile photo in database');
       }
 
       // Update local state
-      setPhotoUrl(cloudinaryUrl);
+      setImageUrl(newImageUrl);
 
       // Update session
-      await update({
+      const newSession = {
         ...session,
         user: {
           ...session?.user,
-          image: cloudinaryUrl,
+          image: newImageUrl,
         },
-      });
+      };
+      await updateSession(newSession);
 
       toast({
         title: "Success",
         description: "Profile photo updated successfully",
       });
+
     } catch (error) {
+      console.error('Photo upload error:', error);
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to update profile photo",
+        description: "Failed to update profile photo",
         variant: "destructive",
       });
     } finally {
@@ -109,10 +101,11 @@ export function ProfilePhoto() {
     <div className="flex flex-col items-center space-y-4">
       <div className="relative w-32 h-32">
         <Image
-          src={photoUrl}
+          src={imageUrl}
           alt="Profile"
           fill
           className="rounded-full object-cover border-2 border-[#D4AF37]"
+          unoptimized // Add this to prevent Next.js image optimization issues
         />
         <Label
           htmlFor="photo-upload"
