@@ -32,22 +32,34 @@ const userSchema = new Schema<IUser>({
     }
 });
 
-// Drop the username index if it exists when the model is compiled
-userSchema.pre('save', async function(next) {
+// Function to drop the username index
+async function dropUsernameIndex() {
     try {
-        // Check if the collection exists and has the username index
-        const collections = await mongoose.connection.db.listCollections({ name: 'users' }).toArray();
+        const db = mongoose.connection.db;
+        if (!db) return;
+
+        const collections = await db.listCollections({ name: 'users' }).toArray();
         if (collections.length > 0) {
-            const indexes = await mongoose.connection.db.collection('users').indexes();
+            const indexes = await db.collection('users').indexes();
             const hasUsernameIndex = indexes.some(index => index.name === 'username_1');
             if (hasUsernameIndex) {
-                await mongoose.connection.db.collection('users').dropIndex('username_1');
+                await db.collection('users').dropIndex('username_1');
+                console.log('Username index dropped successfully');
             }
         }
-        next();
     } catch (error) {
-        next(error as Error);
+        console.error('Error dropping username index:', error);
     }
+}
+
+// Drop index when the model is compiled
+if (mongoose.connection.readyState === 1) { // If connected
+    dropUsernameIndex();
+}
+
+// Also attempt to drop index when connection is established
+mongoose.connection.on('connected', () => {
+    dropUsernameIndex();
 });
 
 const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
