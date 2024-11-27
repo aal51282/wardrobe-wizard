@@ -27,7 +27,10 @@ export function Header() {
   return (
     <header className="border-b border-[#D4AF37] bg-white sticky top-0 z-50">
       <div className="flex items-center h-16 px-8">
-        <div className="flex items-center gap-3">
+        <Link 
+          href="/registered-user-view" 
+          className="flex items-center gap-3 cursor-pointer hover:opacity-90 transition-opacity"
+        >
           <Image
             src="/big-logo.png"
             alt="Wardrobe Wizard Logo"
@@ -37,7 +40,7 @@ export function Header() {
             priority
           />
           <h1 className="text-3xl font-bold text-[#D4AF37]">Wardrobe Wizard</h1>
-        </div>
+        </Link>
 
         <div className="ml-auto flex items-center space-x-4">
           <nav className="hidden md:flex items-center">
