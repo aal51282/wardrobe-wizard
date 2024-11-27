@@ -3,14 +3,12 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mail } from "lucide-react";
+import { useSession } from "next-auth/react";
 
-interface UserInfoProps {
-  email?: string;
-}
+export function UserInfo() {
+  const { data: session } = useSession();
+  const userEmail = session?.user?.email || "No email found";
 
-export function UserInfo({ 
-  email = "user@example.com" 
-}: UserInfoProps) {
   return (
     <div className="space-y-4">
       {/* Non-editable Email Field */}
@@ -21,7 +19,7 @@ export function UserInfo({
         </Label>
         <div className="relative">
           <Input
-            value={email}
+            value={userEmail}
             disabled
             className="bg-gray-50 text-gray-500 cursor-not-allowed"
           />
