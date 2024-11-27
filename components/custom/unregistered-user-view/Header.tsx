@@ -19,7 +19,7 @@ export function Header() {
             <h1 className={`ml-3 ${styles.title}`}>Wardrobe Wizard</h1>
           </div>
         </Link>
-        <nav className={styles.navLinks}></nav>
+        <nav className={styles.navLinks}>
           <Button variant="ghost" asChild>
             <Link href="/login">Login</Link>
           </Button>
