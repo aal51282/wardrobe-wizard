@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/app/libs/mongodb";
 import { ClothingItem } from "@/app/models/clothingItem";
-import { writeFile } from "fs/promises";
-import path from "path";
-import { v4 as uuidv4 } from "uuid";
-import { initUploadsDirectory } from "@/app/lib/init-uploads";
 import { auth } from "@/auth";
 
 export const runtime = "nodejs";
@@ -24,14 +20,10 @@ function formatSize(size: string): string {
 
 export async function POST(req: NextRequest) {
   try {
-    initUploadsDirectory();
     await connectToDatabase();
 
     const session = await auth();
-    console.log("Session in upload:", session);
-    
     if (!session?.user?.email) {
-      console.log("No user email in session");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -45,8 +37,6 @@ export async function POST(req: NextRequest) {
     const brand = capitalizeWords(formData.get("brand") as string);
     const imageFiles = formData.getAll("images") as File[];
 
-    console.log("Processing item:", { category, color, size, brand });
-
     if (!category || !color || !size || !brand || imageFiles.length === 0) {
       return NextResponse.json(
         { message: "Missing required fields" },
@@ -54,46 +44,31 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Process and save images
+    // Upload images to Cloudinary
     const imageUrls: string[] = [];
-
+    
     for (const imageFile of imageFiles) {
-      try {
-        const bytes = await imageFile.arrayBuffer();
-        const buffer = Buffer.from(bytes);
+      const formData = new FormData();
+      formData.append('file', imageFile);
+      formData.append('upload_preset', 'wardrobe-wizard');
+      
+      const uploadResponse = await fetch(
+        'https://api.cloudinary.com/v1_1/dia5ivuqq/image/upload',
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
 
-        // Create unique filename
-        const uniqueId = uuidv4();
-        const originalName = imageFile.name;
-        const extension = path.extname(originalName);
-        const filename = `${uniqueId}${extension}`;
-
-        // Ensure upload directory exists
-        const uploadDir = path.join(process.cwd(), "public", "uploads");
-        await writeFile(path.join(uploadDir, filename), buffer);
-
-        // Store the public URL
-        imageUrls.push(`/uploads/${filename}`);
-      } catch (error) {
-        console.error("Error saving image:", error);
-        return NextResponse.json(
-          { message: "Error saving image" },
-          { status: 500 }
-        );
+      if (!uploadResponse.ok) {
+        throw new Error('Failed to upload image to Cloudinary');
       }
+
+      const uploadData = await uploadResponse.json();
+      imageUrls.push(uploadData.secure_url);
     }
 
-    // Log the item before saving
-    console.log("About to save item with data:", {
-      category,
-      color,
-      size,
-      brand,
-      imageUrls,
-      userId: session.user.email,
-    });
-
-    // Create and save the clothing item with formatted data and userId
+    // Create and save the clothing item
     const newClothingItem = new ClothingItem({
       category,
       color,
@@ -103,7 +78,6 @@ export async function POST(req: NextRequest) {
       userId: session.user.email,
     });
 
-    console.log("About to save item:", newClothingItem);
     const savedItem = await newClothingItem.save();
     console.log("Saved item:", savedItem);
 

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/app/libs/mongodb";
 import { ClothingItem } from "@/app/models/clothingItem";
-import fs from "fs/promises";
-import path from "path";
+import { deleteFromCloudinary } from "@/lib/cloudinary";
+import { auth } from "@/auth";
 
 // Helper function to capitalize every word
 function capitalizeWords(string: string): string {
@@ -22,22 +22,29 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    const session = await auth();
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     await connectToDatabase();
 
     // Find the item first to get the image URLs
-    const item = await ClothingItem.findById(params.id);
+    const item = await ClothingItem.findOne({
+      _id: params.id,
+      userId: session.user.email
+    });
 
     if (!item) {
       return NextResponse.json({ message: "Item not found" }, { status: 404 });
     }
 
-    // Delete the associated images from the uploads directory
+    // Delete images from Cloudinary
     for (const imageUrl of item.imageUrls) {
-      const imagePath = path.join(process.cwd(), "public", imageUrl);
-      try {
-        await fs.unlink(imagePath);
-      } catch (error) {
-        console.error("Error deleting image file:", error);
+      // Extract public_id from Cloudinary URL
+      const publicId = imageUrl.split('/').pop()?.split('.')[0];
+      if (publicId) {
+        await deleteFromCloudinary(publicId);
       }
     }
 
