@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Share2, Download, Save, ArrowLeft } from "lucide-react";
+import { Share2, Download, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import {
@@ -232,71 +232,70 @@ export default function AnalysisPage() {
         className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8"
         style={pdfStyles}
       >
-        {/* Header Section */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 space-y-4 sm:space-y-0">
-          <div className="flex items-center space-x-4">
+        {/* Updated Header Section */}
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-6">
             <Button
+              onClick={() => router.push("/create-outfit")}
               variant="ghost"
-              size="icon"
-              onClick={() => router.back()}
-              className="hover:bg-[#F9F6E8]"
+              className="text-[#D4AF37] hover:text-[#B4941F] hover:bg-[#F9F6E8]"
             >
-              <ArrowLeft className="h-5 w-5 text-[#D4AF37]" />
-            </Button>
-            <h1 className="text-3xl font-bold text-[#D4AF37]">Outfit Analysis</h1>
-          </div>
-          
-          <div className="flex space-x-2">
-            <Button
-              variant="outline"
-              onClick={handleSaveAnalysis}
-              className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#F9F6E8]"
-            >
-              <Save className="h-4 w-4 mr-2" />
-              Save
-            </Button>
-            
-            <Button
-              variant="outline"
-              onClick={handleDownloadPDF}
-              className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#F9F6E8]"
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Download
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Create Outfit
             </Button>
 
-            <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#F9F6E8]"
-                >
-                  <Share2 className="h-4 w-4 mr-2" />
-                  Share
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Share Analysis</DialogTitle>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
+            <div className="flex space-x-2">
+              <Button
+                variant="outline"
+                onClick={handleDownloadPDF}
+                className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#F9F6E8]"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Download PDF
+              </Button>
+
+              <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
+                <DialogTrigger asChild>
                   <Button
                     variant="outline"
-                    onClick={() => handleShare('copy')}
-                    className="w-full"
+                    className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#F9F6E8]"
                   >
-                    Copy Link
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Share
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => handleShare('email')}
-                    className="w-full"
-                  >
-                    Share via Email
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Share Analysis</DialogTitle>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => handleShare('copy')}
+                      className="w-full"
+                    >
+                      Copy Link
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => handleShare('email')}
+                      className="w-full"
+                    >
+                      Share via Email
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-[#D4AF37] mb-4">
+              Outfit Analysis
+            </h1>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Review your outfit's composition, style recommendations, and more.
+            </p>
           </div>
         </div>
 
