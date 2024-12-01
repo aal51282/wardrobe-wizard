@@ -3,6 +3,7 @@ import { connectToDatabase } from "@/app/libs/mongodb";
 import { ClothingItem } from "@/app/models/clothingItem";
 import { deleteFromCloudinary } from "@/lib/cloudinary";
 import { auth } from "@/auth";
+import mongoose from "mongoose";
 
 // Helper function to capitalize every word
 function capitalizeWords(string: string): string {
@@ -29,6 +30,11 @@ export async function DELETE(
 
     await connectToDatabase();
 
+    // Ensure valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(params.id)) {
+      return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
+    }
+
     // Find the item first to get the image URLs
     const item = await ClothingItem.findOne({
       _id: params.id,
@@ -36,15 +42,20 @@ export async function DELETE(
     });
 
     if (!item) {
-      return NextResponse.json({ message: "Item not found" }, { status: 404 });
+      return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
 
     // Delete images from Cloudinary
     for (const imageUrl of item.imageUrls) {
-      // Extract public_id from Cloudinary URL
-      const publicId = imageUrl.split('/').pop()?.split('.')[0];
-      if (publicId) {
-        await deleteFromCloudinary(publicId);
+      try {
+        // Extract public_id from Cloudinary URL
+        const publicId = imageUrl.split('/').pop()?.split('.')[0];
+        if (publicId) {
+          await deleteFromCloudinary(publicId);
+        }
+      } catch (cloudinaryError) {
+        console.error('Error deleting from Cloudinary:', cloudinaryError);
+        // Continue with deletion even if Cloudinary delete fails
       }
     }
 
@@ -58,7 +69,7 @@ export async function DELETE(
   } catch (error) {
     console.error("Failed to delete item:", error);
     return NextResponse.json(
-      { message: "Failed to delete item" },
+      { error: "Failed to delete item" },
       { status: 500 }
     );
   }

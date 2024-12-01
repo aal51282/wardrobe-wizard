@@ -383,26 +383,8 @@ export default function CreateOutfitPage() {
 
   // Handle item deletion
   const deleteItem = async (id: string) => {
-    try {
-      const response = await fetch(`/api/clothing/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete item");
-      }
-
-      // Update local state
-      setItems((prevItems) => prevItems.filter((item) => item.id !== id));
-      setFilteredItems((prevItems) =>
-        prevItems.filter((item) => item.id !== id)
-      );
-
-      toast.success("Item deleted successfully");
-    } catch (error) {
-      console.error("Error deleting item:", error);
-      toast.error("Failed to delete item");
-    }
+    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    setFilteredItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
   const handleSaveOutfit = async () => {

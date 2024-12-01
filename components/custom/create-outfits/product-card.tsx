@@ -105,6 +105,25 @@ export function ProductCard({
     }
   };
 
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await fetch(`/api/clothing/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete item');
+      }
+
+      // Call the parent's deleteItem function to update the UI
+      deleteItem(id);
+      toast.success('Item deleted successfully');
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      toast.error('Failed to delete item');
+    }
+  };
+
   return (
     <Card className="group hover:shadow-md transition-shadow duration-200">
       <CardHeader className="relative p-0">
@@ -280,7 +299,7 @@ export function ProductCard({
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
-                onClick={() => deleteItem(item.id)}
+                onClick={() => handleDelete(item.id)}
                 className="bg-red-500 hover:bg-red-600 text-white"
               >
                 Delete
