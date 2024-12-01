@@ -14,6 +14,7 @@ import Image from "next/image";
 import { LogoutButton } from "@/components/custom/auth/logout-button";
 import { User } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 const navigationLinks = [
   { href: "/upload", label: "Upload Clothing" },
@@ -25,7 +26,27 @@ const navigationLinks = [
 export function Header() {
   const router = useRouter();
   const { data: session } = useSession();
-  const userImage = session?.user?.image || "/default-avatar.png";
+  const [profileImage, setProfileImage] = useState("/default-avatar.png");
+
+  useEffect(() => {
+    const fetchProfilePhoto = async () => {
+      try {
+        if (session?.user?.email) {
+          const response = await fetch(`/api/users/photo?email=${session.user.email}`);
+          if (response.ok) {
+            const data = await response.json();
+            if (data.photoUrl) {
+              setProfileImage(data.photoUrl);
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching profile photo:", error);
+      }
+    };
+
+    fetchProfilePhoto();
+  }, [session?.user?.email]);
 
   return (
     <header className="border-b border-[#D4AF37] bg-white sticky top-0 z-50">
@@ -73,7 +94,7 @@ export function Header() {
                 className="relative h-10 w-10 rounded-full hover:bg-[#F9F6E8]"
               >
                 <Avatar>
-                  <AvatarImage src={userImage} alt="User" />
+                  <AvatarImage src={profileImage} alt="User" />
                   <AvatarFallback className="bg-[#F9F6E8] text-[#D4AF37]">
                     {session?.user?.name?.[0] || 'U'}
                   </AvatarFallback>
