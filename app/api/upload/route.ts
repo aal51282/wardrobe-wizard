@@ -12,9 +12,9 @@ export const runtime = "nodejs";
 // Helper function to capitalize every word
 function capitalizeWords(string: string): string {
   return string
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ');
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
 }
 
 // Helper function to format size to uppercase
@@ -28,19 +28,24 @@ export async function POST(req: NextRequest) {
     await connectToDatabase();
 
     const session = await auth();
+    console.log("Session in upload:", session);
     
     if (!session?.user?.email) {
+      console.log("No user email in session");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const formData = await req.formData();
-    
+    console.log("Received form data");
+
     // Extract and format form fields
     const category = capitalizeWords(formData.get("category") as string);
     const color = capitalizeWords(formData.get("color") as string);
     const size = formatSize(formData.get("size") as string);
     const brand = capitalizeWords(formData.get("brand") as string);
     const imageFiles = formData.getAll("images") as File[];
+
+    console.log("Processing item:", { category, color, size, brand });
 
     if (!category || !color || !size || !brand || imageFiles.length === 0) {
       return NextResponse.json(
@@ -51,7 +56,7 @@ export async function POST(req: NextRequest) {
 
     // Process and save images
     const imageUrls: string[] = [];
-    
+
     for (const imageFile of imageFiles) {
       try {
         const bytes = await imageFile.arrayBuffer();
@@ -62,11 +67,11 @@ export async function POST(req: NextRequest) {
         const originalName = imageFile.name;
         const extension = path.extname(originalName);
         const filename = `${uniqueId}${extension}`;
-        
+
         // Ensure upload directory exists
         const uploadDir = path.join(process.cwd(), "public", "uploads");
         await writeFile(path.join(uploadDir, filename), buffer);
-        
+
         // Store the public URL
         imageUrls.push(`/uploads/${filename}`);
       } catch (error) {
@@ -78,7 +83,17 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Create and save the clothing item with formatted data
+    // Log the item before saving
+    console.log("About to save item with data:", {
+      category,
+      color,
+      size,
+      brand,
+      imageUrls,
+      userId: session.user.email,
+    });
+
+    // Create and save the clothing item with formatted data and userId
     const newClothingItem = new ClothingItem({
       category,
       color,
@@ -88,12 +103,14 @@ export async function POST(req: NextRequest) {
       userId: session.user.email,
     });
 
-    await newClothingItem.save();
+    console.log("About to save item:", newClothingItem);
+    const savedItem = await newClothingItem.save();
+    console.log("Saved item:", savedItem);
 
     return NextResponse.json(
-      { 
+      {
         message: "Clothing item uploaded successfully",
-        item: newClothingItem 
+        item: savedItem,
       },
       { status: 201 }
     );

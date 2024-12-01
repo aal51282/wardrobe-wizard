@@ -243,10 +243,12 @@ export default function CreateOutfitPage() {
         const response = await fetch("/api/clothing");
 
         if (!response.ok) {
-          throw new Error("Failed to fetch items");
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Failed to fetch items");
         }
 
         const data = await response.json();
+        console.log("Fetched data:", data); // Debug log
         setItems(data.items);
         setFilteredItems(data.items);
         setFilterOptions(data.filters);
@@ -461,7 +463,7 @@ export default function CreateOutfitPage() {
       alert("Please select at least one item for your outfit");
       return;
     }
-    
+
     // Navigate to analysis page with selected items
     router.push(`/analysis?items=${selectedItemIds.join(",")}`);
   };
@@ -781,7 +783,13 @@ export default function CreateOutfitPage() {
                     <span>Save Outfit</span>
                   </Button>
                   <Button
-                    onClick={() => handleCompleteOutfit(items.filter((item) => item.selected).map((item) => item.id))}
+                    onClick={() =>
+                      handleCompleteOutfit(
+                        items
+                          .filter((item) => item.selected)
+                          .map((item) => item.id)
+                      )
+                    }
                     className="bg-[#D4AF37] hover:bg-[#B4941F] text-white"
                   >
                     <span>Complete Outfit</span>
@@ -806,7 +814,13 @@ export default function CreateOutfitPage() {
                   <span>Save Outfit</span>
                 </Button>
                 <Button
-                  onClick={() => handleCompleteOutfit(items.filter((item) => item.selected).map((item) => item.id))}
+                  onClick={() =>
+                    handleCompleteOutfit(
+                      items
+                        .filter((item) => item.selected)
+                        .map((item) => item.id)
+                    )
+                  }
                   className="w-full bg-[#D4AF37] hover:bg-[#B4941F] text-white"
                 >
                   <span>Complete Outfit</span>

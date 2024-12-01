@@ -6,18 +6,28 @@ import { auth } from "@/auth";
 export async function GET() {
   try {
     const session = await auth();
+    console.log("Session in GET clothing:", session);
     
     if (!session?.user?.email) {
+      console.log("No user email in session for GET request");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     await connectToDatabase();
 
-    // Only fetch items belonging to the current user
-    const items = await ClothingItem.find({ userId: session.user.email }).lean();
+    // Debug log the query
+    console.log("Querying for userId:", session.user.email);
+
+    // First, check all items in the collection
+    const allItems = await ClothingItem.find({});
+    console.log("All items in collection:", allItems);
+
+    // Then query for user's items
+    const userItems = await ClothingItem.find({ userId: session.user.email });
+    console.log("User's items:", userItems);
 
     // Transform MongoDB documents to plain objects with proper typing
-    const transformedItems = items.map((item: any) => ({
+    const transformedItems = userItems.map((item: any) => ({
       id: item._id.toString(),
       name: `${item.brand} ${item.category}`,
       image: item.imageUrls[0],
@@ -28,11 +38,13 @@ export async function GET() {
       selected: false,
     }));
 
+    console.log("Transformed items:", transformedItems);
+
     // Extract unique values for filters
-    const uniqueCategories = [...new Set(items.map(item => item.category))];
-    const uniqueColors = [...new Set(items.map(item => item.color))];
-    const uniqueSizes = [...new Set(items.map(item => item.size))];
-    const uniqueBrands = [...new Set(items.map(item => item.brand))];
+    const uniqueCategories = [...new Set(userItems.map(item => item.category))];
+    const uniqueColors = [...new Set(userItems.map(item => item.color))];
+    const uniqueSizes = [...new Set(userItems.map(item => item.size))];
+    const uniqueBrands = [...new Set(userItems.map(item => item.brand))];
 
     return NextResponse.json({
       items: transformedItems,
@@ -60,7 +72,7 @@ export async function GET() {
       }
     });
   } catch (error) {
-    console.error("Failed to fetch clothing items:", error);
+    console.error("GET error:", error);
     return NextResponse.json(
       { message: "Failed to fetch clothing items" },
       { status: 500 }

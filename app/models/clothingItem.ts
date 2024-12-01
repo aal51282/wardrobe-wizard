@@ -25,6 +25,8 @@ const ClothingItemSchema: Schema = new Schema<IClothingItem>(
   }
 );
 
+ClothingItemSchema.index({ userId: 1 });
+
 export const ClothingItem: Model<IClothingItem> =
   mongoose.models.ClothingItem ||
   mongoose.model<IClothingItem>("ClothingItem", ClothingItemSchema);
