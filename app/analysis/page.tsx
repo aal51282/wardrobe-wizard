@@ -9,6 +9,9 @@ import { OccasionsTab } from "@/components/custom/analysis/occasions-tab";
 import { RecommendationsTab } from "@/components/custom/analysis/recommendations-tab";
 import { SustainabilityTab } from "@/components/custom/analysis/sustainability-tab";
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface AnalysisData {
   outfitAnalysis: {
@@ -27,6 +30,15 @@ interface AnalysisData {
     type: string;
     suggestion: string;
     reason: string;
+  }>;
+  selectedItems: Array<{
+    _id: string;
+    category: string;
+    color: string;
+    size: string;
+    brand: string;
+    imageUrls: string[];
+    name?: string;
   }>;
 }
 
@@ -87,6 +99,36 @@ export default function AnalysisPage() {
           >
             Back to User Page
           </Button>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold text-[#D4AF37] mb-4">Selected Items</h2>
+          <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+            <div className="flex p-4 gap-4">
+              {analysisData.selectedItems.map((item) => (
+                <Card key={item._id} className="w-[200px] flex-shrink-0">
+                  <CardContent className="p-4">
+                    <div className="aspect-square relative mb-2 rounded-lg overflow-hidden">
+                      <Image
+                        src={item.imageUrls[0]}
+                        alt={item.name || item.category}
+                        layout="fill"
+                        objectFit="cover"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="font-medium">{item.name || item.category}</p>
+                      <p className="text-sm text-gray-500">{item.brand}</p>
+                      <div className="flex gap-2 text-xs">
+                        <span className="px-2 py-1 bg-gray-100 rounded-full">{item.color}</span>
+                        <span className="px-2 py-1 bg-gray-100 rounded-full">{item.size}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </ScrollArea>
         </div>
 
         <MetricsGrid metrics={analysisData.outfitAnalysis} />

@@ -17,16 +17,11 @@ export async function POST(request: Request) {
       );
     }
 
-    console.log('Selected Item IDs:', selectedItemIds); // Debug log
-
     await connectToDatabase();
-    console.log('Database connected'); // Debug log
 
     const selectedItems = await ClothingItem.find({
       _id: { $in: selectedItemIds },
     }).exec();
-
-    console.log('Found items:', selectedItems.length); // Debug log
 
     if (!selectedItems.length) {
       return NextResponse.json(
@@ -39,7 +34,11 @@ export async function POST(request: Request) {
     const recommendations = generateRecommendations(outfitAnalysis);
 
     return NextResponse.json(
-      { outfitAnalysis, recommendations },
+      { 
+        outfitAnalysis, 
+        recommendations,
+        selectedItems
+      },
       { status: 200 }
     );
   } catch (error) {
