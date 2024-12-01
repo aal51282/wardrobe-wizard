@@ -7,6 +7,7 @@ export interface IClothingItem extends Document {
   brand: string;
   imageUrls: string[];
   createdAt: Date;
+  userId: string;
 }
 
 const ClothingItemSchema: Schema = new Schema<IClothingItem>(
@@ -17,6 +18,7 @@ const ClothingItemSchema: Schema = new Schema<IClothingItem>(
     brand: { type: String, required: true },
     imageUrls: { type: [String], required: true },
     createdAt: { type: Date, default: Date.now },
+    userId: { type: String, required: true },
   },
   {
     versionKey: false,

@@ -5,6 +5,7 @@ import { writeFile } from "fs/promises";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import { initUploadsDirectory } from "@/app/lib/init-uploads";
+import { auth } from "@/auth";
 
 export const runtime = "nodejs";
 
@@ -25,6 +26,12 @@ export async function POST(req: NextRequest) {
   try {
     initUploadsDirectory();
     await connectToDatabase();
+
+    const session = await auth();
+    
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     const formData = await req.formData();
     
@@ -78,6 +85,7 @@ export async function POST(req: NextRequest) {
       size,
       brand,
       imageUrls,
+      userId: session.user.email,
     });
 
     await newClothingItem.save();

@@ -1,22 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/app/libs/mongodb";
 import { ClothingItem } from "@/app/models/clothingItem";
+import { auth } from "@/auth";
 
 export async function GET() {
   try {
+    const session = await auth();
+    
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     await connectToDatabase();
 
-    // Get all clothing items from the database
-    const items = await ClothingItem.find({}).sort({ createdAt: -1 });
+    // Only fetch items belonging to the current user
+    const items = await ClothingItem.find({ userId: session.user.email }).lean();
 
-    // Extract unique values for filters
-    const uniqueCategories = [...new Set(items.map(item => item.category))];
-    const uniqueColors = [...new Set(items.map(item => item.color))];
-    const uniqueSizes = [...new Set(items.map(item => item.size))];
-    const uniqueBrands = [...new Set(items.map(item => item.brand))];
-
-    // Transform the items to match the frontend interface
-    const transformedItems = items.map((item) => ({
+    // Transform MongoDB documents to plain objects with proper typing
+    const transformedItems = items.map((item: any) => ({
       id: item._id.toString(),
       name: `${item.brand} ${item.category}`,
       image: item.imageUrls[0],
@@ -26,6 +27,12 @@ export async function GET() {
       brand: item.brand,
       selected: false,
     }));
+
+    // Extract unique values for filters
+    const uniqueCategories = [...new Set(items.map(item => item.category))];
+    const uniqueColors = [...new Set(items.map(item => item.color))];
+    const uniqueSizes = [...new Set(items.map(item => item.size))];
+    const uniqueBrands = [...new Set(items.map(item => item.brand))];
 
     return NextResponse.json({
       items: transformedItems,

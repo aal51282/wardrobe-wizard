@@ -5,9 +5,16 @@ import {
   performAnalysis,
   generateRecommendations,
 } from "@/lib/outfit-analysis";
+import { auth } from "@/auth";
 
 export async function POST(request: Request) {
   try {
+    const session = await auth();
+    
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { selectedItemIds } = await request.json();
     
     if (!Array.isArray(selectedItemIds) || selectedItemIds.length === 0) {
@@ -21,6 +28,7 @@ export async function POST(request: Request) {
 
     const selectedItems = await ClothingItem.find({
       _id: { $in: selectedItemIds },
+      userId: session.user.email
     }).exec();
 
     if (!selectedItems.length) {
