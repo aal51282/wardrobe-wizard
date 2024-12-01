@@ -456,17 +456,14 @@ export default function CreateOutfitPage() {
     }
   };
 
-  const handleCompleteOutfit = () => {
-    const selectedItems = items.filter((item) => item.selected);
-
-    if (selectedItems.length === 0) {
-      toast.error("Please select items to create an outfit", {
-        description: "Select one item from each category you want to include.",
-      });
+  const handleCompleteOutfit = (selectedItemIds: string[]) => {
+    if (selectedItemIds.length === 0) {
+      alert("Please select at least one item for your outfit");
       return;
     }
-
-    router.push("/analysis");
+    
+    // Navigate to analysis page with selected items
+    router.push(`/analysis?items=${selectedItemIds.join(",")}`);
   };
 
   const loadSavedOutfit = (outfit: SavedOutfit) => {
@@ -784,7 +781,7 @@ export default function CreateOutfitPage() {
                     <span>Save Outfit</span>
                   </Button>
                   <Button
-                    onClick={handleCompleteOutfit}
+                    onClick={() => handleCompleteOutfit(items.filter((item) => item.selected).map((item) => item.id))}
                     className="bg-[#D4AF37] hover:bg-[#B4941F] text-white"
                   >
                     <span>Complete Outfit</span>
@@ -809,7 +806,7 @@ export default function CreateOutfitPage() {
                   <span>Save Outfit</span>
                 </Button>
                 <Button
-                  onClick={handleCompleteOutfit}
+                  onClick={() => handleCompleteOutfit(items.filter((item) => item.selected).map((item) => item.id))}
                   className="w-full bg-[#D4AF37] hover:bg-[#B4941F] text-white"
                 >
                   <span>Complete Outfit</span>

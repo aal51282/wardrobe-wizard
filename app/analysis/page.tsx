@@ -8,12 +8,73 @@ import { CompositionTab } from "@/components/custom/analysis/composition-tab";
 import { OccasionsTab } from "@/components/custom/analysis/occasions-tab";
 import { RecommendationsTab } from "@/components/custom/analysis/recommendations-tab";
 import { SustainabilityTab } from "@/components/custom/analysis/sustainability-tab";
+import { useEffect, useState } from "react";
 
-// Move the mock data to a separate file later
-import { outfitAnalysis, recommendations } from "@/lib/mock-data";
+interface AnalysisData {
+  outfitAnalysis: {
+    styleScore: number;
+    colorHarmony: number;
+    seasonalMatch: number;
+    versatility: number;
+    categories: Record<string, number>;
+    brands: Record<string, number>;
+    occasionMatch: string;
+    weatherSuitability: string;
+    sustainabilityScore: number;
+    estimatedCost: string;
+  };
+  recommendations: Array<{
+    type: string;
+    suggestion: string;
+    reason: string;
+  }>;
+}
 
 export default function AnalysisPage() {
   const router = useRouter();
+  const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const fetchAnalysis = async () => {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const itemsParam = urlParams.get("items");
+        
+        if (!itemsParam) {
+          throw new Error("No items selected for analysis");
+        }
+
+        const selectedItemIds = itemsParam.split(",");
+        const response = await fetch("/api/analysis", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ selectedItemIds }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch analysis data: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        setAnalysisData(data);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('An error occurred'));
+        console.error('Analysis error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnalysis();
+  }, []);
+
+  if (loading) return <div className="loading">Loading analysis...</div>;
+  if (error) return <div className="error">Error: {error.message}</div>;
+  if (!analysisData) return <div className="error">No analysis data available</div>;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-[#F9F6E8]/30 p-8">
@@ -28,7 +89,7 @@ export default function AnalysisPage() {
           </Button>
         </div>
 
-        <MetricsGrid metrics={outfitAnalysis} />
+        <MetricsGrid metrics={analysisData.outfitAnalysis} />
 
         <Tabs defaultValue="composition" className="space-y-4">
           <TabsList>
@@ -40,26 +101,26 @@ export default function AnalysisPage() {
 
           <TabsContent value="composition">
             <CompositionTab 
-              categories={outfitAnalysis.categories} 
-              brands={outfitAnalysis.brands} 
+              categories={analysisData.outfitAnalysis.categories} 
+              brands={analysisData.outfitAnalysis.brands} 
             />
           </TabsContent>
 
           <TabsContent value="occasions">
             <OccasionsTab 
-              occasionMatch={outfitAnalysis.occasionMatch}
-              weatherSuitability={outfitAnalysis.weatherSuitability}
+              occasionMatch={analysisData.outfitAnalysis.occasionMatch}
+              weatherSuitability={analysisData.outfitAnalysis.weatherSuitability}
             />
           </TabsContent>
 
           <TabsContent value="recommendations">
-            <RecommendationsTab recommendations={recommendations} />
+            <RecommendationsTab recommendations={analysisData.recommendations} />
           </TabsContent>
 
           <TabsContent value="sustainability">
             <SustainabilityTab 
-              sustainabilityScore={outfitAnalysis.sustainabilityScore}
-              estimatedCost={outfitAnalysis.estimatedCost}
+              sustainabilityScore={analysisData.outfitAnalysis.sustainabilityScore}
+              estimatedCost={analysisData.outfitAnalysis.estimatedCost}
             />
           </TabsContent>
         </Tabs>

@@ -31,3 +31,26 @@
     font-weight: bold;
   }
   
+  /* Add styles for loading and error states */
+  .loading,
+  .error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 1.5rem;
+    color: #a77e3e;
+  }
+  
+  /* Ensure consistent padding and margins */
+  .container {
+    padding: 2rem;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
