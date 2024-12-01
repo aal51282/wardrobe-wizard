@@ -10,39 +10,50 @@ import { ProfilePhoto } from "@/components/custom/account/profile-photo";
 import { PasswordUpdate } from "@/components/custom/account/password-update";
 import { DeleteAccountDialog } from "@/components/custom/account/delete-account-dialog";
 import { UserInfo } from "@/components/custom/account/user-info";
+import { useSession } from "next-auth/react";
 
 export default function AccountPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const [profilePhoto, setProfilePhoto] = useState<string>(
-    "/default-avatar.png"
-  );
+  const { data: session } = useSession();
   const [showPasswordFields, setShowPasswordFields] = useState(false);
-  const userEmail = "user@example.com"; // This would come from your auth system
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
-  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const handleUpdatePassword = async (newPassword: string) => {
+    try {
+      setIsUpdatingPassword(true);
+      
+      const response = await fetch('/api/users/update-password', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newPassword }),
+      });
 
-    if (file.size > 5 * 1024 * 1024) {
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to update password');
+      }
+
+      toast({
+        title: "Success",
+        description: "Password updated successfully",
+      });
+
+      setShowPasswordFields(false);
+    } catch (error) {
       toast({
         title: "Error",
-        description: "Image must be less than 5MB",
+        description: error instanceof Error ? error.message : "Failed to update password",
         variant: "destructive",
       });
-      return;
+    } finally {
+      setIsUpdatingPassword(false);
     }
-
-    const imageUrl = URL.createObjectURL(file);
-    setProfilePhoto(imageUrl);
-    toast({
-      title: "Success",
-      description: "Profile photo updated successfully",
-    });
   };
 
   const handleDeleteAccount = () => {
-    // Handle account deletion logic here
     router.push("/");
     toast({
       title: "Account Deleted",
@@ -60,22 +71,14 @@ export default function AccountPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <ProfilePhoto
-              photoUrl={profilePhoto}
-              onPhotoUpload={handlePhotoUpload}
-            />
-            <UserInfo email={userEmail} />
+            <ProfilePhoto />
+            <UserInfo />
             <PasswordUpdate
               showFields={showPasswordFields}
               onToggleFields={() => setShowPasswordFields(!showPasswordFields)}
-              onUpdatePassword={(password) =>
-                console.log("Update password:", password)
-              }
+              onUpdatePassword={handleUpdatePassword}
             />
-            <DeleteAccountDialog
-              userEmail={userEmail}
-              onDelete={handleDeleteAccount}
-            />
+            <DeleteAccountDialog onDelete={handleDeleteAccount} />
             <Button
               onClick={() => router.push("/registered-user-view")}
               variant="outline"
