@@ -55,8 +55,9 @@ export function ProfilePhoto() {
       formData.append('file', file);
       formData.append('upload_preset', 'wardrobe-wizard');
 
+      console.log('Uploading to Cloudinary...'); // Debug log
       const uploadResponse = await fetch(
-        `https://api.cloudinary.com/v1_1/your-cloud-name/image/upload`,
+        'https://api.cloudinary.com/v1_1/dia5ivuqq/image/upload',
         {
           method: 'POST',
           body: formData,
@@ -64,13 +65,17 @@ export function ProfilePhoto() {
       );
 
       if (!uploadResponse.ok) {
-        throw new Error('Failed to upload image');
+        const errorData = await uploadResponse.json();
+        console.error('Cloudinary upload error:', errorData); // Debug log
+        throw new Error('Failed to upload image to Cloudinary');
       }
 
       const uploadData = await uploadResponse.json();
+      console.log('Cloudinary response:', uploadData); // Debug log
       const newImageUrl = uploadData.secure_url;
 
       // Update in database
+      console.log('Updating database...'); // Debug log
       const updateResponse = await fetch('/api/users/update-photo', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -78,8 +83,13 @@ export function ProfilePhoto() {
       });
 
       if (!updateResponse.ok) {
+        const errorData = await updateResponse.json();
+        console.error('Database update error:', errorData); // Debug log
         throw new Error('Failed to update profile photo in database');
       }
+
+      const updateData = await updateResponse.json();
+      console.log('Database update response:', updateData); // Debug log
 
       // Update local state and session
       setImageUrl(newImageUrl);
@@ -100,7 +110,7 @@ export function ProfilePhoto() {
       console.error('Photo upload error:', error);
       toast({
         title: "Error",
-        description: "Failed to update profile photo",
+        description: error instanceof Error ? error.message : "Failed to update profile photo",
         variant: "destructive",
       });
     } finally {

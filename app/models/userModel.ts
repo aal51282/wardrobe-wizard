@@ -38,32 +38,8 @@ const userSchema = new Schema<IUser>({
     }
 });
 
-// Migration function to add photoUrl to existing users
-async function migrateExistingUsers() {
-    try {
-        const db = mongoose.connection.db;
-        if (!db) return;
-
-        const users = await db.collection('users').updateMany(
-            { photoUrl: { $exists: false } },
-            { $set: { photoUrl: '/default-avatar.png' } }
-        );
-
-        console.log(`Migration complete: ${users.modifiedCount} users updated`);
-    } catch (error) {
-        console.error('Error during migration:', error);
-    }
-}
-
-// Run migration when the model is compiled
-if (mongoose.connection.readyState === 1) {
-    migrateExistingUsers();
-}
-
-// Also run migration when connection is established
-mongoose.connection.on('connected', () => {
-    migrateExistingUsers();
-});
+// Add this index for better query performance
+userSchema.index({ email: 1 });
 
 const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
 
