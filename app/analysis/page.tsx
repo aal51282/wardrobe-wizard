@@ -22,6 +22,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 interface AnalysisData {
   outfitAnalysis: {
@@ -107,10 +109,67 @@ export default function AnalysisPage() {
 
   const handleDownloadPDF = async () => {
     try {
-      // Implement PDF generation and download
-      toast.success("Analysis PDF downloaded");
+      toast.loading("Generating PDF...");
+      
+      // Get the main content div
+      const contentElement = document.getElementById('analysis-content');
+      if (!contentElement) {
+        throw new Error("Content element not found");
+      }
+
+      // Create canvas from the content
+      const canvas = await html2canvas(contentElement, {
+        scale: 2, // Higher scale for better quality
+        useCORS: true, // Enable CORS for images
+        logging: false,
+        windowWidth: contentElement.scrollWidth,
+        windowHeight: contentElement.scrollHeight,
+      });
+
+      // Calculate dimensions
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 297; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      // Initialize PDF
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      let firstPage = true;
+
+      // Add title
+      pdf.setFontSize(20);
+      pdf.setTextColor(212, 175, 55); // #D4AF37 in RGB
+      pdf.text('Outfit Analysis', 105, 15, { align: 'center' });
+      position = 30; // Start content after title
+
+      // Add date
+      pdf.setFontSize(12);
+      pdf.setTextColor(100);
+      pdf.text(`Generated on ${new Date().toLocaleDateString()}`, 105, 22, { align: 'center' });
+
+      // Convert canvas to image
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+
+      // Add image to PDF (potentially across multiple pages)
+      while (heightLeft >= 0) {
+        pdf.addImage(imgData, 'JPEG', 0, firstPage ? position : 0, imgWidth, imgHeight, '', 'FAST');
+        heightLeft -= pageHeight;
+
+        if (heightLeft > 0) {
+          pdf.addPage();
+          firstPage = false;
+        }
+      }
+
+      // Save the PDF
+      pdf.save(`outfit-analysis-${new Date().toISOString().split('T')[0]}.pdf`);
+      toast.dismiss();
+      toast.success("PDF downloaded successfully");
     } catch (error) {
-      toast.error("Failed to download PDF");
+      console.error('PDF generation error:', error);
+      toast.dismiss();
+      toast.error("Failed to generate PDF");
     }
   };
 
@@ -130,6 +189,20 @@ export default function AnalysisPage() {
     } catch (error) {
       toast.error("Failed to share");
     }
+  };
+
+  // Add this style block in your component
+  const pdfStyles = {
+    '@media print': {
+      '.analysis-content': {
+        backgroundColor: 'white',
+        padding: '20mm',
+      },
+      'img': {
+        maxWidth: '100%',
+        height: 'auto',
+      },
+    },
   };
 
   if (loading) return (
@@ -154,7 +227,11 @@ export default function AnalysisPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-[#F9F6E8]/30">
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+      <div 
+        id="analysis-content" 
+        className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8"
+        style={pdfStyles}
+      >
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 space-y-4 sm:space-y-0">
           <div className="flex items-center space-x-4">
@@ -226,8 +303,8 @@ export default function AnalysisPage() {
         {/* Selected Items Section */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-[#D4AF37] mb-4">Selected Items</h2>
-          <ScrollArea className="w-full rounded-lg border bg-white shadow-sm">
-            <div className="flex p-6 gap-6">
+          <div className="w-full rounded-lg border bg-white shadow-sm">
+            <div className="flex p-6 gap-6 overflow-x-auto">
               {analysisData.selectedItems.map((item) => (
                 <Card key={item._id} className="w-[250px] flex-shrink-0 hover:shadow-md transition-shadow">
                   <CardContent className="p-4">
@@ -256,7 +333,7 @@ export default function AnalysisPage() {
                 </Card>
               ))}
             </div>
-          </ScrollArea>
+          </div>
         </div>
 
         {/* Metrics Grid */}
