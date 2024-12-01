@@ -396,6 +396,19 @@ export default function AnalysisPage() {
             </TabsContent>
           </div>
         </Tabs>
+
+        {/* Add Complete Analysis Button */}
+        <div className="mt-12 flex justify-center">
+          <Button
+            onClick={() => router.push("/registered-user-view")}
+            className="bg-[#D4AF37] hover:bg-[#B4941F] text-white px-8 py-3 text-lg font-semibold rounded-lg shadow-md hover:shadow-lg transition-all"
+          >
+            Complete Analysis
+          </Button>
+        </div>
+
+        {/* Add some padding at the bottom */}
+        <div className="h-8" />
       </div>
     </div>
   );
