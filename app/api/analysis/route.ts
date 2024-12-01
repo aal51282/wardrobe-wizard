@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     }
 
     const outfitAnalysis = performAnalysis(selectedItems);
-    const recommendations = generateRecommendations(outfitAnalysis);
+    const recommendations = generateRecommendations(outfitAnalysis, selectedItems);
 
     return NextResponse.json(
       { 

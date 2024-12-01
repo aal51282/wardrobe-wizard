@@ -21,14 +21,19 @@ export function RecommendationsTab({ recommendations }: RecommendationsTabProps)
         <CardDescription>Suggestions to enhance your outfit</CardDescription>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[200px] pr-4">
-          {recommendations.map((rec, index) => (
-            <div key={index} className="mb-4 p-4 border rounded-lg">
-              <h3 className="font-semibold text-[#D4AF37]">{rec.type}</h3>
-              <p className="text-sm text-gray-600 mt-1">{rec.suggestion}</p>
-              <p className="text-xs text-gray-500 mt-1">{rec.reason}</p>
-            </div>
-          ))}
+        <ScrollArea className="h-[400px] pr-4">
+          <div className="space-y-4">
+            {recommendations.map((rec, index) => (
+              <div 
+                key={index} 
+                className="p-6 border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow"
+              >
+                <h3 className="font-semibold text-lg text-[#D4AF37] mb-2">{rec.type}</h3>
+                <p className="text-base text-gray-700 mb-2">{rec.suggestion}</p>
+                <p className="text-sm text-gray-500 italic">{rec.reason}</p>
+              </div>
+            ))}
+          </div>
         </ScrollArea>
       </CardContent>
     </Card>
