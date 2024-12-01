@@ -12,13 +12,27 @@ export function ProfilePhoto() {
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
   const { data: session, update: updateSession } = useSession();
-  const [imageUrl, setImageUrl] = useState("/default-avatar.png");
+  const [imageUrl, setImageUrl] = useState<string>("/default-avatar.png");
 
   useEffect(() => {
-    if (session?.user?.image) {
-      setImageUrl(session.user.image);
-    }
-  }, [session?.user?.image]);
+    const fetchProfilePhoto = async () => {
+      try {
+        if (session?.user?.email) {
+          const response = await fetch(`/api/users/photo?email=${session.user.email}`);
+          if (response.ok) {
+            const data = await response.json();
+            if (data.photoUrl) {
+              setImageUrl(data.photoUrl);
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching profile photo:", error);
+      }
+    };
+
+    fetchProfilePhoto();
+  }, [session?.user?.email]);
 
   const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -42,7 +56,7 @@ export function ProfilePhoto() {
       formData.append('upload_preset', 'wardrobe-wizard');
 
       const uploadResponse = await fetch(
-        `https://api.cloudinary.com/v1_1/dia5ivuqq/image/upload`,
+        `https://api.cloudinary.com/v1_1/your-cloud-name/image/upload`,
         {
           method: 'POST',
           body: formData,
@@ -67,18 +81,15 @@ export function ProfilePhoto() {
         throw new Error('Failed to update profile photo in database');
       }
 
-      // Update local state
+      // Update local state and session
       setImageUrl(newImageUrl);
-
-      // Update session
-      const newSession = {
+      await updateSession({
         ...session,
         user: {
           ...session?.user,
           image: newImageUrl,
         },
-      };
-      await updateSession(newSession);
+      });
 
       toast({
         title: "Success",
@@ -105,7 +116,7 @@ export function ProfilePhoto() {
           alt="Profile"
           fill
           className="rounded-full object-cover border-2 border-[#D4AF37]"
-          unoptimized // Add this to prevent Next.js image optimization issues
+          priority
         />
         <Label
           htmlFor="photo-upload"
