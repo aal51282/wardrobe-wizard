@@ -3,7 +3,7 @@ import { connectToDatabase } from "@/app/libs/mongodb";
 import User from "@/app/models/userModel";
 import { auth } from "@/auth";
 
-export async function DELETE(request: Request) {
+export async function DELETE() {
   try {
     const session = await auth();
     

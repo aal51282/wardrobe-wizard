@@ -119,7 +119,7 @@ export function UploadClothingForm() {
         throw new Error(errorData.message || "Upload failed");
       }
 
-      const data = await response.json();
+      const { _data, _error } = await response.json();
       
       toast({
         title: "Success!",

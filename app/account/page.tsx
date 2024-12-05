@@ -15,9 +15,9 @@ import { useSession } from "next-auth/react";
 export default function AccountPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const { data: session } = useSession();
+  const { data: _session } = useSession();
   const [showPasswordFields, setShowPasswordFields] = useState(false);
-  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+  const [_isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
   const handleUpdatePassword = async (newPassword: string) => {
     try {

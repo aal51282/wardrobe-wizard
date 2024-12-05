@@ -264,23 +264,19 @@ function determineColorSeason(colors: string[]): string | null {
 }
 
 // Helper functions (implement your actual logic here)
-function calculateStyleScore(items: IClothingItem[]): number {
-  // Placeholder logic
+export function calculateStyleScore(_items: IClothingItem[]): number {
   return 85;
 }
 
-function calculateColorHarmony(items: IClothingItem[]): number {
-  // Placeholder logic
+export function calculateColorHarmony(_items: IClothingItem[]): number {
   return 90;
 }
 
-function calculateSeasonalMatch(items: IClothingItem[]): number {
-  // Placeholder logic
+export function calculateSeasonalMatch(_items: IClothingItem[]): number {
   return 75;
 }
 
-function calculateVersatility(items: IClothingItem[]): number {
-  // Placeholder logic
+export function calculateVersatility(_items: IClothingItem[]): number {
   return 80;
 }
 

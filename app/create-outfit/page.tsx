@@ -15,7 +15,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -389,7 +388,7 @@ export default function CreateOutfitPage() {
 
   const handleSaveOutfit = async () => {
     const selectedItems = items.filter((item) => item.selected);
-    const selectedByCategory = getSelectedItemsByCategory(items);
+    const _selectedByCategory = getSelectedItemsByCategory(items);
 
     if (selectedItems.length === 0) {
       toast.error("Please select items to save an outfit", {

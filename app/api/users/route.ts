@@ -2,6 +2,12 @@ import { NextResponse, NextRequest } from "next/server";
 import connectMongoDB from "../../libs/mongodb";
 import User from "../../models/userModel";
 
+// Define proper error type
+interface _ApiError {
+  message: string;
+  code?: string;
+}
+
 export async function GET() {
   await connectMongoDB();
   const users = await User.find().select("-password"); // Exclude passwords
@@ -44,7 +50,7 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error: _ApiError) {
     console.error("Error in POST handler:", error);
     return NextResponse.json(
       {

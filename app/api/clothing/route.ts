@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/app/libs/mongodb";
 import { ClothingItem } from "@/app/models/clothingItem";
 import { auth } from "@/auth";

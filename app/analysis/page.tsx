@@ -11,7 +11,6 @@ import { SustainabilityTab } from "@/components/custom/analysis/sustainability-t
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Share2, Download, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -98,15 +97,6 @@ export default function AnalysisPage() {
     fetchAnalysis();
   }, []);
 
-  const handleSaveAnalysis = async () => {
-    try {
-      // Implement save to user's profile functionality
-      toast.success("Analysis saved to your profile");
-    } catch (error) {
-      toast.error("Failed to save analysis");
-    }
-  };
-
   const handleDownloadPDF = async () => {
     try {
       toast.loading("Generating PDF...");
@@ -166,8 +156,8 @@ export default function AnalysisPage() {
       pdf.save(`outfit-analysis-${new Date().toISOString().split('T')[0]}.pdf`);
       toast.dismiss();
       toast.success("PDF downloaded successfully");
-    } catch (error) {
-      console.error('PDF generation error:', error);
+    } catch (_error) {
+      console.error('PDF generation error:', _error);
       toast.dismiss();
       toast.error("Failed to generate PDF");
     }
