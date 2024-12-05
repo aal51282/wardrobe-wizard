@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -205,17 +206,13 @@ export default function AnalysisPage() {
   };
 
   // Add this style block in your component
-  const pdfStyles = {
-    "@media print": {
-      ".analysis-content": {
-        backgroundColor: "white",
-        padding: "20mm",
-      },
-      img: {
-        maxWidth: "100%",
-        height: "auto",
-      },
+  const pdfStyles: React.CSSProperties = {
+    '@page': {
+      size: 'A4',
+      margin: '20mm',
     },
+    backgroundColor: 'white',
+    padding: '20mm',
   };
 
   if (loading)
