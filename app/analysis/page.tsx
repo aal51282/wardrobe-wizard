@@ -207,12 +207,8 @@ export default function AnalysisPage() {
 
   // Add this style block in your component
   const pdfStyles: React.CSSProperties = {
-    '@page': {
-      size: 'A4',
-      margin: '20mm',
-    },
     backgroundColor: 'white',
-    padding: '20mm',
+    padding: '20px',
   };
 
   if (loading)

@@ -65,7 +65,17 @@
   }
 }
 
+@page {
+  size: A4;
+  margin: 20mm;
+}
+
 @media print {
+  .analysis-content {
+    background-color: white;
+    padding: 20mm;
+  }
+  
   .analysis-content img {
     max-width: 100%;
     height: auto;
