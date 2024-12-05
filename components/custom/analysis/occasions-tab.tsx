@@ -1,14 +1,23 @@
 "use client";
 
 import { Tag, Cloud, Clock } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 interface OccasionsTabProps {
   occasionMatch: string;
   weatherSuitability: string;
 }
 
-export function OccasionsTab({ occasionMatch, weatherSuitability }: OccasionsTabProps) {
+export function OccasionsTab({
+  occasionMatch,
+  weatherSuitability,
+}: OccasionsTabProps) {
   return (
     <Card>
       <CardHeader>
@@ -33,4 +42,4 @@ export function OccasionsTab({ occasionMatch, weatherSuitability }: OccasionsTab
       </CardContent>
     </Card>
   );
-} 
+}

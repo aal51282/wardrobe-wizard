@@ -26,7 +26,9 @@ export function MetricsGrid({ metrics }: MetricsGridProps) {
       {metricsData.map((metric) => (
         <Card key={metric.title}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">{metric.title}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {metric.title}
+            </CardTitle>
             <metric.icon className="h-4 w-4 text-[#D4AF37]" />
           </CardHeader>
           <CardContent>
@@ -37,4 +39,4 @@ export function MetricsGrid({ metrics }: MetricsGridProps) {
       ))}
     </div>
   );
-} 
+}
