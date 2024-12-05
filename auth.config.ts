@@ -5,4 +5,5 @@ export const authConfig: NextAuthConfig = {
     strategy: "jwt",
   },
   providers: [],
+  trustHost: true,
 };
