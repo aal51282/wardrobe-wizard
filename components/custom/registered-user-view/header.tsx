@@ -20,7 +20,6 @@ const navigationLinks = [
   { href: "/upload", label: "Upload Clothing" },
   { href: "/create-outfit", label: "Create Outfits" },
   { href: "/analysis", label: "Analysis" },
-  { href: "/project-team", label: "Meet the Team" },
 ];
 
 export function Header() {
