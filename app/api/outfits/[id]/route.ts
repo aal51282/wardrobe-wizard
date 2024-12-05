@@ -1,70 +1,95 @@
-import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/app/libs/mongodb";
+import { Outfit } from "@/app/models/outfit";
+import { auth } from "@/auth";
 import mongoose from "mongoose";
 
-export async function PATCH(
-  request: Request,
+export async function DELETE(
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
-    const { name, items } = await request.json();
-
-    if (!name?.trim()) {
-      return new NextResponse("Name is required", { status: 400 });
-    }
-
-    if (!Array.isArray(items)) {
-      return new NextResponse("Items must be an array", { status: 400 });
+    const session = await auth();
+    if (!session?.user?.email) {
+      return Response.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
     }
 
     await connectToDatabase();
-    
-    const result = await mongoose
-      .connection
-      .collection("outfits")
-      .updateOne(
-        { _id: new mongoose.Types.ObjectId(id) },
-        { 
-          $set: { 
-            name,
-            items: items.map(itemId => new mongoose.Types.ObjectId(itemId))
-          } 
-        }
-      );
 
-    if (result.matchedCount === 0) {
-      return new NextResponse("Outfit not found", { status: 404 });
+    // Ensure valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(params.id)) {
+      return Response.json(
+        { error: "Invalid ID format" },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json({ success: true });
+    const outfit = await Outfit.findOneAndDelete({
+      _id: params.id,
+      userId: session.user.email,
+    });
+
+    if (!outfit) {
+      return Response.json(
+        { error: "Outfit not found" },
+        { status: 404 }
+      );
+    }
+
+    return Response.json(
+      { message: "Outfit deleted successfully" },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error("Error updating outfit:", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    console.error("Failed to delete outfit:", error);
+    return Response.json(
+      { error: "Failed to delete outfit" },
+      { status: 500 }
+    );
   }
 }
 
-export async function DELETE(
-  request: Request,
+export async function PATCH(
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
-
-    await connectToDatabase();
-    
-    const result = await mongoose
-      .connection
-      .collection("outfits")
-      .deleteOne({ _id: new mongoose.Types.ObjectId(id) });
-
-    if (result.deletedCount === 0) {
-      return new NextResponse("Outfit not found", { status: 404 });
+    const session = await auth();
+    if (!session?.user?.email) {
+      return Response.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
     }
 
-    return NextResponse.json({ success: true });
+    await connectToDatabase();
+    const data = await request.json();
+
+    const updatedOutfit = await Outfit.findOneAndUpdate(
+      {
+        _id: params.id,
+        userId: session.user.email,
+      },
+      data,
+      { new: true }
+    );
+
+    if (!updatedOutfit) {
+      return Response.json(
+        { error: "Outfit not found" },
+        { status: 404 }
+      );
+    }
+
+    return Response.json(updatedOutfit, { status: 200 });
   } catch (error) {
-    console.error("Error deleting outfit:", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    console.error("Failed to update outfit:", error);
+    return Response.json(
+      { error: "Failed to update outfit" },
+      { status: 500 }
+    );
   }
 } 

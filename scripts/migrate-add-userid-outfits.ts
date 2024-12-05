@@ -1,9 +1,12 @@
-const mongoose = require('mongoose');
+import mongoose, { Schema } from 'mongoose';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Define the Outfit schema
-const OutfitSchema = new mongoose.Schema({
+const OutfitSchema = new Schema({
   name: { type: String, required: true },
-  items: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ClothingItem' }],
+  items: [{ type: Schema.Types.ObjectId, ref: 'ClothingItem' }],
   createdAt: { type: Date, default: Date.now },
   userId: { type: String, required: true },
 }, {

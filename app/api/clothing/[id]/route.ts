@@ -1,38 +1,31 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/app/libs/mongodb";
 import { ClothingItem } from "@/app/models/clothingItem";
 import { deleteFromCloudinary } from "@/lib/cloudinary";
 import { auth } from "@/auth";
 import mongoose from "mongoose";
 
-// Helper function to capitalize every word
-function capitalizeWords(string: string): string {
-  return string
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ');
-}
-
-// Helper function to format size to uppercase
-function formatSize(size: string): string {
-  return size.toUpperCase();
-}
-
 export async function DELETE(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const session = await auth();
     if (!session?.user?.email) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return Response.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
     }
 
     await connectToDatabase();
 
     // Ensure valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(params.id)) {
-      return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
+      return Response.json(
+        { error: "Invalid ID format" },
+        { status: 400 }
+      );
     }
 
     // Find the item first to get the image URLs
@@ -42,7 +35,10 @@ export async function DELETE(
     });
 
     if (!item) {
-      return NextResponse.json({ error: "Item not found" }, { status: 404 });
+      return Response.json(
+        { error: "Item not found" },
+        { status: 404 }
+      );
     }
 
     // Delete images from Cloudinary
@@ -62,13 +58,13 @@ export async function DELETE(
     // Delete the item from the database
     await ClothingItem.findByIdAndDelete(params.id);
 
-    return NextResponse.json(
+    return Response.json(
       { message: "Item deleted successfully" },
       { status: 200 }
     );
   } catch (error) {
     console.error("Failed to delete item:", error);
-    return NextResponse.json(
+    return Response.json(
       { error: "Failed to delete item" },
       { status: 500 }
     );
@@ -76,13 +72,13 @@ export async function DELETE(
 }
 
 export async function PATCH(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     await connectToDatabase();
 
-    const data = await req.json();
+    const data = await request.json();
     
     // Format the data
     const formattedData = {
@@ -99,18 +95,31 @@ export async function PATCH(
     );
 
     if (!updatedItem) {
-      return NextResponse.json(
+      return Response.json(
         { message: "Item not found" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(updatedItem);
+    return Response.json(updatedItem, { status: 200 });
   } catch (error) {
     console.error("Failed to update item:", error);
-    return NextResponse.json(
+    return Response.json(
       { message: "Failed to update item" },
       { status: 500 }
     );
   }
+}
+
+// Helper function to capitalize every word
+function capitalizeWords(string: string): string {
+  return string
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
+// Helper function to format size to uppercase
+function formatSize(size: string): string {
+  return size.toUpperCase();
 }

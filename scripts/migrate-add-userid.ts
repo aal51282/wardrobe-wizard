@@ -1,7 +1,10 @@
-const mongoose = require('mongoose');
+import mongoose, { Schema } from 'mongoose';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Define the ClothingItem schema
-const ClothingItemSchema = new mongoose.Schema({
+const ClothingItemSchema = new Schema({
   category: { type: String, required: true },
   color: { type: String, required: true },
   size: { type: String, required: true },

@@ -26,23 +26,18 @@ export const {
 
         try {
           await connectToDatabase();
-          
-          const user = await User.findOne({ email: credentials.email })
-            .select('+password')
-            .lean();
+          const user = await User.findOne({ email: credentials.email });
 
           if (!user) {
-            console.log("User not found");
             return null;
           }
 
-          const isPasswordValid = await bcrypt.compare(
-            credentials.password,
+          const passwordsMatch = await bcrypt.compare(
+            credentials.password as string,
             user.password
           );
 
-          if (!isPasswordValid) {
-            console.log("Invalid password");
+          if (!passwordsMatch) {
             return null;
           }
 
@@ -50,10 +45,9 @@ export const {
             id: user._id.toString(),
             email: user.email,
             name: `${user.firstName} ${user.lastName}`,
-            image: user.photoUrl || '/default-avatar.png',
           };
         } catch (error) {
-          console.error("Auth error:", error);
+          console.error("Authorization error:", error);
           return null;
         }
       },

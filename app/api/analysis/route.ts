@@ -5,54 +5,56 @@ import {
   performAnalysis,
   generateRecommendations,
 } from "@/lib/outfit-analysis";
-import { auth } from "@/auth";
+import { IClothingItem } from "@/models/clothingItem";
+import { Document, Types } from "mongoose";
+
+type PlainClothingItem = {
+  _id: string;
+  userId: string;
+  category: string;
+  color: string;
+  size: string;
+  brand: string;
+  imageUrls: string[];
+  price?: string;
+};
 
 export async function POST(request: Request) {
   try {
-    const session = await auth();
-    
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     const { selectedItemIds } = await request.json();
     
-    if (!Array.isArray(selectedItemIds) || selectedItemIds.length === 0) {
-      return NextResponse.json(
-        { error: "Invalid or empty item selection" },
-        { status: 400 }
-      );
-    }
-
     await connectToDatabase();
 
     const selectedItems = await ClothingItem.find({
       _id: { $in: selectedItemIds },
-      userId: session.user.email
-    }).exec();
+    }).lean();
 
-    if (!selectedItems.length) {
-      return NextResponse.json(
-        { error: "No clothing items found with the provided IDs." },
-        { status: 404 }
-      );
-    }
+    const plainItems: PlainClothingItem[] = selectedItems.map((item: any) => ({
+      _id: item._id.toString(),
+      userId: item.userId,
+      category: item.category,
+      color: item.color,
+      size: item.size,
+      brand: item.brand,
+      imageUrls: item.imageUrls,
+      ...(item.price && { price: item.price })
+    }));
 
-    const outfitAnalysis = performAnalysis(selectedItems);
-    const recommendations = generateRecommendations(outfitAnalysis, selectedItems);
+    const outfitAnalysis = performAnalysis(plainItems);
+    const recommendations = generateRecommendations(outfitAnalysis, plainItems);
 
     return NextResponse.json(
       { 
         outfitAnalysis, 
         recommendations,
-        selectedItems
+        selectedItems: plainItems
       },
       { status: 200 }
     );
   } catch (error) {
     console.error("Analysis Error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Analysis failed" },
+      { error: "Failed to analyze outfit" },
       { status: 500 }
     );
   }
