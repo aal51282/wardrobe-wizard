@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { CSSProperties } from 'react';
 
 interface AnalysisData {
   outfitAnalysis: {
@@ -182,7 +183,9 @@ export default function AnalysisPage() {
   };
 
   // Add this style block in your component
-  const pdfStyles = {
+  const pdfStyles: CSSProperties = {
+    backgroundColor: 'white',
+    padding: '20mm',
     '@media print': {
       '.analysis-content': {
         backgroundColor: 'white',
@@ -192,7 +195,7 @@ export default function AnalysisPage() {
         maxWidth: '100%',
         height: 'auto',
       },
-    },
+    } as any
   };
 
   if (loading) return (

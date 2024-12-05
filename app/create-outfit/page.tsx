@@ -40,9 +40,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { FilterState } from "@/models/clothingItem";
 
 interface Item {
   id: string;
+  _id?: string;
   name: string;
   image: string;
   category: string;

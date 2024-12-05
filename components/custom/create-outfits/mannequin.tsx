@@ -3,10 +3,10 @@ interface ClothingLayerProps {
   className?: string;
 }
 
-const _ClothingLayer = ({ _type, _className = "" }: ClothingLayerProps) => {
+const _ClothingLayer = ({ type, className = "" }: ClothingLayerProps) => {
   return (
-    <div className={`absolute ${_className}`}>
-      {_type === "shirt" && (
+    <div className={`absolute ${className}`}>
+      {type === "shirt" && (
         <svg
           width="100"
           height="120"
@@ -20,7 +20,7 @@ const _ClothingLayer = ({ _type, _className = "" }: ClothingLayerProps) => {
           />
         </svg>
       )}
-      {_type === "pants" && (
+      {type === "pants" && (
         <svg
           width="100"
           height="150"

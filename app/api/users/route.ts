@@ -50,11 +50,11 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: _ApiError) {
+  } catch (error: unknown) {
     console.error("Error in POST handler:", error);
     return NextResponse.json(
       {
-        error: error.message,
+        error: error instanceof Error ? error.message : "An unknown error occurred",
       },
       { status: 500 }
     );

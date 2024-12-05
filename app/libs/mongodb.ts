@@ -11,10 +11,14 @@ interface MongoConnection {
   promise: Promise<typeof mongoose> | null;
 }
 
-let cached: MongoConnection = global.mongoose;
+declare global {
+  var mongooseConnection: MongoConnection | undefined;
+}
+
+let cached = globalThis.mongooseConnection;
 
 if (!cached) {
-  cached = { conn: null, promise: null };
+  cached = globalThis.mongooseConnection = { conn: null, promise: null };
 }
 
 export async function connectToDatabase() {
@@ -28,6 +32,5 @@ export async function connectToDatabase() {
   cached.conn = await cached.promise;
   return cached.conn;
 }
-
 
 export default connectToDatabase;
