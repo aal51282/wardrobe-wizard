@@ -70,4 +70,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 👥 Authors
 
-Angel Loaiza, Grace Walbrecher, Lily Valdes, Brenda Thornton
+Angel Loaiza, Grace Walbrecher, Lily Valdes
