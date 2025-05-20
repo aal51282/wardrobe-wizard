@@ -49,7 +49,11 @@ Wardrobe Wizard is a modern web application designed to help users organize and 
    npm run dev
    ```
 
-4. **Open your browser**
+4. **Setup environment file**
+  Follow .env.example
+  Create .env.local
+
+5. **Open your browser**
    Navigate to `http://localhost:3000`
 
 ## 💻 Development Guidelines
